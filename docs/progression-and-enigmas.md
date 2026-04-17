@@ -29,7 +29,7 @@ This document covers:
 - Set challenges: complete an artist line with 1 artist card and 3 songs.
 - Event challenges: win a festival battle with at least 3 active combo bonuses.
 - Player trading: marketplace or direct trade.
-- Point progression: earn points from battles, booster openings, and optional freemium purchases.
+- Point progression: earn points from battles, active-pack booster openings, and optional freemium purchases.
 
 ## See Also
 

@@ -11,6 +11,19 @@ This document covers:
 - card attributes
 - card value model
 - rarity and shiny behavior
+- distribution model (pack vs booster)
+
+## Distribution Model
+
+- `Pack` = the full set of cards available during a specific time window.
+- `Booster` = a draw unit that opens cards from the currently active pack.
+- Boosters do not pull cards from future or inactive packs.
+
+Example release cadence:
+
+- Pack A active at launch
+- Pack B released around 2 months later
+- boosters switch to the new active pack based on release rules
 
 ## Card Types
 
@@ -93,6 +106,7 @@ Shiny behavior:
 
 ## See Also
 
+- [Pack Rotation Rules](./pack-rotation.md)
 - [Battle System](./battle-system.md)
 - [Economy and Marketplace](./economy-marketplace.md)
 - [Glossary](./glossary.md)

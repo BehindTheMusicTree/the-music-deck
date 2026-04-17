@@ -15,6 +15,11 @@ Tracks accepted product decisions.
 - Enigma flow: select genre first, then answer the question.
 - Enigma can be an AI-generated image clue about a track.
 - Solving an enigma grants the related song card.
+- `Pack` means the full card set available at time T.
+- `Booster` means a card draw and can only pull from the active pack.
+- One active pack is live at a time.
+- Active pack target duration baseline: 8 weeks.
+- Legacy packs remain usable in collection, battles, and marketplace.
 - Points can be earned from battles, boosters, enigmas, and freemium purchases.
 
 ## Operational Baselines

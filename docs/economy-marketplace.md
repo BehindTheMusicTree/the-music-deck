@@ -22,10 +22,10 @@ This document covers:
 Users gain points through:
 
 - battle rewards
-- opening boosters
+- opening boosters from the active pack
 - daily enigma participation rewards
 - daily enigma win rewards (higher than participation)
-- optional paid point packs (freemium)
+- optional paid point bundles (freemium)
 
 This supports both free progression and monetized progression.
 
@@ -48,8 +48,16 @@ To limit inflation and abuse:
 - minimum account level before marketplace access
 - optional daily trade/listing limit per account
 
+## Pack Lifecycle and Economy Impact
+
+- A pack represents the full card set available at a specific period.
+- Booster openings are restricted to the active pack.
+- New pack releases can refresh market demand and price dynamics.
+- Release cadence can be seasonal (example: new pack every ~2 months).
+
 ## See Also
 
+- [Pack Rotation Rules](./pack-rotation.md)
 - [Progression and Enigmas](./progression-and-enigmas.md)
 - [Battle System](./battle-system.md)
 - [Open Questions](./open-questions.md)

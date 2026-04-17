@@ -22,7 +22,10 @@ Canonical terms used across The Music Deck documentation.
 - `Enigma`: Daily puzzle linked to one song.
 - `MusicTree`: Genre/subgenre collection map with global and per-branch scoring.
 - `Marketplace`: Point-based exchange mechanism for buy/sell and trade offers.
-- `Freemium points`: Optional paid point packs.
+- `Pack`: The full card catalog available during a release window (time T).
+- `Active pack`: The currently live pack from which boosters can pull cards.
+- `Booster`: A card draw unit; it only contains cards from the active pack.
+- `Freemium points`: Optional paid point bundles.
 
 ## See Also
 

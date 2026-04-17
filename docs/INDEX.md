@@ -9,6 +9,7 @@ This folder contains the product design documentation for The Music Deck.
 ## Systems
 
 - [Card System](./card-system.md)
+- [Pack Rotation Rules](./pack-rotation.md)
 - [Battle System](./battle-system.md)
 - [Economy and Marketplace](./economy-marketplace.md)
 - [Progression and Enigmas](./progression-and-enigmas.md)
