@@ -28,6 +28,12 @@ Canonical terms used across The Music Deck documentation.
 - `Booster`: A card draw unit; it only contains cards from the active pack.
 - `Freemium points`: Optional paid point bundles.
 
+## Achat de chansons physiques et partenariats
+
+Les personnes qui achètent une chanson en format physique (CD, vinyle, téléchargement) reçoivent 2 cartes chansons correspondant aux deux titres principaux de l’album, du single ou autre support acheté, ainsi que des points supplémentaires dans le jeu.
+
+Possibilité de partenariat avec des plateformes, artistes ou labels pour intégrer ces cartes spéciales dans le jeu et encourager l’achat de musique physique ou digitale.
+
 ## See Also
 
 - [Card System](./card-system.md)
