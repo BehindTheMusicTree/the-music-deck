@@ -1,0 +1,21 @@
+Generate one JSON card for The Music Deck.
+Target: SHINY song card for "Money" by Pink Floyd (album: The Dark Side of the Moon).
+Output: valid JSON only (no markdown, no prose).
+
+Rules:
+- card_type: "song"
+- rarity_tier: "Shiny"
+- is_shiny: true
+- variant_type: "original" (unless justified)
+- card_value must reflect popularity/experimental balance (not plain sum)
+- keep shiny gameplay parity with normal version; upgrade visuals only
+- lyric_excerpt must be short and legal-safe
+- include placeholders for unknown links
+
+Required fields:
+title, artist, album, card_type, genre, lyric_excerpt,
+popularity_level(0-100), experimental_level(0-100), card_value(0-100),
+rarity_tier, is_shiny, variant_type,
+external_links{grow_music_tree,spotify,youtube,apple_music},
+visual_treatment{frame_style,color_palette,artwork_prompt,animation_fx},
+battle_tags[], design_notes

@@ -1,0 +1,50 @@
+You are generating one complete card example for a music card game called "The Music Deck".
+
+Goal:
+Create a single card example, including every card element listed below.
+
+Output format:
+Return valid JSON only. No markdown, no explanation.
+
+Card rules to follow:
+- card_type must be one of: "song", "artist", "special"
+- variant_type must describe a track variant (use "original" unless another variant is explicitly requested)
+- genre can be a list if multi-genre
+- card_value is NOT a plain sum; it should reflect the balance of popularity and experimental profile
+- lyric_excerpt must be short and legal-safe (very short quote or non-infringing excerpt style)
+- include external links with placeholders if exact URLs are unknown
+- include visual_treatment details that could guide image generation
+- include rarity tier and shiny flag
+
+Required fields:
+- title
+- artist
+- album
+- card_type
+- genre
+- lyric_excerpt
+- popularity_level (0-100)
+- experimental_level (0-100)
+- card_value (0-100)
+- rarity_tier (Common, Uncommon, Rare, Ultra Rare, Secret Rare, Shiny)
+- is_shiny (true/false)
+- variant_type
+- external_links:
+  - grow_music_tree
+  - spotify
+  - youtube
+  - apple_music
+- visual_treatment:
+  - frame_style
+  - color_palette
+  - artwork_prompt
+  - animation_fx
+- battle_tags (array of short tags for synergy/matchup use)
+- design_notes (short explanation of why this score/rarity choice makes sense)
+
+Input values:
+Track: "<track-title>"
+Artist: "<artist-name>"
+Album: "<album-name-or-null>"
+
+Now generate the card for the provided input values.

@@ -9,6 +9,10 @@ Tracks unresolved product and design questions.
 - What exact formula should convert popularity and experimental level into card value?
 - What exact genre matchup matrix should be used in battle?
 - Is the main mode collection, duel, or both?
+- **What is the exact bucketing formula to convert card value into 1-5 gold record tiers for booster opening display?**
+- **What are the point or reward curve differences between daily and weekly mission tiers?**
+- **Should Daily Pick cards be weighted by rarity distribution, or uniform random from active pack?**
+- **Should mission completion unlock cosmetics, titles, or purely point-based rewards?**
 
 ## Candidate Additions
 

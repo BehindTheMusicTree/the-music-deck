@@ -30,6 +30,7 @@ Detailed specs:
 - [Economy and Marketplace](./docs/economy-marketplace.md)
 - [Progression and Enigmas](./docs/progression-and-enigmas.md)
 - [MusicTree View](./docs/musictree.md)
+- [AI Card Generation and Asset Storage](./docs/ai-card-generation.md)
 
 Shared references:
 

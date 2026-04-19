@@ -22,14 +22,45 @@ This document covers:
 - Players earn points for participating in enigmas.
 - Players earn additional points when they win/solve correctly.
 
+## Daily Missions
+
+Complete any of these daily challenges:
+
+- Open 2 boosters from the active pack
+- Win at least 1 festival battle
+- Solve at least 5 enigmas (out of 10 available)
+- Interact with marketplace (list, buy, or trade a card)
+
+**Daily Pick (Bonus):**
+
+- Once per day, the player is offered 5 face-down cards from the active pack
+- Player selects one card to add to their collection
+- The other 4 cards are discarded (do not return to the pool)
+- This is a guaranteed card draw separate from boosters
+- Acts as a daily loyalty reward and adds decision-making
+
+## Weekly Missions
+
+Complete any of these weekly challenges (reset every 7 days):
+
+- **Battle Focus**: Participate in a tournament (or complete 20 battles)
+- **Collection Focus**: Collect 200 cards (can be from any pack)
+- **Exploration Focus**: Discover 15 different subgenres across the MusicTree
+- **Community Focus**: Send 3 messages or create a trade offer (social/marketplace interaction)
+- **Synergy Focus**: Build and save a lineup with at least 5 active combo bonuses
+- **Genre Focus**: Win battles using 5 different single genres
+- **Rarity Focus**: Open enough boosters to obtain 10 rare+ cards (Rare, Ultra Rare, Secret Rare, or Shiny)
+
+**Bonus Completion:**
+
+- Complete different weekly missions in the same week for stacking rewards (e.g., +25% bonus if 3+ missions completed)
+
 ## Other Progression Loops
 
-- Daily missions: find 3 cards of the same genre.
-- Themed challenges: collect lyric quotes around one emotion.
-- Set challenges: complete an artist line with 1 artist card and 3 songs.
-- Event challenges: win a festival battle with at least 3 active combo bonuses.
+- Themed challenges: collect cards linked to one emotion or theme.
+- Legendary quests: multi-step challenges requiring solving enigmas + winning battles + marketplace trades.
 - Player trading: marketplace or direct trade.
-- Point progression: earn points from battles, active-pack booster openings, and optional freemium purchases.
+- Point progression: earn points from battles, active-pack booster openings, enigma participation, and optional freemium purchases.
 
 ## See Also
 

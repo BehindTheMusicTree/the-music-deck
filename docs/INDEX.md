@@ -13,7 +13,10 @@ This folder contains the product design documentation for The Music Deck.
 - [Battle System](./battle-system.md)
 - [Economy and Marketplace](./economy-marketplace.md)
 - [Progression and Enigmas](./progression-and-enigmas.md)
+- [Missions and Challenges](./missions-and-challenges.md)
 - [MusicTree View](./musictree.md)
+- [AI Card Generation and Asset Storage](./ai-card-generation.md)
+- [Booster Opening UX](./booster-opening-ux.md)
 
 ## Governance
 

@@ -22,6 +22,28 @@ Tracks accepted product decisions.
 - Legacy packs remain usable in collection, battles, and marketplace.
 - Points can be earned from battles, boosters, enigmas, and freemium purchases.
 
+## Booster Opening UI
+
+- Booster opening reveals cards **one at a time** (sequential animation, not bulk display).
+- Each card displays a **card value indicator** below the card artwork.
+- Card value indicator uses **1-5 gold records (disques d'or)** for quick visual reference.
+- Gold record count maps to the card's computed value tier (based on popularity + experimentation formula).
+
+## Daily Missions & Challenges
+
+- Daily missions include: open 2 boosters, win 1+ battles, solve 5+ enigmas, and marketplace interaction.
+- Players must actively engage with multiple gameplay modes for daily rewards (not purely passive).
+- **Daily Pick** is offered once per day: 5 face-down cards from active pack, player chooses 1.
+- Daily Pick discards unchosen cards (no return to pool).
+- Daily Pick is separate from booster openings (guaranteed card draw as loyalty reward).
+
+## Weekly Missions & Challenges
+
+- Weekly missions reset on a 7-day cycle.
+- Suggested weekly challenge types: tournaments, collection milestones, subgenre discovery, community interaction, synergies, genre diversity, rarity acquisition.
+- Completing multiple different weekly missions in the same week grants a stacking bonus (e.g., +25% reward if 3+ missions completed).
+- Weekly missions encourage long-form engagement and goal variety.
+
 ## Operational Baselines
 
 - battle participation: 10 points
