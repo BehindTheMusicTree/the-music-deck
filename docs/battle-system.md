@@ -8,6 +8,7 @@ This document covers:
 
 - festival battle flow
 - active slots and stack rules
+- saved deck presets (lineups per battle context)
 - synergy and matchup bonuses/maluses
 - scoring model and examples
 
@@ -17,6 +18,18 @@ Festivals are the main battle events.
 
 - Players prepare lineups from their collection.
 - Battles compare lineup quality, stack construction, genre matchups, and bonuses.
+
+## Saved deck presets
+
+Players can **save named deck presets**: frozen lineup configurations (which cards sit in which stacks / slots) built from their collection, then reloaded before a battle instead of rebuilding from scratch each time.
+
+Design intent:
+
+- **Battle-context switching**: different presets for different situations, for example ladder PvP, casual duels, genre-ranked queues, weekly modifiers, event bosses, or anticipated opponent meta (genre-heavy lineups vs balanced stacks).
+- **Fast iteration**: tweak one preset after a loss without losing other tuned setups.
+- **Rules**: a preset must still respect active-slot limits and stacking rules at save time; on load, the client validates against the current collection (traded-away or missing cards surface as gaps the player must fix before queuing).
+
+Optional product limits (to be tuned later): maximum number of saved presets per account, and whether presets can be shared as read-only loadouts between friends or Label members.
 
 ## Active Slots and Stacks
 

@@ -35,6 +35,7 @@ Notre ambition est de transformer la musique en terrain de jeu strategique et co
 - Score d'un stack: carte la plus forte comme base + `15%` par carte supplementaire.
 - Les synergies de genres, d'artistes, d'albums et de cartes speciales augmentent le score.
 - Les mauvais matchups de genres reduisent le score.
+- Le joueur peut **sauvegarder plusieurs decks** (configurations de lineup nommees) et les charger avant un combat: par exemple un deck pour la ligue competitive, un autre pour un event ou boss, un deck oriente genre pour les files classees par style, sans refaire toute la composition a chaque fois.
 
 ## 3) Progression Quotidienne
 

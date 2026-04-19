@@ -5,6 +5,7 @@ Canonical terms used across The Music Deck documentation.
 ## Core Terms
 
 - `Active slot`: One scoring slot in festival battles. A battle has 10 active slots.
+- `Deck preset` (or `lineup preset`): A saved, named festival lineup configuration (cards and stacks) that the player can load before battle; used to keep multiple tuned setups for different battle types or metas.
 - `Stack`: A group of linked cards that occupies one active slot.
 - `Supplementary stacked card`: A linked card in a stack beyond the strongest base card; adds +15% stack bonus each.
 - `Track family`: A song and its variants (remix, live, acoustic, etc.).
