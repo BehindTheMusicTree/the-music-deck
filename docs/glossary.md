@@ -30,9 +30,13 @@ Canonical terms used across The Music Deck documentation.
 
 ## Achat de chansons physiques et partenariats
 
-Les personnes qui achètent une chanson en format physique (CD, vinyle, téléchargement) reçoivent 2 cartes chansons correspondant aux deux titres principaux de l’album, du single ou autre support acheté, ainsi que des points supplémentaires dans le jeu.
+Les personnes qui achètent une chanson en format physique (CD, vinyle, téléchargement), ou une place pour un événement (shotgun, festival, concert), reçoivent 2 cartes chansons correspondant aux deux titres principaux de l’album, du single ou autre support acheté, ainsi que des points supplémentaires dans le jeu.
 
 Possibilité de partenariat avec des plateformes, artistes ou labels pour intégrer ces cartes spéciales dans le jeu et encourager l’achat de musique physique ou digitale.
+
+## Weekend des festivals : bonus de clan
+
+Lors des weekends des festivals, les clans bénéficient d’un bonus de battle de clan, même en cas de défaite. Cela encourage la participation collective et la cohésion entre membres du clan durant ces événements spéciaux.
 
 ## See Also
 
