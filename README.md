@@ -38,6 +38,46 @@ Shared references:
 - [Decisions](./docs/decisions.md)
 - [Open Questions](./docs/open-questions.md)
 
+## Genres de Cartes (Types)
+
+Chaque carte chanson appartient à un genre (type), qui influence les bonus/malus lors des battles contre d'autres types. Voici les 9 genres principaux et leur couleur associée :
+
+| Genre / Type | Couleur     |
+| ------------ | ----------- |
+| Rock         | Bleu        |
+| Reggae Dub   | Vert        |
+| Vintage      | Jaune pâle  |
+| World        | Rouge       |
+| Classique    | Marron bois |
+| Pop          | Blanc       |
+| Electronic   | Métal       |
+| Country      | Orange      |
+| Disco Funk   | Violet      |
+| Hip-hop      | Or          |
+
+🎵 **TABLEAU DES FORCES / FAIBLESSES — MUSIC DECK**
+
+| Genre / Type            | Fort contre →           | Faible contre ←         |
+| ----------------------- | ----------------------- | ----------------------- |
+| Rock (Bleu)             | Vintage (Jaune pâle)    | Reggae Dub (Vert)       |
+| Reggae Dub (Vert)       | Rock (Bleu)             | Hip-hop (Or)            |
+| Vintage (Jaune pâle)    | World (Rouge)           | Rock (Bleu)             |
+| World (Rouge)           | Classique (Marron bois) | Vintage (Jaune pâle)    |
+| Classique (Marron bois) | Electronic (Métal)      | World (Rouge)           |
+| Pop (Blanc)             | Hip-hop (Or)            | Disco Funk (Violet)     |
+| Electronic (Métal)      | Country (Orange)        | Classique (Marron bois) |
+| Country (Orange)        | Disco Funk (Violet)     | Electronic (Métal)      |
+| Disco Funk (Violet)     | Pop (Blanc)             | Country (Orange)        |
+| Hip-hop (Or)            | Reggae Dub (Vert)       | Pop (Blanc)             |
+
+**Rôle en battle :**
+
+- Le genre d'une carte détermine ses affinités et faiblesses face aux autres genres.
+- Certains genres obtiennent des bonus ou subissent des malus selon le type de l'adversaire (voir la documentation du système de battle pour les détails des interactions).
+- Les stratégies de stack et de lineup tirent parti de ces interactions de types pour maximiser les chances de victoire.
+
+Pour plus de détails sur les effets des genres en combat, consultez la section [Battle System](./docs/battle-system.md).
+
 ## External Link
 
 - `https://grow.themusictree.org`
