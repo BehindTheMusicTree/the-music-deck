@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Music Deck — Genre Cards v18</title>
+    <title>The Music Deck — Genre Cards v19</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
@@ -135,9 +135,9 @@
            filter: brightness(0) invert(1);
            opacity: 0.82;
          }
-         /* Classic icon: match --text-main #b8a888 instead of white */
+         /* Classic icon: match --text-main #c8885a warm wood tone */
          .g-classic .ch-icon img.ext {
-           filter: brightness(0) invert(1) sepia(1.0) brightness(0.74);
+           filter: brightness(0) invert(1) sepia(1.0) saturate(1.4) hue-rotate(-10deg) brightness(0.78);
            opacity: 1;
          }
          .ch-left {
@@ -536,21 +536,21 @@
            --bar-glow-exp: rgba(144,72,56,0.7);
         }
 
-         /* CLASSIQUE — warm ivory */
+         /* CLASSIQUE — brown wood */
          .g-classic {
-           --border-color: #7a7060;
-           --card-bg: #1a1810;
-           --header-bg: #14120c;
-           --typeline-bg: #181610;
-           --textbox-bg: #1a1810;
-           --text-main: #b8a888;
-           --text-body: #988868;
-           --text-dim: #585040;
-           --badge-text: #e0d8c0;
-           --bar-pop: linear-gradient(90deg, #484030, #a09070);
-           --bar-exp: linear-gradient(90deg, #383028, #807060);
-           --bar-glow-pop: rgba(160,144,112,0.7);
-           --bar-glow-exp: rgba(128,112,96,0.65);
+           --border-color: #5c2a0a;
+           --card-bg: #130800;
+           --header-bg: #0d0500;
+           --typeline-bg: #110700;
+           --textbox-bg: #130800;
+           --text-main: #b86832;
+           --text-body: #8a4a1a;
+           --text-dim: #4e2408;
+           --badge-text: #e0a870;
+           --bar-pop: linear-gradient(90deg, #4a1a02, #a85020);
+           --bar-exp: linear-gradient(90deg, #321202, #7a3a14);
+           --bar-glow-pop: rgba(168,80,32,0.8);
+           --bar-glow-exp: rgba(122,58,20,0.75);
          }
 
          /* ELECTRONIC — pewter steel */
@@ -704,7 +704,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">⚡ Iron Storm</div>
+              <div class="cb-pname">Iron Storm</div>
               <div class="cb-ptext">
                 Every allied Rock card in the lineup gains +10% power while this
                 card is active.
@@ -772,7 +772,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🌿 Riddim Flow</div>
+              <div class="cb-pname">Riddim Flow</div>
               <div class="cb-ptext">
                 Reduces all genre mismatch penalties by 15% for this slot and
                 adjacent slots.
@@ -891,7 +891,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">👢 Long Walk</div>
+              <div class="cb-pname">Long Walk</div>
               <div class="cb-ptext">
                 For each battle round won, this card gains an additional +8%
                 power, up to a maximum of +40%.
@@ -1001,7 +1001,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🌍 Confluence</div>
+              <div class="cb-pname">Confluence</div>
               <div class="cb-ptext">
                 If the lineup contains 3 or more different genres, this card
                 gains +20% power in battle.
@@ -1077,7 +1077,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🎼 Resonance</div>
+              <div class="cb-pname">Resonance</div>
               <div class="cb-ptext">
                 Doubles the stack bonus for this slot only. Cannot be stacked
                 with another Classical card.
@@ -1154,7 +1154,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">📡 Synthesis</div>
+              <div class="cb-pname">Synthesis</div>
               <div class="cb-ptext">
                 Generates +5 stack bonus points each round. Accumulates over the
                 entire battle.
@@ -1255,7 +1255,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🤠 Heartland</div>
+              <div class="cb-pname">Heartland</div>
               <div class="cb-ptext">
                 This card is immune to genre penalties during the first 2 rounds
                 of any battle.
@@ -1388,7 +1388,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🪩 Groove</div>
+              <div class="cb-pname">Groove</div>
               <div class="cb-ptext">
                 Chaque stack actif dans le lineup accorde +5% de puissance à
                 toutes les cartes alliées, y compris celle-ci.
@@ -1485,7 +1485,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">🎤 Solo Run</div>
+              <div class="cb-pname">Solo Run</div>
               <div class="cb-ptext">
                 If this is the only Hip-Hop card in the lineup, it gains +35%
                 power and is immune to all debuffs.
@@ -1558,7 +1558,7 @@
               </div>
             </div>
             <div class="cb">
-              <div class="cb-pname">✨ Pop Appeal</div>
+              <div class="cb-pname">Pop Appeal</div>
               <div class="cb-ptext">
                 This card shares its Popularity bonus with both adjacent cards
                 in the lineup. Universal reach.
@@ -1616,7 +1616,7 @@
         <div class="leg-label">World</div>
       </div>
       <div>
-        <div class="leg-dot" style="background: #7a7060"></div>
+        <div class="leg-dot" style="background: #5c2a0a"></div>
         <div class="leg-label">Classical</div>
       </div>
       <div>
@@ -1636,5 +1636,42 @@
         <div class="leg-label">Hip-Hop</div>
       </div>
     </div>
+  <script>
+    document.querySelectorAll('.ch-score').forEach(el => {
+      const score = parseInt(el.textContent.trim(), 10);
+      if (isNaN(score)) return;
+
+      const card = el.closest('.card');
+      const style = getComputedStyle(card);
+      const color = style.getPropertyValue('--border-color').trim();
+      const textColor = style.getPropertyValue('--text-main').trim();
+
+      // t = 0 at score 0, t = 1 at score 100
+      // but we only start glowing meaningfully above ~50
+      const t = Math.max(0, (score - 40) / 60); // 0 below 40, 1 at 100
+
+      const innerBlur  = Math.round(t * 6);
+      const outerBlur  = Math.round(t * 18);
+      const outerBlur2 = Math.round(t * 36);
+      const spread     = Math.round(t * 4);
+      const borderOpacity = (0.6 + t * 0.4).toFixed(2);
+
+      // Layered glow: tight white core + mid theme color + wide outer halo
+      el.style.boxShadow = [
+        `0 0 ${innerBlur}px ${Math.round(t*2)}px rgba(255,255,255,${(t * 0.45).toFixed(2)})`,
+        `0 0 ${outerBlur}px ${spread}px ${color}`,
+        `0 0 ${outerBlur2}px ${spread}px ${color}55`,
+      ].join(', ');
+
+      el.style.borderColor = color;
+      el.style.color = textColor;
+
+      // At very high scores (85+), also intensify text glow
+      if (score >= 85) {
+        const tHigh = (score - 85) / 15;
+        el.style.textShadow = `0 0 ${Math.round(tHigh * 8)}px ${color}`;
+      }
+    });
+  </script>
   </body>
 </html>
