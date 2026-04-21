@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Music Deck — Genre Cards v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0e0c0a;
+  font-family: 'Cormorant Garamond', serif;
+  padding: 60px 40px 80px;
+}
+
+h1 {
+  font-family: 'Cinzel', serif; font-weight: 900;
+  font-size: 16px; letter-spacing: 6px; color: #a87c28;
+  text-align: center; margin-bottom: 6px;
+}
+.sub {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  color: #3a2e1a; letter-spacing: 3px; text-align: center;
+  margin-bottom: 56px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 272px);
+  gap: 44px 28px;
+  justify-content: center;
+}
+
+/* ══ CARD SHELL ══ */
+.card {
+  width: 272px;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: transform .28s, filter .28s;
+  /* thick MTG-style border: outer color + inner gold line */
+  padding: 6px;
+  background: var(--border-color);
+  box-shadow:
+    inset 0 0 0 1px var(--inner-line),
+    0 24px 64px rgba(0,0,0,.85);
+}
+.card:hover {
+  transform: translateY(-10px) scale(1.018);
+  filter: brightness(1.08);
+}
+/* inner gold line as ring */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--inner-line);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-inner {
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.ch {
+  padding: 8px 11px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--header-bg);
+  border-bottom: 1px solid rgba(0,0,0,.25);
+  flex-shrink: 0;
+}
+.ch-title {
+  font-family: 'Cinzel', serif; font-weight: 700;
+  font-size: 12.5px; letter-spacing: 1px;
+  color: var(--text-main);
+  max-width: 190px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ch-score {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--inner-line);
+  background: var(--header-bg);
+  color: var(--text-main);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── ART ── */
+.ca {
+  height: 154px; overflow: hidden; position: relative; flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(0,0,0,.3);
+}
+.ca svg { width: 100%; height: 100%; display: block; }
+
+.genre-badge {
+  position: absolute; top: 9px; left: 9px;
+  background: var(--border-color);
+  color: var(--badge-text);
+  font-family: 'Cinzel', serif; font-size: 7.5px; font-weight: 700;
+  letter-spacing: 1.5px; padding: 3px 8px; border-radius: 2px;
+  text-transform: uppercase; opacity: .9;
+}
+
+/* ── TYPE LINE ── */
+.ct {
+  background: var(--typeline-bg);
+  padding: 4px 11px;
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(0,0,0,.2);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+.ct-pip { width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); opacity: .7; }
+
+/* ── TEXT BOX ── */
+.cb {
+  background: var(--textbox-bg);
+  padding: 9px 11px; flex: 1;
+  border-bottom: 1px solid rgba(0,0,0,.2);
+}
+.cb-pname {
+  font-family: 'Cinzel', serif; font-size: 9px; font-weight: 700;
+  color: var(--text-main); letter-spacing: 1px; margin-bottom: 5px;
+}
+.cb-ptext {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
+  font-size: 12px; color: var(--text-body); line-height: 1.55;
+}
+
+/* ── STATS ── */
+.cs {
+  background: var(--header-bg); padding: 8px 11px; flex-shrink: 0;
+}
+.cs-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.cs-row:last-child { margin-bottom: 0; }
+.cs-lbl { font-family: 'Space Mono', monospace; font-size: 7px; color: var(--text-dim); width: 68px; letter-spacing: .8px; }
+.cs-bg  { flex: 1; height: 4px; border-radius: 2px; background: rgba(0,0,0,.25); overflow: hidden; }
+.cs-fill { height: 100%; border-radius: 2px; background: var(--bar-pop); }
+.cs-fill.exp { background: var(--bar-exp); }
+.cs-val { font-family: 'Space Mono', monospace; font-size: 8.5px; color: var(--text-main); width: 22px; text-align: right; }
+
+/* ── FOOTER ── */
+.cf {
+  background: var(--header-bg); padding: 4px 11px; flex-shrink: 0;
+  border-top: 1px solid rgba(0,0,0,.15);
+  display: flex; justify-content: space-between;
+}
+.cf-brand, .cf-rar {
+  font-family: 'Space Mono', monospace; font-size: 7px;
+  color: var(--text-dim); letter-spacing: 1px; opacity: .7;
+}
+
+/* ══════════════════════════════
+   GENRE THEMES — pastel MTG palette
+   ══════════════════════════════ */
+
+/* ROCK METAL — steel blue */
+.g-metal {
+  --border-color:  #4a6e8a;
+  --inner-line:    #8aafc8;
+  --card-bg:       #131c24;
+  --header-bg:     #0e1620;
+  --typeline-bg:   #111a22;
+  --textbox-bg:    #131c24;
+  --text-main:     #9abcd0;
+  --text-body:     #7a9aae;
+  --text-dim:      #4a6878;
+  --badge-text:    #d0e8f0;
+  --bar-pop:       linear-gradient(90deg, #2a4a68, #6a9ab8);
+  --bar-exp:       linear-gradient(90deg, #2a3858, #4a6888);
+}
+
+/* REGGAE DUB — sage green */
+.g-reggae {
+  --border-color:  #4a7a52;
+  --inner-line:    #80b888;
+  --card-bg:       #121e14;
+  --header-bg:     #0e1810;
+  --typeline-bg:   #101c12;
+  --textbox-bg:    #121e14;
+  --text-main:     #8ac890;
+  --text-body:     #6aa872;
+  --text-dim:      #3a6840;
+  --badge-text:    #c8e8cc;
+  --bar-pop:       linear-gradient(90deg, #1a4820, #5a9868);
+  --bar-exp:       linear-gradient(90deg, #2a4830, #3a7848);
+}
+
+/* JAZZ — warm ochre */
+.g-jazz {
+  --border-color:  #8a7028;
+  --inner-line:    #c8a850;
+  --card-bg:       #201808;
+  --header-bg:     #181204;
+  --typeline-bg:   #1c1606;
+  --textbox-bg:    #201808;
+  --text-main:     #c8a048;
+  --text-body:     #a87e38;
+  --text-dim:      #705018;
+  --badge-text:    #e8d090;
+  --bar-pop:       linear-gradient(90deg, #604010, #a87830);
+  --bar-exp:       linear-gradient(90deg, #483010, #806020);
+}
+
+/* WORLD — terra cotta */
+.g-world {
+  --border-color:  #8a3820;
+  --inner-line:    #c07050;
+  --card-bg:       #1e0e08;
+  --header-bg:     #180a04;
+  --typeline-bg:   #1a0c06;
+  --textbox-bg:    #1e0e08;
+  --text-main:     #c07858;
+  --text-body:     #a05838;
+  --text-dim:      #6a3018;
+  --badge-text:    #e0b090;
+  --bar-pop:       linear-gradient(90deg, #601808, #a04030);
+  --bar-exp:       linear-gradient(90deg, #482010, #784030);
+}
+
+/* CLASSIQUE — warm ivory */
+.g-classic {
+  --border-color:  #7a7060;
+  --inner-line:    #b8a888;
+  --card-bg:       #1a1810;
+  --header-bg:     #14120c;
+  --typeline-bg:   #181610;
+  --textbox-bg:    #1a1810;
+  --text-main:     #b8a888;
+  --text-body:     #988868;
+  --text-dim:      #585040;
+  --badge-text:    #e0d8c0;
+  --bar-pop:       linear-gradient(90deg, #484030, #887860);
+  --bar-exp:       linear-gradient(90deg, #383028, #686050);
+}
+
+/* ELECTRONIC — pewter steel */
+.g-electro {
+  --border-color:  #506070;
+  --inner-line:    #8098a8;
+  --card-bg:       #101618;
+  --header-bg:     #0c1014;
+  --typeline-bg:   #0e1416;
+  --textbox-bg:    #101618;
+  --text-main:     #88a0b0;
+  --text-body:     #688090;
+  --text-dim:      #405060;
+  --badge-text:    #c0d8e0;
+  --bar-pop:       linear-gradient(90deg, #284050, #507090);
+  --bar-exp:       linear-gradient(90deg, #203040, #405868);
+}
+
+/* COUNTRY — burnt sienna */
+.g-country {
+  --border-color:  #7a4e20;
+  --inner-line:    #b88048;
+  --card-bg:       #1c1008;
+  --header-bg:     #160c04;
+  --typeline-bg:   #180e06;
+  --textbox-bg:    #1c1008;
+  --text-main:     #b88048;
+  --text-body:     #987028;
+  --text-dim:      #604018;
+  --badge-text:    #e0c090;
+  --bar-pop:       linear-gradient(90deg, #582808, #986030);
+  --bar-exp:       linear-gradient(90deg, #402010, #704828);
+}
+
+/* DISCO FUNK — dusty mauve */
+.g-funk {
+  --border-color:  #6a3878;
+  --inner-line:    #a070b8;
+  --card-bg:       #180e20;
+  --header-bg:     #120818;
+  --typeline-bg:   #160c1c;
+  --textbox-bg:    #180e20;
+  --text-main:     #a878c0;
+  --text-body:     #8858a0;
+  --text-dim:      #503068;
+  --badge-text:    #d8b8e8;
+  --bar-pop:       linear-gradient(90deg, #481860, #8040a0);
+  --bar-exp:       linear-gradient(90deg, #381448, #603080);
+}
+
+/* HIP-HOP — antique gold */
+.g-hiphop {
+  --border-color:  #7a5e18;
+  --inner-line:    #b89038;
+  --card-bg:       #1a1608;
+  --header-bg:     #141004;
+  --typeline-bg:   #181406;
+  --textbox-bg:    #1a1608;
+  --text-main:     #b89038;
+  --text-body:     #987018;
+  --text-dim:      #604800;
+  --badge-text:    #e0c878;
+  --bar-pop:       linear-gradient(90deg, #584000, #987020);
+  --bar-exp:       linear-gradient(90deg, #3c2c00, #785818);
+}
+
+/* ── LEGEND ── */
+.legend {
+  display: grid; grid-template-columns: repeat(9, 1fr);
+  gap: 8px; max-width: 900px; margin: 64px auto 0; text-align: center;
+}
+.leg-dot {
+  width: 26px; height: 26px; border-radius: 4px;
+  margin: 0 auto 6px; border: 2px solid rgba(255,255,255,.1);
+}
+.leg-label {
+  font-family: 'Space Mono', monospace; font-size: 7.5px;
+  color: #3a2e1a; letter-spacing: .5px; line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<h1>THE MUSIC DECK</h1>
+<p class="sub">Genre Color System — 9 Archétypes</p>
+
+<div class="grid">
+
+  <!-- ══ 1. ROCK METAL ══ -->
+  <div class="card g-metal">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">IRON STORM</span><span class="ch-score">88</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <rect width="272" height="154" fill="#0c1422"/>
+          <defs><radialGradient id="m1" cx="50%" cy="35%" r="55%"><stop offset="0%" stop-color="#1a2a40"/><stop offset="100%" stop-color="#08101c"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#m1)"/>
+          <!-- storm clouds, muted -->
+          <ellipse cx="60" cy="38" rx="56" ry="28" fill="#1e2e48" opacity=".8"/>
+          <ellipse cx="140" cy="28" rx="72" ry="30" fill="#182438" opacity=".9"/>
+          <ellipse cx="220" cy="42" rx="58" ry="26" fill="#1e2e48" opacity=".8"/>
+          <!-- lightning — muted steel blue -->
+          <polygon points="144,20 134,68 143,68 130,112 156,58 144,58" fill="#6a9ab8" opacity=".7"/>
+          <polygon points="144,20 134,68 143,68 130,112 156,58 144,58" fill="#9abcd0" opacity=".2"/>
+          <ellipse cx="142" cy="68" rx="26" ry="16" fill="#4a7a98" opacity=".08"/>
+          <!-- amp silhouettes -->
+          <rect x="18" y="108" width="38" height="24" rx="3" fill="#0e1828" stroke="#2a4a68" stroke-width="1"/>
+          <rect x="24" y="114" width="26" height="12" rx="2" fill="#121e30" stroke="#4a7a98" stroke-width=".5" opacity=".5"/>
+          <rect x="216" y="108" width="38" height="24" rx="3" fill="#0e1828" stroke="#2a4a68" stroke-width="1"/>
+          <rect x="222" y="114" width="26" height="12" rx="2" fill="#121e30" stroke="#4a7a98" stroke-width=".5" opacity=".5"/>
+          <rect x="0" y="130" width="272" height="24" fill="#080e18"/>
+          <line x1="0" y1="130" x2="272" y2="130" stroke="#2a4a68" stroke-width=".5" opacity=".5"/>
+          <circle cx="38" cy="14" r="1" fill="#6a9ab8" opacity=".3"/>
+          <circle cx="200" cy="10" r="1.5" fill="#6a9ab8" opacity=".25"/>
+          <circle cx="240" cy="22" r="1" fill="#6a9ab8" opacity=".3"/>
+        </svg>
+        <div class="genre-badge">Rock Metal</div>
+      </div>
+      <div class="ct"><span>Song · Original · Rock Metal</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">⚡ Tempête de Fer</div>
+        <div class="cb-ptext">Chaque carte Rock ou Metal alliée dans le lineup gagne +10% de puissance tant que cette carte est active.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:84%"></div></div><span class="cs-val">84</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:72%"></div></div><span class="cs-val">72</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Rare</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 2. REGGAE DUB ══ -->
+  <div class="card g-reggae">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">ROOTS & RIDDIM</span><span class="ch-score">76</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="rg1" cx="50%" cy="60%" r="65%"><stop offset="0%" stop-color="#0e2010"/><stop offset="100%" stop-color="#060c06"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#rg1)"/>
+          <!-- sun, muted -->
+          <circle cx="136" cy="52" r="28" fill="#3a7840" opacity=".12"/>
+          <circle cx="136" cy="52" r="18" fill="#3a7840" opacity=".16"/>
+          <circle cx="136" cy="52" r="10" fill="#5a9868" opacity=".3"/>
+          <line x1="136" y1="20" x2="136" y2="10" stroke="#5a9868" stroke-width="2" stroke-linecap="round" opacity=".35"/>
+          <line x1="159" y1="29" x2="165" y2="22" stroke="#5a9868" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+          <line x1="168" y1="52" x2="178" y2="52" stroke="#5a9868" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+          <line x1="113" y1="29" x2="107" y2="22" stroke="#5a9868" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+          <line x1="104" y1="52" x2="94" y2="52" stroke="#5a9868" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+          <!-- palms -->
+          <line x1="52" y1="154" x2="72" y2="82" stroke="#1a4820" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="66" cy="82" rx="24" ry="9" fill="#2a6030" opacity=".75" transform="rotate(-25,66,82)"/>
+          <ellipse cx="80" cy="78" rx="20" ry="7" fill="#3a7840" opacity=".65" transform="rotate(15,80,78)"/>
+          <ellipse cx="56" cy="80" rx="18" ry="7" fill="#2a6030" opacity=".6" transform="rotate(-40,56,80)"/>
+          <line x1="220" y1="154" x2="200" y2="84" stroke="#1a4820" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="207" cy="84" rx="24" ry="9" fill="#2a6030" opacity=".75" transform="rotate(25,207,84)"/>
+          <ellipse cx="193" cy="80" rx="20" ry="7" fill="#3a7840" opacity=".65" transform="rotate(-15,193,80)"/>
+          <ellipse cx="215" cy="82" rx="18" ry="7" fill="#2a6030" opacity=".6" transform="rotate(40,215,82)"/>
+          <rect x="0" y="128" width="272" height="26" fill="#060c06"/>
+          <ellipse cx="136" cy="116" rx="56" ry="7" fill="#3a7840" opacity=".05"/>
+        </svg>
+        <div class="genre-badge">Reggae Dub</div>
+      </div>
+      <div class="ct"><span>Song · Original · Reggae Dub</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🌿 Riddim Flow</div>
+        <div class="cb-ptext">Réduit de 15% toutes les pénalités de mauvais matchup de genre pour ce slot et les slots adjacents.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:68%"></div></div><span class="cs-val">68</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:58%"></div></div><span class="cs-val">58</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Uncommon</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 3. JAZZ ══ -->
+  <div class="card g-jazz">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">MIDNIGHT STANDARD</span><span class="ch-score">82</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="jz1" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#1e1408"/><stop offset="100%" stop-color="#0a0600"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#jz1)"/>
+          <polygon points="136,0 88,154 184,154" fill="#a87830" opacity=".04"/>
+          <!-- sax — muted gold -->
+          <path d="M152 18 Q172 38 169 78 Q167 108 145 126 Q129 138 117 133 Q105 126 107 113 Q109 102 121 100 Q133 98 135 108 Q137 116 129 118" fill="none" stroke="#a87830" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+          <ellipse cx="117" cy="130" rx="15" ry="9" fill="#a87830" opacity=".2" transform="rotate(-20,117,130)"/>
+          <ellipse cx="117" cy="130" rx="15" ry="9" fill="none" stroke="#a87830" stroke-width="1.2" transform="rotate(-20,117,130)" opacity=".6"/>
+          <line x1="152" y1="18" x2="145" y2="9" stroke="#a87830" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+          <circle cx="167" cy="48" r="3.5" fill="none" stroke="#a87830" stroke-width=".8" opacity=".5"/>
+          <circle cx="170" cy="63" r="3.5" fill="none" stroke="#a87830" stroke-width=".8" opacity=".5"/>
+          <circle cx="167" cy="77" r="3" fill="none" stroke="#a87830" stroke-width=".8" opacity=".4"/>
+          <text x="78" y="48" font-family="serif" font-size="16" fill="#a87830" opacity=".3">♪</text>
+          <text x="58" y="78" font-family="serif" font-size="12" fill="#a87830" opacity=".2">♩</text>
+          <text x="185" y="58" font-family="serif" font-size="14" fill="#a87830" opacity=".25">♫</text>
+          <rect x="0" y="136" width="272" height="18" fill="#060400"/>
+          <line x1="0" y1="136" x2="272" y2="136" stroke="#a87830" stroke-width=".5" opacity=".2"/>
+        </svg>
+        <div class="genre-badge">Jazz</div>
+      </div>
+      <div class="ct"><span>Song · Original · Jazz</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🎷 Improvisation</div>
+        <div class="cb-ptext">Après révélation du lineup adverse, cette carte peut changer son genre déclaré une fois par battle.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:74%"></div></div><span class="cs-val">74</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:88%"></div></div><span class="cs-val">88</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Rare</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 4. WORLD ══ -->
+  <div class="card g-world">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">DESERT WIND</span><span class="ch-score">79</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="wd1" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#200c06"/><stop offset="100%" stop-color="#0a0402"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#wd1)"/>
+          <circle cx="196" cy="34" r="18" fill="#a04030" opacity=".15"/>
+          <circle cx="196" cy="34" r="11" fill="#a04030" opacity=".18"/>
+          <circle cx="196" cy="34" r="6" fill="#a04030" opacity=".28"/>
+          <!-- dunes -->
+          <path d="M0 98 Q48 72 96 88 Q144 106 192 78 Q232 56 272 82 L272 154 L0 154 Z" fill="#160804"/>
+          <path d="M0 112 Q56 88 116 104 Q176 118 236 94 L272 98 L272 154 L0 154 Z" fill="#100604"/>
+          <!-- minaret -->
+          <rect x="116" y="54" width="14" height="68" fill="#180806"/>
+          <polygon points="123,44 113,56 133,56" fill="#180806"/>
+          <circle cx="123" cy="42" r="3.5" fill="#a04030" opacity=".45"/>
+          <path d="M119 68 Q123 63 127 68 L127 78 L119 78 Z" fill="#a04030" opacity=".15"/>
+          <path d="M119 88 Q123 83 127 88 L127 98 L119 98 Z" fill="#a04030" opacity=".12"/>
+          <!-- geometric mandala -->
+          <circle cx="56" cy="58" r="18" fill="none" stroke="#a04030" stroke-width=".7" opacity=".25"/>
+          <circle cx="56" cy="58" r="12" fill="none" stroke="#a04030" stroke-width=".5" opacity=".2"/>
+          <circle cx="56" cy="58" r="5" fill="#a04030" opacity=".12"/>
+          <line x1="56" y1="40" x2="56" y2="76" stroke="#a04030" stroke-width=".4" opacity=".2"/>
+          <line x1="38" y1="58" x2="74" y2="58" stroke="#a04030" stroke-width=".4" opacity=".2"/>
+          <!-- stars -->
+          <circle cx="28" cy="18" r="1" fill="#c06848" opacity=".3"/>
+          <circle cx="80" cy="12" r="1" fill="#c06848" opacity=".25"/>
+          <circle cx="240" cy="16" r="1" fill="#c06848" opacity=".3"/>
+        </svg>
+        <div class="genre-badge">World</div>
+      </div>
+      <div class="ct"><span>Song · Original · World</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🌍 Confluence</div>
+        <div class="cb-ptext">Si le lineup contient 3 genres différents ou plus, cette carte gagne +20% de puissance en battle.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:62%"></div></div><span class="cs-val">62</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:80%"></div></div><span class="cs-val">80</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Uncommon</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 5. CLASSIQUE ══ -->
+  <div class="card g-classic">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">NOCTURNE</span><span class="ch-score">91</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="cl1" cx="50%" cy="30%" r="55%"><stop offset="0%" stop-color="#1a1814"/><stop offset="100%" stop-color="#080806"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#cl1)"/>
+          <!-- hall arches — muted ivory -->
+          <path d="M36 154 L36 78 Q36 54 62 54 Q88 54 88 78 L88 154" fill="#0e0e0c" stroke="#908878" stroke-width=".8" opacity=".45"/>
+          <path d="M92 154 L92 68 Q92 42 124 42 Q156 42 156 68 L156 154" fill="#0e0e0c" stroke="#908878" stroke-width=".8" opacity=".5"/>
+          <path d="M160 154 L160 78 Q160 54 186 54 Q212 54 212 78 L212 154" fill="#0e0e0c" stroke="#908878" stroke-width=".8" opacity=".45"/>
+          <!-- chandelier -->
+          <ellipse cx="136" cy="17" rx="26" ry="5" fill="#908878" opacity=".12"/>
+          <line x1="136" y1="17" x2="136" y2="34" stroke="#908878" stroke-width=".8" opacity=".3"/>
+          <circle cx="112" cy="19" r="1.8" fill="#908878" opacity=".35"/>
+          <circle cx="124" cy="16" r="1.8" fill="#908878" opacity=".35"/>
+          <circle cx="136" cy="15" r="2.2" fill="#908878" opacity=".4"/>
+          <circle cx="148" cy="16" r="1.8" fill="#908878" opacity=".35"/>
+          <circle cx="160" cy="19" r="1.8" fill="#908878" opacity=".35"/>
+          <!-- piano keys -->
+          <rect x="66" y="128" width="140" height="22" rx="2" fill="#0c0c0a" stroke="#908878" stroke-width=".7" opacity=".45"/>
+          <rect x="70" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="81" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="92" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="103" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="114" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="125" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="136" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="147" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="158" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="169" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <rect x="180" y="128" width="9" height="14" rx="1" fill="#b8a888" opacity=".75"/>
+          <!-- black keys -->
+          <rect x="77" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="88" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="110" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="121" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="132" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="154" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="165" y="128" width="6" height="9" rx="1" fill="#060606"/>
+          <rect x="176" y="128" width="6" height="9" rx="1" fill="#060606"/>
+        </svg>
+        <div class="genre-badge">Classique</div>
+      </div>
+      <div class="ct"><span>Song · Original · Classique</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🎼 Résonance</div>
+        <div class="cb-ptext">Double les bonus de stack pour ce slot uniquement. Ne peut pas être stackée avec une autre carte Classique.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:70%"></div></div><span class="cs-val">70</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:94%"></div></div><span class="cs-val">94</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Ultra Rare</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 6. ELECTRONIC ══ -->
+  <div class="card g-electro">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">SIGNAL WAVE</span><span class="ch-score">85</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="el1" cx="50%" cy="50%" r="55%"><stop offset="0%" stop-color="#0e1418"/><stop offset="100%" stop-color="#060810"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#el1)"/>
+          <!-- circuit lines, muted steel -->
+          <line x1="0" y1="38" x2="78" y2="38" stroke="#607888" stroke-width=".5" opacity=".25"/>
+          <line x1="78" y1="38" x2="78" y2="78" stroke="#607888" stroke-width=".5" opacity=".25"/>
+          <line x1="78" y1="78" x2="194" y2="78" stroke="#607888" stroke-width=".5" opacity=".25"/>
+          <line x1="194" y1="78" x2="194" y2="38" stroke="#607888" stroke-width=".5" opacity=".25"/>
+          <line x1="194" y1="38" x2="272" y2="38" stroke="#607888" stroke-width=".5" opacity=".25"/>
+          <line x1="38" y1="0" x2="38" y2="38" stroke="#607888" stroke-width=".5" opacity=".2"/>
+          <line x1="234" y1="0" x2="234" y2="38" stroke="#607888" stroke-width=".5" opacity=".2"/>
+          <line x1="116" y1="78" x2="116" y2="128" stroke="#607888" stroke-width=".5" opacity=".2"/>
+          <line x1="156" y1="78" x2="156" y2="128" stroke="#607888" stroke-width=".5" opacity=".2"/>
+          <line x1="116" y1="128" x2="156" y2="128" stroke="#607888" stroke-width=".5" opacity=".2"/>
+          <circle cx="78" cy="38" r="2.5" fill="#607888" opacity=".4"/>
+          <circle cx="194" cy="38" r="2.5" fill="#607888" opacity=".4"/>
+          <circle cx="78" cy="78" r="2.5" fill="#607888" opacity=".4"/>
+          <circle cx="194" cy="78" r="2.5" fill="#607888" opacity=".4"/>
+          <circle cx="116" cy="128" r="2" fill="#607888" opacity=".35"/>
+          <circle cx="156" cy="128" r="2" fill="#607888" opacity=".35"/>
+          <!-- waveform -->
+          <path d="M18 78 L38 78 L48 52 L58 104 L68 64 L78 90 L88 78 L108 78 L118 54 L128 100 L138 60 L148 96 L158 78 L178 78 L188 54 L198 100 L208 70 L218 88 L228 78 L254 78" fill="none" stroke="#6a8898" stroke-width="1.5" opacity=".7"/>
+          <path d="M18 78 L38 78 L48 52 L58 104 L68 64 L78 90 L88 78 L108 78 L118 54 L128 100 L138 60 L148 96 L158 78 L178 78 L188 54 L198 100 L208 70 L218 88 L228 78 L254 78" fill="none" stroke="#6a8898" stroke-width="5" opacity=".06"/>
+          <!-- chip -->
+          <rect x="114" y="124" width="44" height="28" rx="3" fill="#0c1014" stroke="#506878" stroke-width=".7" opacity=".6"/>
+          <rect x="120" y="130" width="32" height="16" rx="2" fill="#0e1418" stroke="#506878" stroke-width=".4" opacity=".4"/>
+          <line x1="114" y1="132" x2="106" y2="132" stroke="#607888" stroke-width="1" opacity=".35"/>
+          <line x1="114" y1="138" x2="106" y2="138" stroke="#607888" stroke-width="1" opacity=".35"/>
+          <line x1="114" y1="144" x2="106" y2="144" stroke="#607888" stroke-width="1" opacity=".35"/>
+          <line x1="158" y1="132" x2="166" y2="132" stroke="#607888" stroke-width="1" opacity=".35"/>
+          <line x1="158" y1="138" x2="166" y2="138" stroke="#607888" stroke-width="1" opacity=".35"/>
+          <line x1="158" y1="144" x2="166" y2="144" stroke="#607888" stroke-width="1" opacity=".35"/>
+        </svg>
+        <div class="genre-badge">Electronic</div>
+      </div>
+      <div class="ct"><span>Song · Original · Electronic</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">📡 Synthèse</div>
+        <div class="cb-ptext">Génère +5 points de stack bonus à chaque round de battle. S'accumule sur toute la durée du combat.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:78%"></div></div><span class="cs-val">78</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:85%"></div></div><span class="cs-val">85</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Rare</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 7. COUNTRY ══ -->
+  <div class="card g-country">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">DUST ROAD</span><span class="ch-score">73</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="co1" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#1c0e06"/><stop offset="100%" stop-color="#080402"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#co1)"/>
+          <circle cx="136" cy="78" r="26" fill="#986030" opacity=".11"/>
+          <circle cx="136" cy="78" r="16" fill="#986030" opacity=".14"/>
+          <circle cx="136" cy="78" r="8" fill="#986030" opacity=".2"/>
+          <line x1="0" y1="92" x2="272" y2="92" stroke="#986030" stroke-width=".5" opacity=".25"/>
+          <!-- barn -->
+          <rect x="24" y="68" width="48" height="30" fill="#0e0804"/>
+          <polygon points="24,68 48,48 72,68" fill="#0c0602"/>
+          <rect x="38" y="80" width="12" height="18" fill="#080402"/>
+          <!-- fence -->
+          <line x1="96" y1="82" x2="96" y2="104" stroke="#0e0804" stroke-width="2"/>
+          <line x1="110" y1="80" x2="110" y2="102" stroke="#0e0804" stroke-width="2"/>
+          <line x1="124" y1="79" x2="124" y2="101" stroke="#0e0804" stroke-width="2"/>
+          <line x1="96" y1="88" x2="124" y2="86" stroke="#0e0804" stroke-width="1.2"/>
+          <line x1="96" y1="96" x2="124" y2="94" stroke="#0e0804" stroke-width=".8"/>
+          <!-- road -->
+          <polygon points="108,154 164,154 154,98 118,98" fill="#120806" opacity=".5"/>
+          <line x1="136" y1="98" x2="136" y2="154" stroke="#986030" stroke-width=".7" opacity=".12" stroke-dasharray="5,6"/>
+          <!-- banjo -->
+          <circle cx="216" cy="74" r="19" fill="#100804" stroke="#986030" stroke-width="1.2" opacity=".65"/>
+          <circle cx="216" cy="74" r="12" fill="#0c0602" stroke="#986030" stroke-width=".5" opacity=".35"/>
+          <line x1="216" y1="55" x2="216" y2="20" stroke="#986030" stroke-width="1.8" opacity=".55" stroke-linecap="round"/>
+          <line x1="214" y1="22" x2="218" y2="22" stroke="#986030" stroke-width="1.2" opacity=".45"/>
+          <line x1="214" y1="55" x2="214" y2="22" stroke="#986030" stroke-width=".4" opacity=".35"/>
+          <line x1="217" y1="55" x2="217" y2="22" stroke="#986030" stroke-width=".4" opacity=".35"/>
+          <line x1="220" y1="55" x2="220" y2="22" stroke="#986030" stroke-width=".4" opacity=".35"/>
+          <circle cx="38" cy="22" r="1" fill="#c08048" opacity=".25"/>
+          <circle cx="240" cy="28" r="1" fill="#c08048" opacity=".2"/>
+          <rect x="0" y="128" width="272" height="26" fill="#060200"/>
+        </svg>
+        <div class="genre-badge">Country</div>
+      </div>
+      <div class="ct"><span>Song · Original · Country</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🤠 Heartland</div>
+        <div class="cb-ptext">Cette carte est immunisée aux pénalités de genre pendant les 2 premiers rounds de tout battle.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:71%"></div></div><span class="cs-val">71</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:38%"></div></div><span class="cs-val">38</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Common</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 8. DISCO FUNK ══ -->
+  <div class="card g-funk">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">GROOVE MACHINE</span><span class="ch-score">87</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="dk1" cx="50%" cy="30%" r="58%"><stop offset="0%" stop-color="#140820"/><stop offset="100%" stop-color="#060208"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#dk1)"/>
+          <!-- disco ball -->
+          <circle cx="136" cy="40" r="24" fill="#160a28" stroke="#7050a0" stroke-width="1" opacity=".7"/>
+          <rect x="125" y="16" width="5" height="4" rx=".5" fill="#7050a0" opacity=".55"/>
+          <rect x="132" y="16" width="5" height="4" rx=".5" fill="#9070b8" opacity=".45"/>
+          <rect x="139" y="16" width="5" height="4" rx=".5" fill="#7050a0" opacity=".55"/>
+          <rect x="118" y="22" width="5" height="4" rx=".5" fill="#9070b8" opacity=".45"/>
+          <rect x="125" y="22" width="5" height="4" rx=".5" fill="#584888" opacity=".65"/>
+          <rect x="132" y="22" width="5" height="4" rx=".5" fill="#7050a0" opacity=".55"/>
+          <rect x="139" y="22" width="5" height="4" rx=".5" fill="#9070b8" opacity=".45"/>
+          <rect x="146" y="22" width="5" height="4" rx=".5" fill="#584888" opacity=".65"/>
+          <rect x="114" y="28" width="5" height="4" rx=".5" fill="#7050a0" opacity=".55"/>
+          <rect x="121" y="28" width="5" height="4" rx=".5" fill="#9070b8" opacity=".35"/>
+          <rect x="128" y="28" width="5" height="4" rx=".5" fill="#584888" opacity=".65"/>
+          <rect x="135" y="28" width="5" height="4" rx=".5" fill="#7050a0" opacity=".55"/>
+          <rect x="142" y="28" width="5" height="4" rx=".5" fill="#9070b8" opacity=".35"/>
+          <rect x="149" y="28" width="5" height="4" rx=".5" fill="#584888" opacity=".65"/>
+          <line x1="136" y1="0" x2="136" y2="16" stroke="#7050a0" stroke-width=".8" opacity=".4"/>
+          <!-- light beams — muted -->
+          <line x1="136" y1="40" x2="28" y2="96" stroke="#7050a0" stroke-width=".7" opacity=".18"/>
+          <line x1="136" y1="40" x2="76" y2="128" stroke="#9070b8" stroke-width=".7" opacity=".15"/>
+          <line x1="136" y1="40" x2="196" y2="108" stroke="#7050a0" stroke-width=".7" opacity=".18"/>
+          <line x1="136" y1="40" x2="244" y2="88" stroke="#9070b8" stroke-width=".7" opacity=".15"/>
+          <!-- dance floor -->
+          <rect x="0" y="116" width="272" height="38" fill="#0a0414"/>
+          <rect x="0"   y="116" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="27"  y="116" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="54"  y="116" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="81"  y="116" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="108" y="116" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="135" y="116" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="162" y="116" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="189" y="116" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <rect x="216" y="116" width="56" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".35"/>
+          <!-- lit tile -->
+          <rect x="108" y="116" width="27" height="19" fill="#7050a0" opacity=".22"/>
+          <rect x="0"   y="135" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".25"/>
+          <rect x="27"  y="135" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".25"/>
+          <rect x="54"  y="135" width="27" height="19" fill="#0a0414" stroke="#7050a0" stroke-width=".3" opacity=".25"/>
+          <rect x="81"  y="135" width="27" height="19" fill="#100620" stroke="#7050a0" stroke-width=".3" opacity=".25"/>
+          <circle cx="48" cy="70" r="1.2" fill="#9070b8" opacity=".55"/>
+          <circle cx="214" cy="60" r="1" fill="#7050a0" opacity=".6"/>
+          <circle cx="88" cy="52" r="1" fill="#9070b8" opacity=".5"/>
+        </svg>
+        <div class="genre-badge">Disco Funk</div>
+      </div>
+      <div class="ct"><span>Song · Original · Disco Funk</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">🪩 Groove</div>
+        <div class="cb-ptext">Chaque stack actif dans le lineup accorde +5% de puissance à toutes les cartes alliées, y compris celle-ci.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:82%"></div></div><span class="cs-val">82</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:70%"></div></div><span class="cs-val">70</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Rare</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 9. HIP-HOP ══ -->
+  <div class="card g-hiphop">
+    <div class="card-inner">
+      <div class="ch"><span class="ch-title">CROWN THEORY</span><span class="ch-score">94</span></div>
+      <div class="ca">
+        <svg viewBox="0 0 272 154" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="hh1" cx="50%" cy="55%" r="62%"><stop offset="0%" stop-color="#181208"/><stop offset="100%" stop-color="#060400"/></radialGradient></defs>
+          <rect width="272" height="154" fill="url(#hh1)"/>
+          <!-- city skyline, muted warm -->
+          <rect x="0"   y="90" width="18" height="64" fill="#0e0a04"/>
+          <rect x="18"  y="72" width="16" height="82" fill="#0c0804"/>
+          <rect x="34"  y="80" width="20" height="74" fill="#0e0a04"/>
+          <rect x="54"  y="62" width="14" height="92" fill="#0c0804"/>
+          <rect x="68"  y="76" width="18" height="78" fill="#100c06"/>
+          <rect x="86"  y="86" width="12" height="68" fill="#0c0804"/>
+          <rect x="98"  y="52" width="22" height="102" fill="#0e0a04"/>
+          <rect x="120" y="66" width="16" height="88" fill="#0c0804"/>
+          <rect x="136" y="80" width="20" height="74" fill="#100c06"/>
+          <rect x="156" y="56" width="18" height="98" fill="#0c0804"/>
+          <rect x="174" y="82" width="14" height="72" fill="#0e0a04"/>
+          <rect x="188" y="70" width="20" height="84" fill="#0c0804"/>
+          <rect x="208" y="88" width="16" height="66" fill="#100c06"/>
+          <rect x="224" y="76" width="48" height="78" fill="#0c0804"/>
+          <!-- windows muted gold -->
+          <rect x="101" y="57" width="3.5" height="3.5" rx=".5" fill="#987028" opacity=".35"/>
+          <rect x="107" y="57" width="3.5" height="3.5" rx=".5" fill="#987028" opacity=".28"/>
+          <rect x="101" y="64" width="3.5" height="3.5" rx=".5" fill="#987028" opacity=".2"/>
+          <rect x="57" y="66" width="3" height="3" rx=".5" fill="#987028" opacity=".28"/>
+          <rect x="159" y="62" width="3.5" height="3.5" rx=".5" fill="#987028" opacity=".3"/>
+          <!-- crown — muted antique gold -->
+          <polygon points="98,42 78,58 104,50 118,35 132,50 158,58 138,42 118,28" fill="#987028" opacity=".72"/>
+          <polygon points="98,42 78,58 104,50 118,35 132,50 158,58 138,42 118,28" fill="none" stroke="#c0a040" stroke-width=".8" opacity=".5"/>
+          <circle cx="118" cy="36" r="3.5" fill="#987028" opacity=".8"/>
+          <circle cx="100" cy="45" r="2.5" fill="#987028" opacity=".6"/>
+          <circle cx="136" cy="45" r="2.5" fill="#987028" opacity=".6"/>
+          <ellipse cx="118" cy="50" rx="36" ry="10" fill="#987028" opacity=".04"/>
+          <!-- moon muted -->
+          <circle cx="234" cy="22" r="13" fill="#12100a"/>
+          <circle cx="228" cy="19" r="13" fill="#06040"/>
+          <circle cx="234" cy="22" r="13" fill="none" stroke="#987028" stroke-width=".5" opacity=".25"/>
+          <circle cx="38" cy="16" r="1" fill="#c0a040" opacity=".22"/>
+          <circle cx="170" cy="12" r="1.2" fill="#c0a040" opacity=".2"/>
+        </svg>
+        <div class="genre-badge">Hip-Hop</div>
+      </div>
+      <div class="ct"><span>Song · Original · Hip-Hop</span><div class="ct-pip"></div></div>
+      <div class="cb">
+        <div class="cb-pname">👑 Flow State</div>
+        <div class="cb-ptext">Si cette carte est la valeur la plus haute du lineup, elle gagne +25% de puissance et immunise le slot contre tout debuff.</div>
+      </div>
+      <div class="cs">
+        <div class="cs-row"><span class="cs-lbl">Popularity</span><div class="cs-bg"><div class="cs-fill" style="width:92%"></div></div><span class="cs-val">92</span></div>
+        <div class="cs-row"><span class="cs-lbl">Experimental</span><div class="cs-bg"><div class="cs-fill exp" style="width:66%"></div></div><span class="cs-val">66</span></div>
+      </div>
+      <div class="cf"><span class="cf-brand">THE MUSIC DECK</span><span class="cf-rar">Secret Rare</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div><div class="leg-dot" style="background:#4a6e8a;"></div><div class="leg-label">Rock<br>Metal</div></div>
+  <div><div class="leg-dot" style="background:#4a7a52;"></div><div class="leg-label">Reggae<br>Dub</div></div>
+  <div><div class="leg-dot" style="background:#8a7028;"></div><div class="leg-label">Jazz</div></div>
+  <div><div class="leg-dot" style="background:#8a3820;"></div><div class="leg-label">World</div></div>
+  <div><div class="leg-dot" style="background:#7a7060;"></div><div class="leg-label">Classique</div></div>
+  <div><div class="leg-dot" style="background:#506070;"></div><div class="leg-label">Electronic</div></div>
+  <div><div class="leg-dot" style="background:#7a4e20;"></div><div class="leg-label">Country</div></div>
+  <div><div class="leg-dot" style="background:#6a3878;"></div><div class="leg-label">Disco<br>Funk</div></div>
+  <div><div class="leg-dot" style="background:#7a5e18;"></div><div class="leg-label">Hip-Hop</div></div>
+</div>
+
+</body>
+</html>
