@@ -613,10 +613,10 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 // ══════════════════════════════════════════
 
 const CARDS = [
-  { id:1,  title:"Bohemian Rhapsody",     artist:"Queen",                genre:"Metal",   power:95, rarity:"Legendary", pop:98, exp:90, year:"1975", ability:"Power Chord",     abilityDesc:"Inflige 2× les dégâts normaux. La légende ne s'éteint jamais.",              artwork:"artwork.example-bohemian-rhapsody-v2.png" },
+  { id:1,  title:"Bohemian Rhapsody",     artist:"Queen",                genre:"Rock",   power:95, rarity:"Legendary", pop:98, exp:90, year:"1975", ability:"Power Chord",     abilityDesc:"Inflige 2× les dégâts normaux. La légende ne s'éteint jamais.",              artwork:"artwork.example-bohemian-rhapsody-v2.png" },
   { id:2,  title:"Thriller",              artist:"Michael Jackson",      genre:"Pop",     power:92, rarity:"Legendary", pop:97, exp:88, year:"1982", ability:"Chart Topper",    abilityDesc:"Restaure 8 PV et réduit l'attaque adverse de 20% pendant 2 tours.",          artwork:null },
   { id:3,  title:"So What",               artist:"Miles Davis",          genre:"Jazz",    power:88, rarity:"Epic",      pop:85, exp:94, year:"1959", ability:"Improvise",       abilityDesc:"Dégâts aléatoires entre ×1 et ×3. Le jazz ne se prédit pas.",               artwork:null },
-  { id:4,  title:"Smells Like Teen Spirit",artist:"Nirvana",             genre:"Metal",   power:90, rarity:"Epic",      pop:93, exp:82, year:"1991", ability:"Feedback Surge",  abilityDesc:"Étourdit l'adversaire pendant 1 tour, annulant son attaque.",               artwork:"artwork.example-smells-like-teen-spirit-v2.png" },
+  { id:4,  title:"Smells Like Teen Spirit",artist:"Nirvana",             genre:"Rock",   power:90, rarity:"Epic",      pop:93, exp:82, year:"1991", ability:"Feedback Surge",  abilityDesc:"Étourdit l'adversaire pendant 1 tour, annulant son attaque.",               artwork:"artwork.example-smells-like-teen-spirit-v2.png" },
   { id:5,  title:"Sandstorm",             artist:"Darude",               genre:"Electro", power:85, rarity:"Rare",      pop:88, exp:79, year:"1999", ability:"The Drop",        abilityDesc:"+12 dégâts supplémentaires mais passe le tour suivant.",                   artwork:"artwork.example-sandstorm-v2.png" },
   { id:6,  title:"HUMBLE.",               artist:"Kendrick Lamar",       genre:"HipHop",  power:87, rarity:"Epic",      pop:91, exp:89, year:"2017", ability:"Diss Track",      abilityDesc:"Réduit de 50% l'attaque adverse pendant 2 tours.",                         artwork:null },
   { id:7,  title:"Lose Yourself",         artist:"Eminem",               genre:"HipHop",  power:89, rarity:"Epic",      pop:94, exp:85, year:"2002", ability:"One Shot",        abilityDesc:"Tentative de KO instantané (25% de chance). Maintenant ou jamais.",         artwork:null },
@@ -624,28 +624,28 @@ const CARDS = [
   { id:9,  title:"No Woman No Cry",       artist:"Bob Marley",           genre:"Reggae",  power:84, rarity:"Rare",      pop:87, exp:83, year:"1974", ability:"Roots & Culture", abilityDesc:"Récupère 15 PV. Les racines soignent toutes les blessures.",               artwork:"artwork.example-is-this-love-v1.png" },
   { id:10, title:"Carmina Burana",        artist:"Carl Orff",            genre:"Classic", power:91, rarity:"Epic",      pop:70, exp:97, year:"1937", ability:"Fortissimo",      abilityDesc:"Trois frappes consécutives de faible intensité. Précision absolue.",        artwork:"artwork.example-carmina-burana-v1.png" },
   { id:11, title:"Billie Jean",           artist:"Michael Jackson",      genre:"Pop",     power:91, rarity:"Epic",      pop:95, exp:86, year:"1982", ability:"Moonwalk",        abilityDesc:"Esquive la prochaine attaque adverse avec 70% de probabilité.",            artwork:"artwork.example-billy-jean-v2.png" },
-  { id:12, title:"Enter Sandman",         artist:"Metallica",            genre:"Metal",   power:88, rarity:"Rare",      pop:89, exp:80, year:"1991", ability:"Shred",           abilityDesc:"Ignore tous les bonus défensifs de l'adversaire. Métal pur.",              artwork:null },
+  { id:12, title:"Enter Sandman",         artist:"Rocklica",            genre:"Rock",   power:88, rarity:"Rare",      pop:89, exp:80, year:"1991", ability:"Shred",           abilityDesc:"Ignore tous les bonus défensifs de l'adversaire. Métal pur.",              artwork:null },
   { id:13, title:"Night Fever",           artist:"Bee Gees",             genre:"Funk",    power:87, rarity:"Rare",      pop:90, exp:72, year:"1977", ability:"Groove",          abilityDesc:"Chaque stack actif dans le lineup accorde +5% de puissance à tous.",       artwork:"artwork.example-night-fever-v1.png" },
   { id:14, title:"Sicko Mode",            artist:"Travis Scott",         genre:"HipHop",  power:83, rarity:"Rare",      pop:86, exp:77, year:"2018", ability:"Astronomical",    abilityDesc:"Frappe aléatoirement 2 ou 3 fois pour 6 dégâts chacune.",                  artwork:null },
   { id:15, title:"Summertime",            artist:"Gershwin",             genre:"Jazz",    power:80, rarity:"Rare",      pop:79, exp:88, year:"1935", ability:"Blue Note",       abilityDesc:"Réduit de 8 les prochains dégâts reçus pendant 3 tours.",                 artwork:null },
   { id:16, title:"I Will Always Love You",artist:"Whitney Houston",      genre:"Funk",    power:93, rarity:"Legendary", pop:96, exp:97, year:"1992", ability:"Soul Power",      abilityDesc:"Restaure 20 PV. La voix la plus puissante de l'histoire.",                artwork:null },
   { id:17, title:"God's Plan",            artist:"Drake",                genre:"HipHop",  power:85, rarity:"Rare",      pop:90, exp:79, year:"2018", ability:"6 God",           abilityDesc:"Protège des dégâts à hauteur de 8 points pendant ce tour.",               artwork:null },
   { id:18, title:"Blue (Da Ba Dee)",      artist:"Eiffel 65",            genre:"Electro", power:72, rarity:"Common",    pop:78, exp:65, year:"1998", ability:"Earworm",         abilityDesc:"Réduit la concentration adverse : -4 dégâts pendant 1 tour.",             artwork:null },
-  { id:19, title:"Seven Nation Army",     artist:"The White Stripes",    genre:"Metal",   power:86, rarity:"Rare",      pop:88, exp:81, year:"2003", ability:"Riff Eternal",    abilityDesc:"Attaque de 10 dégâts infaillible, ignorant les esquives.",                artwork:null },
+  { id:19, title:"Seven Nation Army",     artist:"The White Stripes",    genre:"Rock",   power:86, rarity:"Rare",      pop:88, exp:81, year:"2003", ability:"Riff Eternal",    abilityDesc:"Attaque de 10 dégâts infaillible, ignorant les esquives.",                artwork:null },
   { id:20, title:"Redbone",               artist:"Childish Gambino",     genre:"Funk",    power:84, rarity:"Rare",      pop:85, exp:87, year:"2016", ability:"Smooth Groove",   abilityDesc:"Réduit l'attaque adverse de 3 pendant 2 tours consécutifs.",              artwork:null },
   { id:21, title:"Levels",                artist:"Avicii",               genre:"Electro", power:81, rarity:"Rare",      pop:87, exp:75, year:"2011", ability:"Euphoria",        abilityDesc:"Augmente tes dégâts de 4 pour les 3 prochains tours.",                    artwork:null },
   { id:22, title:"Hotline Bling",         artist:"Drake",                genre:"HipHop",  power:80, rarity:"Common",    pop:86, exp:72, year:"2015", ability:"Late Night",      abilityDesc:"Attaque réduite mais garantie : inflige exactement 8 dégâts.",            artwork:null },
   { id:23, title:"Shape of You",          artist:"Ed Sheeran",           genre:"Pop",     power:88, rarity:"Epic",      pop:98, exp:42, year:"2017", ability:"Pop Appeal",      abilityDesc:"Ce symbole sonore partage son bonus de popularité aux cartes adjacentes.", artwork:"artwork.example-shape-of-you-v1.png" },
   { id:24, title:"Take Five",             artist:"Dave Brubeck Quartet", genre:"Jazz",    power:83, rarity:"Rare",      pop:80, exp:95, year:"1959", ability:"Odd Meter",       abilityDesc:"Désynchronise l'adversaire : son prochain spécial est annulé.",           artwork:null },
   { id:25, title:"Mé Gustas Tú",         artist:"Manu Chao",            genre:"World",   power:79, rarity:"Rare",      pop:62, exp:80, year:"2001", ability:"Confluence",      abilityDesc:"Si 3 genres différents dans le lineup, +20% de puissance en battle.",     artwork:"artwork.example-me-gustas-tu-v1.png" },
-  { id:26, title:"Money",                 artist:"Pink Floyd",           genre:"Metal",   power:86, rarity:"Rare",      pop:89, exp:87, year:"1973", ability:"Dark Side",       abilityDesc:"Vole 5 PV à l'adversaire et les récupère pour soi.",                      artwork:"artwork.example-money-v2.png" },
+  { id:26, title:"Money",                 artist:"Pink Floyd",           genre:"Rock",   power:86, rarity:"Rare",      pop:89, exp:87, year:"1973", ability:"Dark Side",       abilityDesc:"Vole 5 PV à l'adversaire et les récupère pour soi.",                      artwork:"artwork.example-money-v2.png" },
   { id:27, title:"Country Roads",         artist:"John Denver",          genre:"Country", power:73, rarity:"Common",    pop:82, exp:45, year:"1971", ability:"Heartland",       abilityDesc:"Immune aux pénalités de genre pendant les 2 premiers tours.",             artwork:"artwork.example-take-me-home-country-roads-v2.png" },
   { id:28, title:"These Boots Are Made For Walkin'",artist:"Nancy Sinatra",genre:"Jazz", power:82, rarity:"Rare",      pop:76, exp:88, year:"1966", ability:"Long Walk",       abilityDesc:"Pour chaque round gagné, +8% de puissance, jusqu'à +40%.",               artwork:"artwork.example-these-boots-are-made-for-walkin-v2.png" },
   { id:29, title:"Without Me",            artist:"Eminem",               genre:"HipHop",  power:94, rarity:"Epic",      pop:92, exp:66, year:"2002", ability:"Solo Run",        abilityDesc:"Si seule carte Hip-Hop, +35% de puissance et immunité aux debuffs.",     artwork:"artwork.example-without-me-v1.png" },
   { id:30, title:"Symphony No. 5",        artist:"Beethoven",            genre:"Classic", power:93, rarity:"Epic",      pop:82, exp:99, year:"1808", ability:"Fate Knocks",     abilityDesc:"3 frappes rapides de 5 dégâts chacune. Le destin frappe toujours.",      artwork:"artwork.example-beethoven-symphony-no-5-v1.png" },
   { id:31, title:"Lacrimosa",             artist:"Mozart",               genre:"Classic", power:90, rarity:"Epic",      pop:76, exp:97, year:"1791", ability:"Requiem",         abilityDesc:"Récupère 18 PV et réduit la puissance adverse de 15% pendant 2 tours.", artwork:"artwork.example-mozart-requiem-lacrimosa-v1.png" },
   { id:32, title:"Dies Irae",             artist:"Verdi",                genre:"Classic", power:88, rarity:"Rare",      pop:70, exp:94, year:"1874", ability:"Wrath of God",    abilityDesc:"Dégâts de base × 1.8. Le jugement dernier n'attend pas.",               artwork:"artwork.example-verdi-dies-irae-v1.png" },
-  { id:33, title:"Ride of the Valkyries", artist:"Wagner",               genre:"Metal",   power:91, rarity:"Epic",      pop:80, exp:93, year:"1870", ability:"Battle Charge",   abilityDesc:"Étourdit l'adversaire 1 tour et inflige 2× dégâts au tour suivant.",     artwork:"artwork.example-wagner-ride-of-the-valkyries-v1.png" },
+  { id:33, title:"Ride of the Valkyries", artist:"Wagner",               genre:"Rock",   power:91, rarity:"Epic",      pop:80, exp:93, year:"1870", ability:"Battle Charge",   abilityDesc:"Étourdit l'adversaire 1 tour et inflige 2× dégâts au tour suivant.",     artwork:"artwork.example-wagner-ride-of-the-valkyries-v1.png" },
   { id:34, title:"La Marseillaise",       artist:"Rouget de Lisle",      genre:"World",   power:82, rarity:"Rare",      pop:88, exp:78, year:"1792", ability:"Liberty Call",    abilityDesc:"Annule tous les debuffs actifs et restaure 10 PV. La liberté triomphe.", artwork:"artwork.example-rouget-de-lisle-la-marseillaise-v1.png" },
   { id:35, title:"Les Lacs du Connemara", artist:"Michel Sardou",        genre:"World",   power:78, rarity:"Rare",      pop:84, exp:66, year:"1981", ability:"Celtic Tide",     abilityDesc:"Si 3 genres différents dans le lineup, +25% de puissance en battle.",   artwork:"artwork.example-michel-sardou-les-lacs-du-connemara-v1.png" },
   { id:36, title:"Sky and Sand",          artist:"Paul Kalkbrenner",     genre:"Electro", power:83, rarity:"Rare",      pop:80, exp:82, year:"2009", ability:"Berlin Night",    abilityDesc:"Accumule +3 dégâts bonus par tour passé en battle.",                    artwork:"artwork.example-paul-karlkbrenner-sky-and-sand-v1.png" },
@@ -665,7 +665,7 @@ const CARDS = [
 ];
 
 const GENRE_CFG = {
-  Metal:   { cls:'g-metal',   genreLabel:'Metal',     bg0:'#0e1a4a', bg1:'#040a1e', accent:'#4060d8', sym:'🎸',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>` },
+  Rock:   { cls:'g-metal',   genreLabel:'Rock',     bg0:'#0e1a4a', bg1:'#040a1e', accent:'#4060d8', sym:'🎸',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>` },
   Reggae:  { cls:'g-reggae',  genreLabel:'Reggae',    bg0:'#0e2014', bg1:'#040c08', accent:'#5ab878', sym:'🌿',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><ellipse cx="8" cy="9" rx="5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="3.5" x2="8" y2="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 7 Q6.5 5 8 7 Q9.5 5 11 7" fill="none" stroke="currentColor" stroke-width="1"/></svg>` },
   Jazz:    { cls:'g-jazz',    genreLabel:'Jazz',      bg0:'#281800', bg1:'#0c0600', accent:'#c89030', sym:'🎷',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".85"/><circle cx="8" cy="8" r="5" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.6"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.6"/><circle cx="8" cy="8" r="2.2" fill="rgba(0,0,0,0.45)"/><circle cx="8" cy="8" r="0.8" fill="rgba(255,255,255,0.55)"/></svg>` },
   World:   { cls:'g-world',   genreLabel:'World',     bg0:'#2a1208', bg1:'#0c0400', accent:'#c05040', sym:'🌍',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>` },
@@ -681,7 +681,7 @@ const TREE_NODES = [
   { genre:'Electro', x:50, y:10, level:0 },
   { genre:'Pop',     x:18, y:28, level:1 },
   { genre:'HipHop',  x:50, y:28, level:1 },
-  { genre:'Metal',   x:82, y:28, level:1 },
+  { genre:'Rock',   x:82, y:28, level:1 },
   { genre:'Jazz',    x:12, y:52, level:2 },
   { genre:'Funk',    x:35, y:52, level:2 },
   { genre:'Reggae',  x:60, y:52, level:2 },
@@ -691,9 +691,9 @@ const TREE_NODES = [
 ];
 
 const TREE_EDGES = [
-  ['Electro','Pop'], ['Electro','HipHop'], ['Electro','Metal'],
+  ['Electro','Pop'], ['Electro','HipHop'], ['Electro','Rock'],
   ['Pop','Jazz'], ['Pop','Funk'], ['HipHop','Funk'], ['HipHop','Reggae'],
-  ['Metal','Reggae'], ['Metal','Classic'], ['Jazz','Country'], ['Funk','World'],
+  ['Rock','Reggae'], ['Rock','Classic'], ['Jazz','Country'], ['Funk','World'],
 ];
 
 // ══════════════════════════════════════════
@@ -973,7 +973,7 @@ function resetPack() {
 //  COLLECTION
 // ══════════════════════════════════════════
 
-const GENRES_ALL = ['All', 'Metal', 'Pop', 'Jazz', 'Classic', 'Electro', 'Reggae', 'Funk', 'HipHop', 'Country', 'World'];
+const GENRES_ALL = ['All', 'Rock', 'Pop', 'Jazz', 'Classic', 'Electro', 'Reggae', 'Funk', 'HipHop', 'Country', 'World'];
 
 function renderCollection() {
   document.getElementById('coll-count').textContent = S.collection.length + ' cartes';
@@ -1178,7 +1178,7 @@ function executeSpecial(card, isPlayer) {
   const genre = card.genre;
   const delay = 400;
   if (isPlayer) {
-    if (genre === 'Metal') {
+    if (genre === 'Rock') {
       setTimeout(() => { const dmg = calcDmg(card) * 2; addLog('special', `${card.ability} : dégâts doublés !`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'Pop') {
       setTimeout(() => { heal(15, true); S.debuff = 0.2; addLog('heal', `${card.ability} : +15 PV, attaque adverse réduite`); enemyAttack(); }, delay);
