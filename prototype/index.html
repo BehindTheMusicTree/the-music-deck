@@ -408,6 +408,34 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 /* ── MISC ── */
 .sep { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent); margin: 8px 0; }
 .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; }
+
+/* ── DÉFI ── */
+.btn-defi { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 12px 28px; background: transparent; color: var(--gold); border: 1px solid var(--gold); border-radius: 3px; cursor: pointer; transition: all .2s; font-weight: 600; margin-top: 8px; }
+.btn-defi:hover { background: rgba(168,124,40,.08); transform: translateY(-1px); }
+
+#screen-defi { padding: 20px 24px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+#screen-defi .s-hdr { width: 100%; max-width: 520px; }
+.defi-intro { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--muted); font-size: 16px; text-align: center; margin: 8px 0 28px; line-height: 1.7; }
+
+.defi-genres { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; max-width: 520px; margin: 0 auto; }
+.defi-genre-btn { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all .2s; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+.defi-genre-btn:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+.defi-genre-icon { font-size: 26px; line-height: 1; }
+
+#defi-guess { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; padding-top: 4px; }
+.defi-card-wrap { position: relative; }
+.defi-title-mask { position: absolute; top: 10px; left: 10px; right: 10px; background: var(--surface); border-radius: 4px; height: 44px; display: flex; align-items: center; justify-content: center; z-index: 10; border: 1px dashed var(--border); }
+.defi-title-mask span { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); }
+
+.defi-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 320px; }
+.defi-question { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--white); text-align: center; }
+.defi-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 12px 16px; font-family: 'Cinzel', serif; font-size: 13px; color: var(--white); letter-spacing: 1px; outline: none; text-align: center; transition: border-color .2s; }
+.defi-input:focus { border-color: var(--gold); }
+.defi-feedback { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 1px; min-height: 20px; text-align: center; }
+.defi-feedback.ok  { color: #5ab878; }
+.defi-feedback.err { color: #c05040; }
+.defi-feedback.won { color: var(--gold); font-size: 14px; }
+#defi-genre-pick { display: flex; flex-direction: column; align-items: center; width: 100%; }
 </style>
 </head>
 <body>
@@ -435,14 +463,15 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
       <div class="home-bar"></div>
       <div class="home-tagline">Collecte les titres légendaires.<br>Bâtis ton deck. Domine l'arène.</div>
       <div class="home-actions">
-        <button class="btn-primary" onclick="goTo('pack')">Ouvrir un Pack</button>
-        <button class="btn-secondary" onclick="goTo('collection')">Ma Collection</button>
+        <button class="btn-primary" onclick="goTo('pack')">Open a Pack</button>
+        <button class="btn-secondary" onclick="goTo('collection')">My Collection</button>
+        <button class="btn-defi" onclick="goTo('defi')">🎯 Challenge</button>
       </div>
     </div>
     <div class="home-stats">
       <div class="home-stat"><div class="stat-num" id="hs-cards">12</div><div class="stat-unit">Cartes</div></div>
       <div class="home-stat"><div class="stat-num" id="hs-deck">0</div><div class="stat-unit">Deck</div></div>
-      <div class="home-stat"><div class="stat-num">3</div><div class="stat-unit">Victoires</div></div>
+      <div class="home-stat"><div class="stat-num">3</div><div class="stat-unit">Wins</div></div>
     </div>
     <div class="home-preview">
       <div class="home-preview-cards" id="home-preview-cards"></div>
@@ -452,8 +481,8 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
   <!-- ── PACK OPENING ── -->
   <section id="screen-pack" class="screen">
     <div class="pack-header">
-      <h1>OUVERTURE DE PACK</h1>
-      <p>COLLECTION SAISON 1 · 5 CARTES</p>
+      <h1>PACK OPENING</h1>
+      <p>SEASON 1 COLLECTION · 5 CARDS</p>
     </div>
     <div id="pack-idle" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
       <div class="pack-visual" id="pack-visual" onclick="startPackOpen()">
@@ -461,14 +490,14 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
         <div class="pack-pack-name">SEASON<br>ONE</div>
         <div class="pack-count">5 CARTES · COLLECTION</div>
       </div>
-      <div class="pack-tap-hint">— CLIQUER POUR OUVRIR —</div>
+      <div class="pack-tap-hint">— CLICK TO OPEN —</div>
     </div>
     <div id="pack-reveal" style="display:none; flex-direction:column; align-items:center; gap:16px;">
       <div class="pack-reveal" id="pack-cards-row"></div>
-      <div class="pack-hint" id="pack-hint">Cliquez sur chaque carte pour la révéler</div>
+      <div class="pack-hint" id="pack-hint">Click each card to reveal it</div>
       <div class="pack-cta" id="pack-cta" style="display:none">
-        <button class="btn-primary" onclick="addPackToCollection()">Ajouter à la Collection</button>
-        <button class="btn-secondary" onclick="resetPack()">Nouveau Pack</button>
+        <button class="btn-primary" onclick="addPackToCollection()">Add to Collection</button>
+        <button class="btn-secondary" onclick="resetPack()">New Pack</button>
       </div>
     </div>
   </section>
@@ -476,8 +505,8 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
   <!-- ── COLLECTION ── -->
   <section id="screen-collection" class="screen">
     <div class="screen-header">
-      <div class="screen-title">MA COLLECTION</div>
-      <div class="screen-count" id="coll-count">0 cartes</div>
+      <div class="screen-title">MY COLLECTION</div>
+      <div class="screen-count" id="coll-count">0 cards</div>
     </div>
     <div class="filters" id="coll-filters"></div>
     <div class="cards-grid" id="coll-grid"></div>
@@ -486,30 +515,30 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
   <!-- ── DECK BUILDER ── -->
   <section id="screen-deckbuilder" class="screen">
     <div class="deck-main">
-      <div class="s-hdr"><div class="lbl">SÉLECTION</div><h2>DECK BUILDER</h2></div>
+      <div class="s-hdr"><div class="lbl">SELECTION</div><h2>DECK BUILDER</h2></div>
       <div class="filters" id="deck-filters"></div>
       <div class="cards-grid" id="deck-grid"></div>
     </div>
     <div class="deck-sidebar">
-      <div class="deck-title">MON DECK</div>
+      <div class="deck-title">MY DECK</div>
       <div class="deck-power-box">
-        <div class="deck-power-lbl">Puissance Totale</div>
+        <div class="deck-power-lbl">Total Power</div>
         <div class="deck-power-num" id="deck-power">0</div>
-        <div class="deck-power-sub" id="deck-count-txt">0 / 10 cartes</div>
+        <div class="deck-power-sub" id="deck-count-txt">0 / 10 cards</div>
       </div>
       <div class="deck-slots" id="deck-slots"></div>
-      <button class="btn-primary" id="deck-save-btn" onclick="saveDeck()" style="margin-top:8px;">Sauvegarder le Deck</button>
+      <button class="btn-primary" id="deck-save-btn" onclick="saveDeck()" style="margin-top:8px;">Save Deck</button>
     </div>
   </section>
 
   <!-- ── BATTLE ── -->
   <section id="screen-battle" class="screen">
     <div id="battle-pick" class="battle-pick-phase" style="width:100%;max-width:760px;margin:0 auto;">
-      <div class="s-hdr"><div class="lbl">ARÈNE</div><h2>CHOISIR TA CARTE</h2></div>
-      <div class="battle-pick-label">Sélectionne une carte de ta collection</div>
+      <div class="s-hdr"><div class="lbl">ARENA</div><h2>PICK YOUR CARD</h2></div>
+      <div class="battle-pick-label">Select a card from your collection</div>
       <div class="battle-pick-cards" id="battle-pick-cards"></div>
       <div class="battle-start-row">
-        <button class="btn-attack" id="btn-start-battle" onclick="startBattle()" disabled>Lancer la Bataille</button>
+        <button class="btn-attack" id="btn-start-battle" onclick="startBattle()" disabled>Start Battle</button>
       </div>
     </div>
     <div id="battle-fight" style="display:none; flex-direction:column; align-items:center; gap:0; width:100%;">
@@ -534,8 +563,8 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
           </div>
         </div>
         <div class="battle-controls">
-          <button class="btn-attack" id="btn-attack" onclick="doAttack()">⚔ Attaquer</button>
-          <button class="btn-special" id="btn-special" onclick="doSpecial()">★ Spécial</button>
+          <button class="btn-attack" id="btn-attack" onclick="doAttack()">⚔ Attack</button>
+          <button class="btn-special" id="btn-special" onclick="doSpecial()">★ Special</button>
         </div>
       </div>
       <div class="battle-log" id="battle-log"></div>
@@ -555,14 +584,14 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
   <!-- ── MISSIONS + MUSICTREE ── -->
   <section id="screen-missions" class="screen">
     <div>
-      <div class="s-hdr"><div class="lbl">QUOTIDIEN</div><h2>MISSIONS</h2></div>
+      <div class="s-hdr"><div class="lbl">DAILY</div><h2>MISSIONS</h2></div>
       <div class="missions-list" id="missions-list"></div>
       <div class="weekly-box">
-        <div class="weekly-label">Défi de la Semaine</div>
-        <div class="weekly-title">Le Grand Collectionneur</div>
-        <div class="weekly-desc">Constitue un deck complet de 10 cartes de 5 genres différents.</div>
-        <div style="margin-bottom:10px"><div class="prog-bar"><div class="prog-fill" id="weekly-prog" style="width:20%"></div></div><div class="prog-txt">2 / 10 cartes · 1 / 5 genres</div></div>
-        <div class="weekly-reward">⬡ Récompense : 500 pièces + Pack Légendaire</div>
+        <div class="weekly-label">Weekly Challenge</div>
+        <div class="weekly-title">The Grand Collector</div>
+        <div class="weekly-desc">Build a full deck of 10 cards spanning 5 different genres.</div>
+        <div style="margin-bottom:10px"><div class="prog-bar"><div class="prog-fill" id="weekly-prog" style="width:20%"></div></div><div class="prog-txt">2 / 10 cards · 1 / 5 genres</div></div>
+        <div class="weekly-reward">⬡ Reward: 500 coins + Legendary Pack</div>
       </div>
     </div>
     <div class="tree-panel">
@@ -571,12 +600,30 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
     </div>
   </section>
 
+  <!-- ── DÉFI ── -->
+  <section id="screen-defi" class="screen">
+    <div id="defi-genre-pick">
+      <div class="s-hdr"><div class="lbl">MINI-GAME</div><h2>CHALLENGE</h2></div>
+      <p class="defi-intro">Pick a genre.<br>Find the title of the hidden card.</p>
+      <div class="defi-genres" id="defi-genres"></div>
+    </div>
+    <div id="defi-guess" style="display:none">
+      <div class="defi-card-wrap" id="defi-card-wrap"></div>
+      <div class="defi-form">
+        <p class="defi-question">What is the title of this card?</p>
+        <input id="defi-input" class="defi-input" type="text" placeholder="Song title…" autocomplete="off" spellcheck="false">
+        <button class="btn-primary" onclick="checkDefi()">Valider</button>
+        <div id="defi-feedback" class="defi-feedback"></div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <!-- BOTTOM NAVIGATION -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-screen="home" onclick="goTo('home')">
-    <span class="nav-icon">🏠</span><span class="nav-label">Accueil</span>
+    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
   </button>
   <button class="nav-item" data-screen="pack" onclick="goTo('pack')">
     <span class="nav-icon">📦</span><span class="nav-label">Pack</span>
@@ -588,7 +635,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
     <span class="nav-icon">🃏</span><span class="nav-label">Deck</span>
   </button>
   <button class="nav-item" data-screen="battle" onclick="goTo('battle')">
-    <span class="nav-icon">⚔️</span><span class="nav-label">Bataille</span>
+    <span class="nav-icon">⚔️</span><span class="nav-label">Battle</span>
   </button>
   <button class="nav-item" data-screen="market" onclick="goTo('market')">
     <span class="nav-icon">🏪</span><span class="nav-label">Market</span>
@@ -726,11 +773,11 @@ const S = {
   playerDebuff: 0,
   // missions
   missions: [
-    { id:1, name:'Ouvrir 1 Pack',            reward:50,  prog:0, total:1, done:false },
-    { id:2, name:'Ajouter une carte au Deck', reward:30,  prog:1, total:1, done:true  },
-    { id:3, name:'Gagner 1 Bataille',         reward:100, prog:0, total:1, done:false },
-    { id:4, name:'Voir 5 fiches de cartes',   reward:25,  prog:3, total:5, done:false },
-    { id:5, name:'Collecter 4 genres diff.',  reward:75,  prog:3, total:4, done:false },
+    { id:1, name:'Open 1 Pack',               reward:50,  prog:0, total:1, done:false },
+    { id:2, name:'Add a card to your Deck',   reward:30,  prog:1, total:1, done:true  },
+    { id:3, name:'Win 1 Battle',              reward:100, prog:0, total:1, done:false },
+    { id:4, name:'View 5 card details',       reward:25,  prog:3, total:5, done:false },
+    { id:5, name:'Collect 4 different genres',reward:75,  prog:3, total:4, done:false },
   ],
 };
 
@@ -764,11 +811,8 @@ function cardArt(card) {
     </defs>
     <rect width="234" height="190" fill="url(#rg${card.id})"/>
     ${dots}${bars}
-    ${card.genre === 'Classic'
-      ? `<image href="https://upload.wikimedia.org/wikipedia/commons/e/ef/GClef.svg" x="67" y="8" width="100" height="174" opacity="0.07"/>
-         <image href="https://upload.wikimedia.org/wikipedia/commons/e/ef/GClef.svg" x="67" y="8" width="100" height="174" opacity="0.38" style="filter:sepia(1) saturate(3) hue-rotate(5deg);"/>`
-      : `<text x="117" y="102" font-size="80" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.07" font-family="serif">${cfg.icon}</text>
-         <text x="117" y="99"  font-size="78" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.42" font-family="serif">${cfg.icon}</text>`}
+    <text x="117" y="102" font-size="80" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.07" font-family="serif">${cfg.sym}</text>
+    <text x="117" y="99"  font-size="78" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.42" font-family="serif">${cfg.sym}</text>
     <rect x="0" y="160" width="234" height="30" fill="${cfg.bg1}" opacity="0.65"/>
     <rect x="0" y="0"   width="234" height="18" fill="${cfg.bg1}" opacity="0.45"/>
   </svg>`;
@@ -876,6 +920,7 @@ function renderScreen(name) {
   if (name === 'battle')      renderBattlePick();
   if (name === 'market')      renderMarket();
   if (name === 'missions')    renderMissions();
+  if (name === 'defi')        renderDefi();
 }
 
 // ══════════════════════════════════════════
@@ -948,14 +993,14 @@ function flipPackCard(i) {
   el.classList.add('flipped');
   S.packFlipped++;
   if (S.packFlipped === S.packCards.length) {
-    document.getElementById('pack-hint').textContent = 'Toutes les cartes révélées !';
+    document.getElementById('pack-hint').textContent = 'All cards revealed!';
     document.getElementById('pack-cta').style.display = 'flex';
   }
 }
 
 function addPackToCollection() {
   S.packCards.forEach(c => { if (!S.collection.includes(c.id)) S.collection.push(c.id); });
-  showToast('5 cartes ajoutées à la collection !', 'ok');
+  showToast('5 cards added to your collection!', 'ok');
   resetPack();
   advanceMission(5, S.collection.length >= 4 ? 4 : S.collection.length);
 }
@@ -976,7 +1021,7 @@ function resetPack() {
 const GENRES_ALL = ['All', 'Rock', 'Pop', 'Jazz', 'Classic', 'Electro', 'Reggae', 'Funk', 'HipHop', 'Country', 'World'];
 
 function renderCollection() {
-  document.getElementById('coll-count').textContent = S.collection.length + ' cartes';
+  document.getElementById('coll-count').textContent = S.collection.length + ' cards';
   // filters
   const filtersEl = document.getElementById('coll-filters');
   filtersEl.innerHTML = GENRES_ALL.map(g =>
@@ -1023,7 +1068,7 @@ function renderDeckBuilder() {
     return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;opacity:${inDeck?.5:1}">
       ${renderCard(c)}
       <button onclick="event.stopPropagation();toggleDeck(${c.id})" style="width:272px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;padding:8px 0;background:${inDeck?'rgba(200,50,50,.8)':'var(--gold)'};color:${inDeck?'#fff':'#0a0600'};border:none;border-radius:2px;cursor:pointer;font-weight:700;">
-        ${inDeck ? '— Retirer du Deck' : '+ Ajouter au Deck'}
+        ${inDeck ? '— Remove from Deck' : '+ Add to Deck'}
       </button>
     </div>`;
   }).join('');
@@ -1273,11 +1318,11 @@ function endBattle(playerWon) {
   if (playerWon) {
     earnCoins(80);
     advanceMission(3, 1);
-    showToast('Victoire ! +80 pièces gagnées', 'ok');
-    addLog('sys', '⬡ Victoire ! Récompense : 80 pièces.');
+    showToast('Victory! +80 coins earned', 'ok');
+    addLog('sys', '⬡ Victory! Reward: 80 coins.');
   } else {
-    showToast('Défaite. Meilleure chance la prochaine fois…', 'err');
-    addLog('sys', '✕ Défaite. Ton adversaire était trop fort cette fois.');
+    showToast('Defeat. Better luck next time…', 'err');
+    addLog('sys', '✕ Defeat. Your opponent was too strong this time.');
   }
   setTimeout(() => {
     const overlay = document.createElement('div');
@@ -1413,7 +1458,7 @@ function advanceMission(id, amount) {
   if (m.prog >= m.total && !m.done) {
     m.done = true;
     earnCoins(m.reward);
-    showToast(`Mission accomplie ! +${m.reward} pièces ⬡`, 'ok');
+    showToast(`Mission complete! +${m.reward} coins ⬡`, 'ok');
   }
   if (S.screen === 'missions') renderMissions();
 }
@@ -1452,7 +1497,7 @@ function renderMusicTree() {
     const state = cnt === 0 ? '' : cnt >= tot ? 'mastered' : 'unlocked';
     const lx = n.x / 100 * W;
     const ly = n.y / 100 * H;
-    return `<div class="tree-node ${state}" style="left:${lx}px;top:${ly}px;" onclick="showToast('${n.genre} : ${cnt}/${tot} cartes',${cnt>0?'\'ok\'':'\'\''})" title="${n.genre}">
+    return `<div class="tree-node ${state}" style="left:${lx}px;top:${ly}px;" onclick="showToast('${n.genre}: ${cnt}/${tot} cards',${cnt>0?'\'ok\'':'\'\''})" title="${n.genre}">
       <div class="node-circle">
         <div class="node-ico">${cfg.sym || '🎵'}</div>
         <div class="node-cnt">${cnt}/${tot}</div>
@@ -1520,12 +1565,12 @@ function openModal(id) {
       <div class="modal-actions">
         ${owned
           ? (inDeck
-            ? `<button class="btn-secondary" onclick="toggleDeck(${id});closeModal()">Retirer du Deck</button>`
+            ? `<button class="btn-secondary" onclick="toggleDeck(${id});closeModal()">Remove from Deck</button>`
             : (S.deck.length < 10
-              ? `<button class="btn-primary" onclick="toggleDeck(${id});closeModal()">+ Ajouter au Deck</button>`
-              : `<button class="btn-secondary" disabled style="opacity:.4">Deck complet</button>`))
-          : `<button class="btn-primary" onclick="closeModal();goTo('market')">Acheter sur le Market</button>`}
-        <button class="btn-secondary" onclick="closeModal()">Fermer</button>
+              ? `<button class="btn-primary" onclick="toggleDeck(${id});closeModal()">+ Add to Deck</button>`
+              : `<button class="btn-secondary" disabled style="opacity:.4">Deck full</button>`))
+          : `<button class="btn-primary" onclick="closeModal();goTo('market')">Buy on Market</button>`}
+        <button class="btn-secondary" onclick="closeModal()">Close</button>
       </div>
     </div>`;
   document.getElementById('card-modal').classList.add('open');
@@ -1563,6 +1608,161 @@ function showToast(msg, type = '') {
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.className = ''; }, 2600);
 }
+
+// ══════════════════════════════════════════
+//  DÉFI
+// ══════════════════════════════════════════
+
+const DEFI_GENRES = ['Rock', 'Classic', 'Jazz', 'Electro', 'World'];
+
+const S_DEFI = { card: null, attempts: 0 };
+
+function renderDefi() {
+  document.getElementById('defi-genre-pick').style.display = 'flex';
+  document.getElementById('defi-guess').style.display = 'none';
+  const wrap = document.getElementById('defi-genres');
+  wrap.innerHTML = DEFI_GENRES.map(g => {
+    const cfg = GENRE_CFG[g];
+    return `<button class="defi-genre-btn" onclick="startDefi('${g}')" style="--accent:${cfg.accent}">
+      <span class="defi-genre-icon">${cfg.sym}</span>
+      <span>${cfg.genreLabel}</span>
+    </button>`;
+  }).join('');
+}
+
+function startDefi(genre) {
+  const pool = CARDS.filter(c => c.genre === genre);
+  S_DEFI.card = pool[Math.floor(Math.random() * pool.length)];
+  S_DEFI.attempts = 0;
+
+  document.getElementById('defi-genre-pick').style.display = 'none';
+  const guessEl = document.getElementById('defi-guess');
+  guessEl.style.display = 'flex';
+
+  // Render card with title masked
+  const cardWrap = document.getElementById('defi-card-wrap');
+  const maskedCard = renderMaskedCard(S_DEFI.card);
+  cardWrap.innerHTML = maskedCard;
+  applyScoreGlow(cardWrap);
+
+  document.getElementById('defi-input').value = '';
+  document.getElementById('defi-feedback').textContent = '';
+  document.getElementById('defi-feedback').className = 'defi-feedback';
+  document.getElementById('defi-input').focus();
+}
+
+function renderMaskedCard(card) {
+  const cfg = GENRE_CFG[card.genre] || GENRE_CFG.Pop;
+  const artSrc = card.artwork ? `/assets/cards/artworks/examples/${card.artwork}` : null;
+  const artHTML = artSrc
+    ? `<img src="${artSrc}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+    : cardArt(card);
+
+  const cardHTML = `<div class="card ${cfg.cls}" data-id="${card.id}">
+    <div class="card-inner">
+      <div class="ch">
+        <div class="ch-left">
+          <span class="ch-icon">${cfg.icon}</span>
+          <div class="ch-titles">
+            <span class="ch-title" style="background:var(--border);color:transparent;border-radius:3px;min-width:80px;">▓▓▓▓▓▓▓▓▓</span>
+            <span class="ch-artist">${card.artist}</span>
+          </div>
+        </div>
+        <span class="ch-score">${card.power}</span>
+      </div>
+      <div class="ca">${artHTML}</div>
+      <div class="card-bottom">
+        <div class="ct">
+          <span class="ct-type">Song · ${card.year}</span>
+          <div class="ct-right"><span class="ct-genre">${cfg.genreLabel}</span><div class="ct-pip"></div></div>
+        </div>
+        <div class="cb">
+          <div class="cb-pname">${card.ability}</div>
+          <div class="cb-ptext">${card.abilityDesc}</div>
+        </div>
+        <div class="cs">
+          <div class="cs-row">
+            <span class="cs-lbl">Popularity</span>
+            <div class="cs-bg"><div class="cs-fill" style="width:${card.pop}%"></div></div>
+            <span class="cs-val">${card.pop}</span>
+          </div>
+          <div class="cs-row">
+            <span class="cs-lbl">Experimental</span>
+            <div class="cs-bg"><div class="cs-fill exp" style="width:${card.exp}%"></div></div>
+            <span class="cs-val">${card.exp}</span>
+          </div>
+        </div>
+        <div class="cf">
+          <span class="cf-brand">THE MUSIC DECK</span>
+          <span class="cf-rar"><span class="rar-icon">${RAR_SVG[card.rarity] || RAR_SVG.Common}</span>${card.rarity}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  return `<div class="card-wrap clg">${cardHTML}</div>`;
+}
+
+function normalize(str) {
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[''`]/g, "'")
+    .replace(/[^a-z0-9' ]/g, '')
+    .trim();
+}
+
+function checkDefi() {
+  const input = document.getElementById('defi-input').value;
+  const feedback = document.getElementById('defi-feedback');
+  if (!input.trim()) return;
+
+  S_DEFI.attempts++;
+  const guess = normalize(input);
+  const answer = normalize(S_DEFI.card.title);
+
+  if (guess === answer) {
+    // WIN
+    feedback.textContent = '🎉 Correct! You win this card!';
+    feedback.className = 'defi-feedback won';
+    document.getElementById('defi-input').disabled = true;
+    if (!S.collection.includes(S_DEFI.card.id)) {
+      S.collection.push(S_DEFI.card.id);
+      showToast(`"${S_DEFI.card.title}" added to your collection!`, 'gold');
+    } else {
+      showToast('Already in your collection!');
+    }
+    // Show title on card and offer replay
+    setTimeout(() => {
+      const titleEl = document.querySelector('#defi-card-wrap .ch-title');
+      if (titleEl) {
+        titleEl.textContent = S_DEFI.card.title;
+        titleEl.style.background = '';
+        titleEl.style.color = '';
+        titleEl.style.borderRadius = '';
+      }
+      const formEl = document.querySelector('.defi-form');
+      const replayBtn = document.createElement('button');
+      replayBtn.className = 'btn-secondary';
+      replayBtn.textContent = 'Play Again';
+      replayBtn.onclick = renderDefi;
+      formEl.appendChild(replayBtn);
+    }, 600);
+  } else {
+    // WRONG
+    const hint = S_DEFI.attempts >= 2
+      ? ` — Hint: starts with "${S_DEFI.card.title[0].toUpperCase()}"`
+      : '';
+    feedback.textContent = `Wrong…${hint}`;
+    feedback.className = 'defi-feedback err';
+    document.getElementById('defi-input').classList.add('shake');
+    setTimeout(() => document.getElementById('defi-input').classList.remove('shake'), 400);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && S.screen === 'defi' && document.getElementById('defi-guess').style.display !== 'none') {
+    checkDefi();
+  }
+});
 
 // ══════════════════════════════════════════
 //  INIT
