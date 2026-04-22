@@ -16,7 +16,7 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 ### 1. Rock / Metal
 
-- **Couleur dominante** : Bleu acier (`#4a6e8a`)
+- **Couleur dominante** : Bleu profond (`#2040a0`)
 - **Archétype** : Guerriers, brutes, tanks
 - **Description** : Spécialistes de la puissance brute et de la résistance, ils boostent les alliés du même genre. Leur force vient du collectif et de la rage scénique.
 

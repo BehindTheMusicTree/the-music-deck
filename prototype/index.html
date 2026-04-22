@@ -90,6 +90,20 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 .ch-score { font-family: 'Space Mono', monospace; font-size: 11px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border-color); background: var(--header-bg); color: var(--text-main); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .ca { grid-row: 2; grid-column: 1; overflow: hidden; position: relative; align-self: stretch; }
 .ca svg, .ca img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* Artwork bleed: illustration overflows the card frame border */
+.card.art-bleed .card-inner { overflow: visible; }
+.card.art-bleed .ca { overflow: visible; }
+.card.art-bleed .ca img {
+  position: absolute;
+  top: -36px; left: -20px; right: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 44px);
+  object-fit: cover;
+  border-radius: 18px;
+  filter: drop-shadow(0 -14px 28px rgba(0,0,0,.8));
+  z-index: 4;
+}
 .card-bottom { grid-row: 2; grid-column: 1; align-self: end; display: flex; flex-direction: column; position: relative; z-index: 3; }
 .ct { background-color: #ede4cc; background-image: linear-gradient(135deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(225deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(315deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(45deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px); background-position: top left, top right, bottom right, bottom left; background-size: 12px 12px; background-repeat: no-repeat; border: 1.5px solid var(--border-color); padding: 6px 14px; margin: 3px 2px -6px; border-radius: 3px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px; color: #2e2010; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; position: relative; z-index: 3; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 0 0 2px rgba(255,255,255,.2), 0 5px 12px rgba(0,0,0,.35); }
 .ct-pip { width: 7px; height: 7px; transform: rotate(45deg); background: var(--border-color); opacity: .9; border-radius: 1px; flex-shrink: 0; }
@@ -112,7 +126,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 .cf-rar { font-family: 'Space Mono', monospace; font-size: 7px; color: rgba(255,255,255,.95); letter-spacing: 1px; display: flex; align-items: center; gap: 4px; }
 .rar-icon { width: 10px; height: 10px; display: inline-flex; align-items: center; flex-shrink: 0; }
 /* ── GENRE THEMES ── */
-.g-metal  { --border-color:#4a6e8a; --card-bg:#131c24; --header-bg:#0e1620; --text-main:#9abcd0; --text-body:#7a9aae; --bar-pop:linear-gradient(90deg,#2a4a68,#6ab0d8); --bar-exp:linear-gradient(90deg,#2a3858,#4a7aaa); --bar-glow-pop:rgba(106,176,216,.75); --bar-glow-exp:rgba(74,122,170,.7); }
+.g-metal  { --border-color:#2040a0; --card-bg:#09101e; --header-bg:#060c18; --text-main:#7090d8; --text-body:#5070b8; --bar-pop:linear-gradient(90deg,#141e5a,#3050c8); --bar-exp:linear-gradient(90deg,#0e1848,#2840a0); --bar-glow-pop:rgba(48,80,200,.75); --bar-glow-exp:rgba(40,64,160,.7); }
 .g-reggae { --border-color:#4a7a52; --card-bg:#121e14; --header-bg:#0e1810; --text-main:#8ac890; --text-body:#6aa872; --bar-pop:linear-gradient(90deg,#1a4820,#5ab878); --bar-exp:linear-gradient(90deg,#2a4830,#3a9858); --bar-glow-pop:rgba(90,184,120,.75); --bar-glow-exp:rgba(58,152,88,.7); }
 .g-jazz   { --border-color:#8a7028; --card-bg:#201808; --header-bg:#181204; --text-main:#c8a048; --text-body:#a87e38; --bar-pop:linear-gradient(90deg,#604010,#c89030); --bar-exp:linear-gradient(90deg,#483010,#986820); --bar-glow-pop:rgba(200,144,48,.75); --bar-glow-exp:rgba(152,104,32,.7); }
 .g-world  { --border-color:#8a3820; --card-bg:#1e0e08; --header-bg:#180a04; --text-main:#c07858; --text-body:#a05838; --bar-pop:linear-gradient(90deg,#601808,#c05040); --bar-exp:linear-gradient(90deg,#482010,#904838); --bar-glow-pop:rgba(192,80,64,.75); --bar-glow-exp:rgba(144,72,56,.7); }
@@ -664,11 +678,11 @@ const CARDS = [
 ];
 
 const GENRE_CFG = {
-  Metal:   { cls:'g-metal',   genreLabel:'Metal',     bg0:'#1c2e3a', bg1:'#080e14', accent:'#6ab0d8', sym:'🎸',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>` },
+  Metal:   { cls:'g-metal',   genreLabel:'Metal',     bg0:'#0e1a4a', bg1:'#040a1e', accent:'#4060d8', sym:'🎸',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>` },
   Reggae:  { cls:'g-reggae',  genreLabel:'Reggae',    bg0:'#0e2014', bg1:'#040c08', accent:'#5ab878', sym:'🌿',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><ellipse cx="8" cy="9" rx="5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="3.5" x2="8" y2="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 7 Q6.5 5 8 7 Q9.5 5 11 7" fill="none" stroke="currentColor" stroke-width="1"/></svg>` },
   Jazz:    { cls:'g-jazz',    genreLabel:'Jazz',      bg0:'#281800', bg1:'#0c0600', accent:'#c89030', sym:'🎷',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".85"/><circle cx="8" cy="8" r="5" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.6"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.6"/><circle cx="8" cy="8" r="2.2" fill="rgba(0,0,0,0.45)"/><circle cx="8" cy="8" r="0.8" fill="rgba(255,255,255,0.55)"/></svg>` },
   World:   { cls:'g-world',   genreLabel:'World',     bg0:'#2a1208', bg1:'#0c0400', accent:'#c05040', sym:'🌍',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>` },
-  Classic: { cls:'g-classic', genreLabel:'Classical', bg0:'#200a00', bg1:'#080200', accent:'#a85020', sym:'🎻',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 2v7.5a2.5 2.5 0 1 1-2-2.45V4l-3 .5V3l5-1z" fill="currentColor"/></svg>` },
+  Classic: { cls:'g-classic', genreLabel:'Classical', bg0:'#200a00', bg1:'#080200', accent:'#a85020', sym:'🎻',  icon:`<img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/GClef.svg" width="14" height="14" style="filter:sepia(1) saturate(2) hue-rotate(5deg) brightness(0.75);display:block;">` },
   Electro: { cls:'g-electro', genreLabel:'Electronic',bg0:'#0e1828', bg1:'#040810', accent:'#60a0c0', sym:'💿',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><path d="M1 8L3 8L5 3L7 13L9 5L11 11L13 8L15 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   Country: { cls:'g-country', genreLabel:'Country',   bg0:'#241408', bg1:'#0c0600', accent:'#b07030', sym:'🤠',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><ellipse cx="8" cy="11" rx="7" ry="2" fill="currentColor" opacity=".85"/><path d="M4.5 11 Q4 8 5 6 Q6 4 8 4 Q10 4 11 6 Q12 8 11.5 11 Z" fill="currentColor" opacity=".85"/><line x1="4.8" y1="9.2" x2="11.2" y2="9.2" stroke="rgba(0,0,0,0.3)" stroke-width="1"/></svg>` },
   Funk:    { cls:'g-funk',    genreLabel:'Funk',      bg0:'#200e30', bg1:'#0a0418', accent:'#a060c8', sym:'🕺',  icon:`<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" stroke-width="1"/><line x1="8" y1="2.5" x2="8" y2="0" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="4" width="3" height="2" rx=".5" fill="currentColor" opacity=".5"/><rect x="10" y="4" width="3" height="2" rx=".5" fill="currentColor" opacity=".5"/></svg>` },
@@ -763,8 +777,11 @@ function cardArt(card) {
     </defs>
     <rect width="234" height="190" fill="url(#rg${card.id})"/>
     ${dots}${bars}
-    <text x="117" y="102" font-size="80" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.07" font-family="serif">${cfg.icon}</text>
-    <text x="117" y="99"  font-size="78" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.42" font-family="serif">${cfg.icon}</text>
+    ${card.genre === 'Classic'
+      ? `<image href="https://upload.wikimedia.org/wikipedia/commons/e/ef/GClef.svg" x="67" y="8" width="100" height="174" opacity="0.07"/>
+         <image href="https://upload.wikimedia.org/wikipedia/commons/e/ef/GClef.svg" x="67" y="8" width="100" height="174" opacity="0.38" style="filter:sepia(1) saturate(3) hue-rotate(5deg);"/>`
+      : `<text x="117" y="102" font-size="80" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.07" font-family="serif">${cfg.icon}</text>
+         <text x="117" y="99"  font-size="78" text-anchor="middle" dominant-baseline="middle" fill="${cfg.accent}" opacity="0.42" font-family="serif">${cfg.icon}</text>`}
     <rect x="0" y="160" width="234" height="30" fill="${cfg.bg1}" opacity="0.65"/>
     <rect x="0" y="0"   width="234" height="18" fill="${cfg.bg1}" opacity="0.45"/>
   </svg>`;
@@ -785,10 +802,11 @@ function renderCard(card, wrapClass = '', overrideClick = null) {
   const cfg = GENRE_CFG[card.genre] || GENRE_CFG.Pop;
   const clickAttr = overrideClick !== null ? overrideClick : `onclick="openModal(${card.id})"`;
   const artSrc = card.artwork ? `/assets/cards/artworks/examples/${card.artwork}` : null;
+  const isBleed = !!(artSrc && card.id % 5 === 0);
   const artHTML = artSrc
     ? `<img src="${artSrc}" style="width:100%;height:100%;object-fit:cover;display:block;">`
     : cardArt(card);
-  const cardHTML = `<div class="card ${cfg.cls}" data-id="${card.id}" ${clickAttr}>
+  const cardHTML = `<div class="card ${cfg.cls}${isBleed ? ' art-bleed' : ''}" data-id="${card.id}" ${clickAttr}>
     <div class="card-inner">
       <div class="ch">
         <div class="ch-left">
