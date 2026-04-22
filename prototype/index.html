@@ -455,13 +455,13 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
   <!-- ── HOME ── -->
   <section id="screen-home" class="screen active">
     <div class="home-hero">
-      <div class="home-eyebrow">TRADING CARD GAME · SAISON 1</div>
+      <div class="home-eyebrow">TRADING CARD GAME · SEASON 1</div>
       <div class="home-title">
         <span class="the">THE</span>
         <span class="gold">MUSIC</span><br>DECK
       </div>
       <div class="home-bar"></div>
-      <div class="home-tagline">Collecte les titres légendaires.<br>Bâtis ton deck. Domine l'arène.</div>
+      <div class="home-tagline">Collect legendary tracks.<br>Build your deck. Rule the arena.</div>
       <div class="home-actions">
         <button class="btn-primary" onclick="goTo('pack')">Open a Pack</button>
         <button class="btn-secondary" onclick="goTo('collection')">My Collection</button>
@@ -545,7 +545,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
       <div class="battle-arena">
         <div class="battle-fighters">
           <div class="battle-side" id="battle-player-side">
-            <div class="battle-lbl">JOUEUR</div>
+            <div class="battle-lbl">PLAYER</div>
             <div class="battle-card-container" id="player-card-wrap"></div>
             <div class="battle-hp-wrap">
               <div class="battle-hp-bar"><div class="battle-hp-fill" id="player-hp-bar" style="width:100%"></div></div>
@@ -554,7 +554,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
           </div>
           <div class="battle-vs"><div class="vs-label">VS</div></div>
           <div class="battle-side" id="battle-enemy-side">
-            <div class="battle-lbl">ADVERSAIRE</div>
+            <div class="battle-lbl">OPPONENT</div>
             <div class="battle-card-container" id="enemy-card-wrap"></div>
             <div class="battle-hp-wrap">
               <div class="battle-hp-bar"><div class="battle-hp-fill" id="enemy-hp-bar" style="width:100%"></div></div>
@@ -1032,7 +1032,7 @@ function renderCollection() {
     .filter(c => S.collFilter === 'All' || c.genre === S.collFilter);
   const grid = document.getElementById('coll-grid');
   if (!cards.length) {
-    grid.innerHTML = '<div class="empty-state">Aucune carte dans cette catégorie.<br>Ouvrez des packs pour en obtenir !</div>';
+    grid.innerHTML = '<div class="empty-state">No cards in this category.<br>Open packs to get some!</div>';
     return;
   }
   grid.innerHTML = cards.map(c => renderCard(c)).join('');
@@ -1083,11 +1083,11 @@ function setDeckFilter(g) {
 function toggleDeck(id) {
   if (S.deck.includes(id)) {
     S.deck = S.deck.filter(x => x !== id);
-    showToast('Carte retirée du deck', '');
+    showToast('Card removed from deck', '');
   } else {
-    if (S.deck.length >= 10) { showToast('Deck complet ! Max 10 cartes.', 'err'); return; }
+    if (S.deck.length >= 10) { showToast('Deck full! Max 10 cards.', 'err'); return; }
     S.deck.push(id);
-    showToast('Carte ajoutée au deck', 'ok');
+    showToast('Card added to deck', 'ok');
     advanceMission(2, 1);
   }
   renderDeckBuilder();
@@ -1100,7 +1100,7 @@ function renderDeckSidebar() {
     return sum + (c ? c.power : 0);
   }, 0);
   document.getElementById('deck-power').textContent = totalPower;
-  document.getElementById('deck-count-txt').textContent = S.deck.length + ' / 10 cartes';
+  document.getElementById('deck-count-txt').textContent = S.deck.length + ' / 10 cards';
   const slotsEl = document.getElementById('deck-slots');
   const slots = Array.from({length:10}, (_,i) => {
     const id = S.deck[i];
@@ -1120,8 +1120,8 @@ function renderDeckSidebar() {
 }
 
 function saveDeck() {
-  if (S.deck.length === 0) { showToast('Ajoutez des cartes au deck !', 'err'); return; }
-  showToast(`Deck sauvegardé (${S.deck.length} cartes) ✓`, 'ok');
+  if (S.deck.length === 0) { showToast('Add cards to your deck first!', 'err'); return; }
+  showToast(`Deck saved (${S.deck.length} cards) ✓`, 'ok');
 }
 
 // ══════════════════════════════════════════
@@ -1180,8 +1180,8 @@ function startBattle() {
   updateHPBars();
 
   document.getElementById('battle-log').innerHTML = '';
-  addLog('sys', `Bataille : <strong>${playerCard.title}</strong> vs <strong>${S.enemyCard.title}</strong>`);
-  addLog('sys', `Que la musique décide du vainqueur…`);
+  addLog('sys', `Battle: <strong>${playerCard.title}</strong> vs <strong>${S.enemyCard.title}</strong>`);
+  addLog('sys', `Let the music decide the winner…`);
 
   document.getElementById('btn-attack').disabled = false;
   document.getElementById('btn-special').disabled = false;
@@ -1199,7 +1199,7 @@ function doAttack() {
   const player = CARDS.find(c => c.id === S.pickedCard);
   disableBattleButtons();
   if (S.stunned) {
-    addLog('dmg', `${player.title} est étourdi et perd son tour !`);
+    addLog('dmg', `${player.title} is stunned and loses their turn!`);
     S.stunned = false;
     setTimeout(() => enemyAttack(), 800);
     return;
@@ -1215,7 +1215,7 @@ function doSpecial() {
   const player = CARDS.find(c => c.id === S.pickedCard);
   S.specialUsed = true;
   disableBattleButtons();
-  addLog('special', `✦ ${player.title} utilise « ${player.ability} » !`);
+  addLog('special', `✦ ${player.title} uses "${player.ability}"!`);
   executeSpecial(player, true);
 }
 
@@ -1224,34 +1224,34 @@ function executeSpecial(card, isPlayer) {
   const delay = 400;
   if (isPlayer) {
     if (genre === 'Rock') {
-      setTimeout(() => { const dmg = calcDmg(card) * 2; addLog('special', `${card.ability} : dégâts doublés !`); applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { const dmg = calcDmg(card) * 2; addLog('special', `${card.ability}: double damage!`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'Pop') {
-      setTimeout(() => { heal(15, true); S.debuff = 0.2; addLog('heal', `${card.ability} : +15 PV, attaque adverse réduite`); enemyAttack(); }, delay);
+      setTimeout(() => { heal(15, true); S.debuff = 0.2; addLog('heal', `${card.ability}: +15 HP, opponent attack reduced`); enemyAttack(); }, delay);
     } else if (genre === 'Jazz') {
-      setTimeout(() => { const mult = 1 + Math.random() * 2; const dmg = Math.floor(calcDmg(card) * mult); addLog('special', `${card.ability} : ×${mult.toFixed(1)} → ${dmg} dégâts !`); applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { const mult = 1 + Math.random() * 2; const dmg = Math.floor(calcDmg(card) * mult); addLog('special', `${card.ability}: ×${mult.toFixed(1)} → ${dmg} damage!`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'Electro') {
-      setTimeout(() => { const dmg = calcDmg(card) + 12; addLog('special', `${card.ability} : ${dmg} dégâts ! (passe le prochain tour)`); S.stunned = true; applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { const dmg = calcDmg(card) + 12; addLog('special', `${card.ability}: ${dmg} damage! (skip next turn)`); S.stunned = true; applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'HipHop') {
-      setTimeout(() => { S.debuff = 0.5; addLog('special', `${card.ability} : attaque adverse divisée par 2 pendant 2 tours`); enemyAttack(); }, delay);
+      setTimeout(() => { S.debuff = 0.5; addLog('special', `${card.ability}: opponent attack halved for 2 turns`); enemyAttack(); }, delay);
     } else if (genre === 'Reggae') {
-      setTimeout(() => { heal(20, true); addLog('heal', `${card.ability} : +20 PV récupérés`); enemyAttack(); }, delay);
+      setTimeout(() => { heal(20, true); addLog('heal', `${card.ability}: +20 HP restored`); enemyAttack(); }, delay);
     } else if (genre === 'Classic') {
       let total = 0;
       [0, 350, 700].forEach((t,i) => {
         setTimeout(() => {
           const dmg = Math.floor(calcDmg(card) * 0.6);
-          total += dmg; addLog('dmg', `${card.ability} frappe ${i+1}/3 : ${dmg} dégâts`);
+          total += dmg; addLog('dmg', `${card.ability} hits ${i+1}/3: ${dmg} damage`);
           applyDamageToEnemyRaw(dmg);
           if (i === 2) { showDamageFloat(total, false); setTimeout(() => enemyAttack(), 600); }
         }, delay + t);
       });
       return;
     } else if (genre === 'Funk') {
-      setTimeout(() => { heal(12, true); const dmg = calcDmg(card); addLog('special', `${card.ability} : +12 PV et ${dmg} dégâts`); applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { heal(12, true); const dmg = calcDmg(card); addLog('special', `${card.ability}: +12 HP and ${dmg} damage`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'World') {
-      setTimeout(() => { heal(8, true); const dmg = calcDmg(card) + 4; addLog('special', `${card.ability} : convergence ! +8 PV et ${dmg} dégâts`); applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { heal(8, true); const dmg = calcDmg(card) + 4; addLog('special', `${card.ability}: convergence! +8 HP and ${dmg} damage`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else if (genre === 'Country') {
-      setTimeout(() => { S.playerDebuff = 0; const dmg = calcDmg(card); addLog('special', `${card.ability} : immune aux debuffs ! ${dmg} dégâts`); applyDamageToEnemy(dmg, card.title); }, delay);
+      setTimeout(() => { S.playerDebuff = 0; const dmg = calcDmg(card); addLog('special', `${card.ability}: immune to debuffs! ${dmg} damage`); applyDamageToEnemy(dmg, card.title); }, delay);
     } else {
       setTimeout(() => { const dmg = calcDmg(card) + 3; applyDamageToEnemy(dmg, card.title); }, delay);
     }
@@ -1261,7 +1261,7 @@ function executeSpecial(card, isPlayer) {
 function applyDamageToEnemy(dmg, attackerName) {
   showDamageFloat(dmg, false);
   shakeEl('enemy-card-wrap');
-  addLog('dmg', `${attackerName} inflige ${dmg} dégâts à ${S.enemyCard.title}`);
+  addLog('dmg', `${attackerName} deals ${dmg} damage to ${S.enemyCard.title}`);
   applyDamageToEnemyRaw(dmg);
   setTimeout(() => enemyAttack(), 900);
 }
@@ -1281,12 +1281,12 @@ function enemyAttack() {
   if (S.debuff > 0) { dmg = Math.floor(dmg * (1 - S.debuff)); }
   // enemy may use special randomly
   if (Math.random() < 0.22 && enemy.genre) {
-    addLog('special', `★ ${enemy.title} utilise « ${enemy.ability} » !`);
+    addLog('special', `★ ${enemy.title} uses "${enemy.ability}"!`);
     dmg = Math.floor(dmg * (1.4 + Math.random() * 0.6));
   }
   showDamageFloat(dmg, true);
   shakeEl('player-card-wrap');
-  addLog('dmg', `${enemy.title} inflige ${dmg} dégâts à ${player.title}`);
+  addLog('dmg', `${enemy.title} deals ${dmg} damage to ${player.title}`);
   S.playerHP = Math.max(0, S.playerHP - dmg);
   updateHPBars();
   if (S.playerHP <= 0) { endBattle(false); return; }
@@ -1409,8 +1409,8 @@ function renderMarket() {
         <div class="market-price">⬡ ${price}</div>
         <div class="market-pwr">Puissance : ${c.power}</div>
         ${owned
-          ? `<div class="btn-owned">Possédé</div>`
-          : `<button class="btn-buy" ${canBuy?'':'disabled'} onclick="buyCard(${c.id},${price})">${S.coins < price ? 'Insuffisant' : 'Acheter'}</button>`}
+          ? `<div class="btn-owned">Owned</div>`
+          : `<button class="btn-buy" ${canBuy?'':'disabled'} onclick="buyCard(${c.id},${price})">${S.coins < price ? 'Not enough coins' : 'Buy'}</button>`}
       </div>
     </div>`;
   }).join('');
@@ -1422,11 +1422,11 @@ function setMarketFilter(g) {
 }
 
 function buyCard(id, price) {
-  if (S.coins < price) { showToast('Pièces insuffisantes !', 'err'); return; }
+  if (S.coins < price) { showToast('Not enough coins!', 'err'); return; }
   S.coins -= price;
   if (!S.collection.includes(id)) S.collection.push(id);
   updateCoinDisplay();
-  showToast(`Carte achetée ! Solde restant : ⬡ ${S.coins}`, 'ok');
+  showToast(`Card purchased! Balance: ⬡ ${S.coins}`, 'ok');
   renderMarket();
   document.getElementById('hs-cards').textContent = S.collection.length;
 }
@@ -1548,7 +1548,7 @@ function openModal(id) {
           <div class="modal-stat-val">${card.power}</div>
         </div>
         <div class="modal-stat-row">
-          <div class="modal-stat-lbl">Popularité</div>
+          <div class="modal-stat-lbl">Popularity</div>
           <div class="modal-stat-bar"><div class="modal-stat-fill pop" style="width:${card.pop}%"></div></div>
           <div class="modal-stat-val">${card.pop}</div>
         </div>
