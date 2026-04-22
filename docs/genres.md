@@ -24,9 +24,9 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 - **Couleur dominante** : Vert sauge (`#4a7a52`)
 - **Archétype** : Mages soigneurs, chamans nature
-- **Description** : Maîtres de la guérison et de la réduction des malus, ils protègent et soignent à base de vibes naturelles. Attribut : Nature, harmonie.
+- **Description** : Maîtres de la guérison et de la réduction des malus, ils protègent et soignent à base de vibes naturelles et de plantes. Attribut : Nature, harmonie.
 
-### 3. Jazz (Vintage)
+### 3. Vintage
 
 - **Couleur dominante** : Ocre chaud (`#8a7028`)
 - **Archétype** : Virtuoses, improvisateurs, manipulateurs de tempo
@@ -73,6 +73,25 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 - **Couleur dominante** : Blanc perle (`#989098`)
 - **Archétype** : Universels, diffuseurs, connecteurs
 - **Description** : Partagent leurs bonus avec les cartes adjacentes. Grande accessibilité et popularité.
+
+## Genre Strengths & Weaknesses
+
+Each genre has a strength against another genre, and a weakness against a different one. This creates a strategic triangle similar to type matchups in other games.
+
+| Genre        | Strength vs. | Weakness vs. |
+| ------------ | ------------ | ------------ |
+| Rock / Metal | Vintage      | Electronic   |
+| Reggae / Dub | Electronic   | Disco / Funk |
+| Vintage      | Country      | Rock / Metal |
+| World        | Pop          | Country      |
+| Classique    | Disco / Funk | Hip-Hop      |
+| Electronic   | Rock / Metal | Reggae / Dub |
+| Country      | World        | Vintage      |
+| Disco / Funk | Reggae / Dub | Classique    |
+| Hip-Hop      | Classique    | Pop          |
+| Pop          | Hip-Hop      | World        |
+
+> Ces relations peuvent être adaptées selon l'équilibrage du jeu. Elles sont à la fois thématiques et stratégiques.
 
 ## Synergy Logic
 
