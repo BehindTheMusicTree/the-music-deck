@@ -1642,16 +1642,13 @@ function renderDefi() {
 
 function startDefi(genre) {
   const pool = CARDS.filter(c => c.genre === genre);
+  if (!pool.length) return;
   S_DEFI.card = pool[Math.floor(Math.random() * pool.length)];
   S_DEFI.attempts = 0;
 
   document.getElementById('defi-genre-pick').style.display = 'none';
   const guessEl = document.getElementById('defi-guess');
   guessEl.style.display = 'flex';
-
-  const cardWrap = document.getElementById('defi-card-wrap');
-  cardWrap.innerHTML = renderMaskedCard(S_DEFI.card);
-  applyScoreGlow(cardWrap);
 
   // Build 3 choices: correct + 2 decoys (same genre, fallback to any)
   let decoyPool = CARDS.filter(c => c.id !== S_DEFI.card.id && c.genre === genre);
@@ -1669,6 +1666,14 @@ function startDefi(genre) {
 
   document.getElementById('defi-feedback').textContent = '';
   document.getElementById('defi-feedback').className = 'defi-feedback';
+
+  try {
+    const cardWrap = document.getElementById('defi-card-wrap');
+    cardWrap.innerHTML = renderMaskedCard(S_DEFI.card);
+    applyScoreGlow(cardWrap);
+  } catch(e) {
+    console.error('renderMaskedCard failed:', e);
+  }
 }
 
 function renderMaskedCard(card) {
