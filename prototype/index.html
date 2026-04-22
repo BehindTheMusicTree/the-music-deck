@@ -91,19 +91,6 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 .ca { grid-row: 2; grid-column: 1; overflow: hidden; position: relative; align-self: stretch; }
 .ca svg, .ca img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-/* Artwork bleed: illustration overflows the card frame border */
-.card.art-bleed .card-inner { overflow: visible; }
-.card.art-bleed .ca { overflow: visible; }
-.card.art-bleed .ca img {
-  position: absolute;
-  top: -36px; left: -20px; right: -20px;
-  width: calc(100% + 40px);
-  height: calc(100% + 44px);
-  object-fit: cover;
-  border-radius: 18px;
-  filter: drop-shadow(0 -14px 28px rgba(0,0,0,.8));
-  z-index: 4;
-}
 .card-bottom { grid-row: 2; grid-column: 1; align-self: end; display: flex; flex-direction: column; position: relative; z-index: 3; }
 .ct { background-color: #ede4cc; background-image: linear-gradient(135deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(225deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(315deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px), linear-gradient(45deg, var(--border-color) 0%, var(--border-color) 7px, transparent 7px); background-position: top left, top right, bottom right, bottom left; background-size: 12px 12px; background-repeat: no-repeat; border: 1.5px solid var(--border-color); padding: 6px 14px; margin: 3px 2px -6px; border-radius: 3px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px; color: #2e2010; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; position: relative; z-index: 3; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 0 0 2px rgba(255,255,255,.2), 0 5px 12px rgba(0,0,0,.35); }
 .ct-pip { width: 7px; height: 7px; transform: rotate(45deg); background: var(--border-color); opacity: .9; border-radius: 1px; flex-shrink: 0; }
@@ -802,11 +789,10 @@ function renderCard(card, wrapClass = '', overrideClick = null) {
   const cfg = GENRE_CFG[card.genre] || GENRE_CFG.Pop;
   const clickAttr = overrideClick !== null ? overrideClick : `onclick="openModal(${card.id})"`;
   const artSrc = card.artwork ? `/assets/cards/artworks/examples/${card.artwork}` : null;
-  const isBleed = !!(artSrc && card.id % 5 === 0);
   const artHTML = artSrc
     ? `<img src="${artSrc}" style="width:100%;height:100%;object-fit:cover;display:block;">`
     : cardArt(card);
-  const cardHTML = `<div class="card ${cfg.cls}${isBleed ? ' art-bleed' : ''}" data-id="${card.id}" ${clickAttr}>
+  const cardHTML = `<div class="card ${cfg.cls}" data-id="${card.id}" ${clickAttr}>
     <div class="card-inner">
       <div class="ch">
         <div class="ch-left">
