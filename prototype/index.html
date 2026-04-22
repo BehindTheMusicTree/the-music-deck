@@ -1653,15 +1653,19 @@ function startDefi(genre) {
   cardWrap.innerHTML = renderMaskedCard(S_DEFI.card);
   applyScoreGlow(cardWrap);
 
-  // Build 3 choices: correct + 2 decoys from same genre
-  const decoyPool = CARDS.filter(c => c.id !== S_DEFI.card.id && c.genre === genre);
+  // Build 3 choices: correct + 2 decoys (same genre, fallback to any)
+  let decoyPool = CARDS.filter(c => c.id !== S_DEFI.card.id && c.genre === genre);
+  if (decoyPool.length < 2) {
+    decoyPool = CARDS.filter(c => c.id !== S_DEFI.card.id);
+  }
   const decoys = decoyPool.sort(() => Math.random() - .5).slice(0, 2);
   const choices = [S_DEFI.card, ...decoys].sort(() => Math.random() - .5);
 
   const choicesEl = document.getElementById('defi-choices');
-  choicesEl.innerHTML = choices.map(c =>
-    `<button class="defi-choice" onclick="checkDefi('${c.id}')">${c.title}</button>`
-  ).join('');
+  choicesEl.innerHTML = choices.map(c => {
+    const safeTitle = c.title.replace(/'/g, '&#39;');
+    return `<button class="defi-choice" onclick="checkDefi(${c.id})">${safeTitle}</button>`;
+  }).join('');
 
   document.getElementById('defi-feedback').textContent = '';
   document.getElementById('defi-feedback').className = 'defi-feedback';
@@ -1721,14 +1725,15 @@ function renderMaskedCard(card) {
 function checkDefi(chosenId) {
   const feedback = document.getElementById('defi-feedback');
   const buttons = document.querySelectorAll('.defi-choice');
-  const correct = parseInt(chosenId) === S_DEFI.card.id;
+  const correct = chosenId === S_DEFI.card.id;
 
-  // Disable all buttons and highlight
-  buttons.forEach(btn => {
+  // Disable all, mark correct green and wrong choice red
+  buttons.forEach((btn, i) => {
     btn.disabled = true;
-    const btnTitle = btn.textContent;
-    if (btnTitle === S_DEFI.card.title) btn.classList.add('correct');
-    else if (btnTitle === CARDS.find(c => c.id === parseInt(chosenId))?.title && !correct) btn.classList.add('wrong');
+    const btnOnclick = btn.getAttribute('onclick');
+    const btnId = parseInt(btnOnclick.match(/\d+/)[0]);
+    if (btnId === S_DEFI.card.id) btn.classList.add('correct');
+    else if (btnId === chosenId && !correct) btn.classList.add('wrong');
   });
 
   if (correct) {
