@@ -427,8 +427,12 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 
 .defi-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 320px; }
 .defi-question { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--white); text-align: center; }
-.defi-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 12px 16px; font-family: 'Cinzel', serif; font-size: 13px; color: var(--white); letter-spacing: 1px; outline: none; text-align: center; transition: border-color .2s; }
-.defi-input:focus { border-color: var(--gold); }
+.defi-choices { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.defi-choice { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 13px 16px; font-family: 'Cinzel', serif; font-size: 11px; color: var(--white); letter-spacing: 1px; cursor: pointer; transition: all .2s; text-align: center; }
+.defi-choice:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+.defi-choice.correct { border-color: #5ab878; color: #5ab878; background: rgba(90,184,120,.08); }
+.defi-choice.wrong   { border-color: #c05040; color: #c05040; background: rgba(192,80,64,.08); opacity: .5; }
+.defi-choice:disabled { cursor: default; }
 .defi-feedback { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 1px; min-height: 20px; text-align: center; }
 .defi-feedback.ok  { color: #5ab878; }
 .defi-feedback.err { color: #c05040; }
@@ -1645,16 +1649,22 @@ function startDefi(genre) {
   const guessEl = document.getElementById('defi-guess');
   guessEl.style.display = 'flex';
 
-  // Render card with title masked
   const cardWrap = document.getElementById('defi-card-wrap');
-  const maskedCard = renderMaskedCard(S_DEFI.card);
-  cardWrap.innerHTML = maskedCard;
+  cardWrap.innerHTML = renderMaskedCard(S_DEFI.card);
   applyScoreGlow(cardWrap);
 
-  document.getElementById('defi-input').value = '';
+  // Build 3 choices: correct + 2 decoys from same genre
+  const decoyPool = CARDS.filter(c => c.id !== S_DEFI.card.id && c.genre === genre);
+  const decoys = decoyPool.sort(() => Math.random() - .5).slice(0, 2);
+  const choices = [S_DEFI.card, ...decoys].sort(() => Math.random() - .5);
+
+  const choicesEl = document.getElementById('defi-choices');
+  choicesEl.innerHTML = choices.map(c =>
+    `<button class="defi-choice" onclick="checkDefi('${c.id}')">${c.title}</button>`
+  ).join('');
+
   document.getElementById('defi-feedback').textContent = '';
   document.getElementById('defi-feedback').className = 'defi-feedback';
-  document.getElementById('defi-input').focus();
 }
 
 function renderMaskedCard(card) {
@@ -1708,67 +1718,47 @@ function renderMaskedCard(card) {
   return `<div class="card-wrap clg">${cardHTML}</div>`;
 }
 
-function normalize(str) {
-  return str.toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .replace(/[''`]/g, "'")
-    .replace(/[^a-z0-9' ]/g, '')
-    .trim();
-}
-
-function checkDefi() {
-  const input = document.getElementById('defi-input').value;
+function checkDefi(chosenId) {
   const feedback = document.getElementById('defi-feedback');
-  if (!input.trim()) return;
+  const buttons = document.querySelectorAll('.defi-choice');
+  const correct = parseInt(chosenId) === S_DEFI.card.id;
 
-  S_DEFI.attempts++;
-  const guess = normalize(input);
-  const answer = normalize(S_DEFI.card.title);
+  // Disable all buttons and highlight
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    const btnTitle = btn.textContent;
+    if (btnTitle === S_DEFI.card.title) btn.classList.add('correct');
+    else if (btnTitle === CARDS.find(c => c.id === parseInt(chosenId))?.title && !correct) btn.classList.add('wrong');
+  });
 
-  if (guess === answer) {
-    // WIN
+  if (correct) {
     feedback.textContent = '🎉 Correct! You win this card!';
     feedback.className = 'defi-feedback won';
-    document.getElementById('defi-input').disabled = true;
     if (!S.collection.includes(S_DEFI.card.id)) {
       S.collection.push(S_DEFI.card.id);
       showToast(`"${S_DEFI.card.title}" added to your collection!`, 'gold');
     } else {
       showToast('Already in your collection!');
     }
-    // Show title on card and offer replay
     setTimeout(() => {
       const titleEl = document.querySelector('#defi-card-wrap .ch-title');
-      if (titleEl) {
-        titleEl.textContent = S_DEFI.card.title;
-        titleEl.style.background = '';
-        titleEl.style.color = '';
-        titleEl.style.borderRadius = '';
-      }
-      const formEl = document.querySelector('.defi-form');
-      const replayBtn = document.createElement('button');
-      replayBtn.className = 'btn-secondary';
-      replayBtn.textContent = 'Play Again';
-      replayBtn.onclick = renderDefi;
-      formEl.appendChild(replayBtn);
-    }, 600);
+      if (titleEl) { titleEl.textContent = S_DEFI.card.title; titleEl.style.background = ''; titleEl.style.color = ''; titleEl.style.borderRadius = ''; }
+    }, 300);
   } else {
-    // WRONG
-    const hint = S_DEFI.attempts >= 2
-      ? ` — Hint: starts with "${S_DEFI.card.title[0].toUpperCase()}"`
-      : '';
-    feedback.textContent = `Wrong…${hint}`;
+    feedback.textContent = `Wrong — the answer was "${S_DEFI.card.title}"`;
     feedback.className = 'defi-feedback err';
-    document.getElementById('defi-input').classList.add('shake');
-    setTimeout(() => document.getElementById('defi-input').classList.remove('shake'), 400);
   }
-}
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && S.screen === 'defi' && document.getElementById('defi-guess').style.display !== 'none') {
-    checkDefi();
-  }
-});
+  // Play Again button
+  setTimeout(() => {
+    const replayBtn = document.createElement('button');
+    replayBtn.className = 'btn-secondary';
+    replayBtn.style.marginTop = '8px';
+    replayBtn.textContent = 'Play Again';
+    replayBtn.onclick = renderDefi;
+    document.querySelector('.defi-form').appendChild(replayBtn);
+  }, 600);
+}
 
 // ══════════════════════════════════════════
 //  INIT
