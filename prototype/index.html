@@ -167,11 +167,11 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 .pack-visual {
   width: 210px; height: 295px; border-radius: 16px; cursor: pointer;
   position: relative; transition: transform .3s, box-shadow .3s;
-  background: repeating-linear-gradient(120deg, rgba(255,255,255,.04) 0px, rgba(255,255,255,.04) 1px, transparent 1px, transparent 6px),
-    linear-gradient(160deg, rgba(255,255,255,.15) 0%, rgba(0,0,0,.25) 55%, rgba(255,255,255,.06) 100%), #8a7028;
+  background: #09080d;
   box-shadow: 0 24px 64px rgba(168,124,40,.22), 0 0 0 1px rgba(168,124,40,.1);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; user-select: none;
+  overflow: hidden; user-select: none;
 }
+.pack-visual img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 16px; }
 .pack-visual:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 36px 80px rgba(168,124,40,.35), 0 0 60px rgba(168,124,40,.15); }
 .pack-visual.shaking { animation: packShake .5s ease; }
 .pack-brand { font-family: 'Cinzel', serif; font-weight: 900; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,.6); text-align: center; }
@@ -486,9 +486,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
     </div>
     <div id="pack-idle" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
       <div class="pack-visual" id="pack-visual" onclick="startPackOpen()">
-        <div class="pack-brand"><small>THE</small>MUSIC DECK</div>
-        <div class="pack-pack-name">SEASON<br>ONE</div>
-        <div class="pack-count">5 CARTES · COLLECTION</div>
+        <img src="../assets/cards/artworks/booster-pack-season1-v1.png" alt="Season One booster pack">
       </div>
       <div class="pack-tap-hint">— CLICK TO OPEN —</div>
     </div>
