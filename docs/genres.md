@@ -14,25 +14,38 @@ This document covers:
 
 Each genre has a dominant color used for card frames and UI, and a gameplay archetype that defines how it behaves in battles.
 
-### 1. Rock / Metal
+### 1. Rock
 
-- **Dominant color**: Deep blue (`#2040a0`)
+- **Dominant color**: Flashy red (`#d01828`)
 - **Archetype**: Warriors, brutes, tanks
 - **Description**: Specialists in raw power and resilience, they boost allies of the same genre. Their strength comes from the collective and stage rage.
 - **Strength**: Vintage
 - **Weakness**: Electronic
 
+#### Subgenre: Metal
+
+- **Dominant color**: Dark red (`#7a0810`) — rouge plus sombre que le Rock, sous-genre extérieur
+- **Archetype**: Warriors, brutes, tanks (version extrême)
+
 ### 2. Reggae / Dub
 
-- **Dominant color**: Sage green (`#4a7a52`)
+- **Dominant color**: Grass green (`#3a9030`)
 - **Archetype**: Healer mages, nature shamans
 - **Description**: Masters of healing and debuff reduction, they protect and heal using natural vibes and plants. Attribute: Nature, harmony.
 - **Strength**: Electronic
 - **Weakness**: Disco / Funk
 
+#### Subgenre direction: Dub
+
+- **Color**: Turquoise (`~#20a898`) — vert gazon tirant vers le bleu roi électro
+
+#### Subgenre direction: Reggae (sous-genres)
+
+- **Color**: Vert pomme (`~#78d828`) — vert gazon plus vif et lumineux
+
 ### 3. Vintage
 
-- **Dominant color**: Warm ochre (`#8a7028`)
+- **Dominant color**: Gray (`#787878`)
 - **Archetype**: Virtuosos, improvisers, tempo manipulators
 - **Description**: Experts in improvisation, they gain power as rounds progress and manipulate the rhythm of the game.
 - **Strength**: Country
@@ -40,7 +53,7 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 ### 4. World
 
-- **Dominant color**: Terra cotta (`#8a3820`)
+- **Dominant color**: Red (`#a01818`)
 - **Archetype**: Travelers, adaptive, multicultural bonuses
 - **Description**: Benefit from diversity: the more different genres in the lineup, the stronger they become. Adaptability and openness.
 - **Strength**: Pop
@@ -56,7 +69,7 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 ### 6. Electronic
 
-- **Dominant color**: Steel gray (`#506070`)
+- **Dominant color**: Royal blue (`#2850c8`)
 - **Archetype**: Engineers, accumulators, resource generators
 - **Description**: Generate stack bonuses each round, accumulate resources over time.
 - **Strength**: Rock / Metal
@@ -72,7 +85,7 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 ### 8. Disco / Funk
 
-- **Dominant color**: Dusty mauve (`#6a3878`)
+- **Dominant color**: Hot pink (`#c0387a`)
 - **Archetype**: Collective boosters, party makers
 - **Description**: The more active stacks in the lineup, the more everyone is boosted. Group synergy.
 - **Strength**: Reggae / Dub
@@ -88,7 +101,7 @@ Each genre has a dominant color used for card frames and UI, and a gameplay arch
 
 ### 10. Pop
 
-- **Dominant color**: Pearl white (`#989098`)
+- **Dominant color**: Near-white (`#c0b8d0`)
 - **Archetype**: Universal, spreaders, connectors
 - **Description**: Share their bonuses with adjacent cards. Great accessibility and popularity.
 - **Strength**: Hip-hop
@@ -100,12 +113,12 @@ Each genre has a strength against another genre, and a weakness against a differ
 
 | Genre        | Strength vs. | Weakness vs. |
 | ------------ | ------------ | ------------ |
-| Rock / Metal | Vintage      | Electronic   |
+| Rock         | Vintage      | Electronic   |
 | Reggae / Dub | Electronic   | Disco / Funk |
-| Vintage      | Country      | Rock / Metal |
+| Vintage      | Country      | Rock         |
 | World        | Pop          | Country      |
 | Classical    | Disco / Funk | Hip-hop      |
-| Electronic   | Rock / Metal | Reggae / Dub |
+| Electronic   | Rock         | Reggae / Dub |
 | Country      | World        | Vintage      |
 | Disco / Funk | Reggae / Dub | Classical    |
 | Hip-hop      | Classical    | Pop          |
@@ -123,6 +136,22 @@ Genres interact in battles like type matchups (see [Battle System](./battle-syst
 - Classical effects are unique and non-stackable with other Classical cards
 - Disco / Funk effects scale with the total number of active stacks
 - Hip-hop cards gain solo immunity to debuffs when they are the only card of their genre in the lineup
+
+## Subgenre Color System
+
+Each subgenre inherits the dominant color of its parent genre, with a variation that can pull toward a second genre. The further the subgenre sits from the parent's core, the more it blends toward the secondary genre's hue.
+
+**Examples:**
+
+| Subgenre   | Parent genre(s)   | Color                                      |
+| ---------- | ----------------- | ------------------------------------------ |
+| Metal      | Rock              | Navy blue (`#1a2e6a`) — denim foncé        |
+| Funk Metal      | Rock + Funk       | Indigo (`~#8020a0`) — rouge rock tirant au rose funk   |
+| Pop Rap         | Hip-hop + Pop     | Jaune très clair (`~#f0e890`) — or pastel              |
+| Dub (ss-genres) | Reggae + Electro  | Turquoise (`~#20a898`) — vert gazon + bleu roi électro |
+| Reggae (ss-genres) | Reggae         | Vert pomme (`~#78d828`) — vert gazon plus lumineux     |
+
+> This table will grow as subgenres are defined. The color blending ratio reflects the thematic distance from the parent genre.
 
 ## Subgenres Reference
 

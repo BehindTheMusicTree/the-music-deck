@@ -109,7 +109,7 @@ export default function BattleScreen() {
       fs = { ...fs, debuff: 0.2 };
       fs = addLog(fs, 'heal', `${card.ability}: +15 HP, opponent attack reduced`);
       return enemyTurn(fs);
-    } else if (genre === 'Jazz') {
+    } else if (genre === 'Vintage') {
       const mult = 1 + Math.random() * 2;
       const dmg = Math.floor(calcDmg(card) * mult);
       fs = addLog(fs, 'special', `${card.ability}: ×${mult.toFixed(1)} → ${dmg} damage!`);

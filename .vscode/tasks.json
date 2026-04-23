@@ -18,8 +18,8 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "Starting\\.\\.\\.",
-          "endsPattern": "Ready in"
+          "beginsPattern": "Next\\.js",
+          "endsPattern": "Local:"
         }
       },
       "presentation": {

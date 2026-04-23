@@ -19,6 +19,10 @@ This folder contains the product design documentation for The Music Deck.
 - [AI Card Generation and Asset Storage](./ai-card-generation.md)
 - [Booster Opening UX](./booster-opening-ux.md)
 
+## Design
+
+- [Charte Graphique](./charte-graphique.md)
+
 ## Governance
 
 - [Glossary](./glossary.md)

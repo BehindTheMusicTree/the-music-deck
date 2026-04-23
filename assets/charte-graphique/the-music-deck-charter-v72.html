@@ -130,6 +130,24 @@ h2 em { color: var(--gold); font-style: normal; }
 .gc-hex { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); }
 .gc-role { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 12px; color: var(--muted); line-height: 1.4; }
 
+/* ── Genre wheel ── */
+.genre-wheel-wrap { display: flex; gap: 64px; align-items: flex-start; margin-top: 40px; flex-wrap: wrap; }
+.genre-wheel { position: relative; width: 640px; height: 640px; flex-shrink: 0; }
+.gw-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 96px; height: 56px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px; color: #09080d; text-align: center; line-height: 1.5; z-index: 2; box-shadow: 0 0 0 2px #1e1c2c, 0 0 24px rgba(192,184,208,.2); cursor: pointer; }
+.gw-rect { position: absolute; transform: translate(-50%,-50%); width: 90px; height: 52px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,.5); transition: transform .15s; }
+.gw-rect:hover { transform: translate(-50%,-50%) scale(1.07); }
+.gw-rect-name { font-family: 'Cinzel', serif; font-size: 7.5px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,.92); text-shadow: 0 1px 4px rgba(0,0,0,.7); white-space: nowrap; }
+.gw-rect-hex  { font-family: 'Space Mono', monospace; font-size: 6.5px; color: rgba(255,255,255,.6); text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+/* world aside */
+.genre-world-aside { flex: 1; min-width: 220px; }
+.gwa-title { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--white); font-weight: 700; margin-bottom: 12px; }
+.gwa-desc { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.gwa-example { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.gwa-ex-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+.gwa-ex-swatch { height: 32px; border-radius: 3px; position: relative; overflow: hidden; }
+.gwa-ex-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.85) 1.5px, transparent 1.5px); background-size: 6px 6px; }
+.gwa-ex-name { font-family: 'Cinzel', serif; font-size: 9px; color: var(--white); letter-spacing: 1px; }
+
 /* ── TYPOGRAPHY ── */
 .typo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
 .tp { padding: 40px; background: var(--surface); }
@@ -472,9 +490,26 @@ footer { border-top: 1px solid var(--border); padding: 36px 64px; max-width: 112
   <div class="section-label">Genre colour system</div>
   <h2>THE <em>GENRES</em></h2>
   <div class="ch-rule"></div>
-  <p class="intro">Each genre owns a border colour that defines the card frame, the type-line pip, the corner diamonds, and the progress bar glow. Ten genres, ten distinct identities.</p>
-  <div class="genre-table" id="genre-table-1"></div>
-  <div class="genre-table-2" id="genre-table-2"></div>
+  <p class="intro">Each genre owns a border colour that defines the card frame, the type-line pip, the corner diamonds, and the progress bar glow. World is the exception — it has no fixed colour, using instead a dotted pattern overlaid on the host genre's colour.</p>
+  <div class="genre-wheel-wrap">
+    <div class="genre-wheel" id="genre-wheel">
+      <div class="gw-center" style="background:#c0b8d0;box-shadow:0 0 0 3px #1e1c2c,0 0 24px rgba(192,184,208,.25);" onclick="navigator.clipboard.writeText('#c0b8d0')" title="#c0b8d0">POP<br><span style="font-size:6px;letter-spacing:1px;opacity:.7;">#c0b8d0</span></div>
+    </div>
+    <div class="genre-world-aside">
+      <div class="gwa-title">WORLD — cas particulier</div>
+      <p class="gwa-desc">World n'a pas de couleur propre. Chaque carte World emprunte la couleur du genre hôte et y superpose un motif de pointillés blancs, signifiant la diversité et l'emprunt culturel.</p>
+      <div class="gwa-example">
+        <div class="gwa-ex-label">Exemple — Les Lacs du Connemara</div>
+        <div class="gwa-ex-swatch" style="background:#987040"><div class="gwa-ex-dots"></div></div>
+        <div class="gwa-ex-name">Pointillés blancs · fond Vintage</div>
+      </div>
+      <div class="gwa-example" style="margin-top:10px">
+        <div class="gwa-ex-label">Exemple — carte World sur Hip-hop</div>
+        <div class="gwa-ex-swatch" style="background:#c8960a"><div class="gwa-ex-dots"></div></div>
+        <div class="gwa-ex-name">Pointillés blancs · fond Hip-hop</div>
+      </div>
+    </div>
+  </div>
 </section>
 <div class="sep"></div>
 
@@ -812,16 +847,16 @@ const panels = [
   { n:'Ink',          h:'#1a1208', r:'Text on parchment' },
 ];
 const genres = [
-  { n:'Rock',       h:'#4a6e8a', r:'Steel blue — electric energy' },
-  { n:'Reggae',     h:'#4a7a52', r:'Sage green — natural roots' },
-  { n:'Vintage',    h:'#8a7028', r:'Warm ochre — timeless warmth' },
-  { n:'World',      h:'#8a3820', r:'Terra cotta — earth & travel' },
-  { n:'Classical',  h:'#7a7060', r:'Ivory — concert hall elegance' },
-  { n:'Electronic', h:'#506070', r:'Pewter — circuits & synthesis' },
-  { n:'Country',    h:'#7a4e20', r:'Sienna — open road & dust' },
-  { n:'Funk',       h:'#6a3878', r:'Mauve — dance floor nights' },
-  { n:'Hip-hop',    h:'#7a5e18', r:'Antique gold — crown & street' },
-  { n:'Pop',        h:'#989098', r:'Pearl silver — mass appeal' },
+  { n:'Rock',       h:'#d01828', r:'Rouge clinquant — énergie scène' },
+  { n:'Reggae/Dub', h:'#3a9030', r:'Vert gazon — roots naturelles' },
+  { n:'Vintage',    h:'#787878', r:'Gris — nostalgie monochrome' },
+  { n:'Classical',  h:'#5c2a0a', r:'Brun bois — élégance concert' },
+  { n:'Electronic', h:'#2850c8', r:'Bleu roi — circuits & synthèse' },
+  { n:'Country',    h:'#7a4e20', r:'Brun sienna — grand air & poussière' },
+  { n:'Disco/Funk', h:'#c0387a', r:'Rose chaud — nuits dancefloor' },
+  { n:'Hip-hop',    h:'#c8960a', r:'Or antique — crown & street' },
+  // World n'a pas de couleur propre — voir section World ci-dessus
+  // Pop est au centre du nuancier (universel, connecteur)
 ];
 
 function mk(c) {
@@ -836,17 +871,40 @@ document.getElementById('pal-primary').append(...primary.map(mk));
 document.getElementById('pal-secondary').append(...secondary.map(mk));
 document.getElementById('pal-panels').append(...panels.map(mk));
 
-// Genre table
-function mkGenre(c) {
-  const el = document.createElement('div');
-  el.className = 'gc';
-  el.innerHTML = `<div class="gc-swatch" style="background:${c.h}"></div><div class="gc-name">${c.n}</div><div class="gc-hex">${c.h}</div><div class="gc-role">${c.r}</div>`;
-  return el;
-}
-const g1 = genres.slice(0,5);
-const g2 = genres.slice(5);
-document.getElementById('genre-table-1').append(...g1.map(mkGenre));
-document.getElementById('genre-table-2').append(...g2.map(mkGenre));
+// Genre wheel
+(function() {
+  const wheel = document.getElementById('genre-wheel');
+  const cx0 = 320, cy0 = 320, rInner = 210, rOuter = 290;
+
+  // Inner circle — 8 genres, Rock at index 0 (top, -90°)
+  genres.forEach((g, i) => {
+    const angle = (i / genres.length) * 360 - 90;
+    const rad = angle * Math.PI / 180;
+    const cx = cx0 + Math.cos(rad) * rInner;
+    const cy = cy0 + Math.sin(rad) * rInner;
+    const el = document.createElement('div');
+    el.className = 'gw-rect';
+    el.style.cssText = `left:${cx}px; top:${cy}px; background:${g.h}; box-shadow:0 2px 16px ${g.h}66;`;
+    el.title = g.h;
+    el.onclick = () => navigator.clipboard.writeText(g.h);
+    el.innerHTML = `<span class="gw-rect-name">${g.n}</span><span class="gw-rect-hex">${g.h}</span>`;
+    wheel.appendChild(el);
+  });
+
+  // Outer circle — Metal, same angle as Rock (index 0 → -90°)
+  const metal = { n:'Metal', h:'#7a0810' };
+  const mAngle = (0 / genres.length) * 360 - 90;
+  const mRad = mAngle * Math.PI / 180;
+  const mx = cx0 + Math.cos(mRad) * rOuter;
+  const my = cy0 + Math.sin(mRad) * rOuter;
+  const mel = document.createElement('div');
+  mel.className = 'gw-rect';
+  mel.style.cssText = `left:${mx}px; top:${my}px; background:${metal.h}; box-shadow:0 2px 16px ${metal.h}88; outline:2px dashed rgba(208,24,40,.4); outline-offset:3px;`;
+  mel.title = metal.h;
+  mel.onclick = () => navigator.clipboard.writeText(metal.h);
+  mel.innerHTML = `<span class="gw-rect-name">${metal.n}</span><span class="gw-rect-hex">${metal.h}</span>`;
+  wheel.appendChild(mel);
+})();
 </script>
 </body>
 </html>

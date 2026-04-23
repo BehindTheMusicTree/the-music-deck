@@ -2,7 +2,7 @@ export type Rarity = "Legendary" | "Epic" | "Rare" | "Common";
 export type Genre =
   | "Rock"
   | "Pop"
-  | "Jazz"
+  | "Vintage"
   | "Classic"
   | "Electro"
   | "Reggae"
@@ -61,7 +61,7 @@ export const CARDS: Card[] = [
     id: 3,
     title: "So What",
     artist: "Miles Davis",
-    genre: "Jazz",
+    genre: "Vintage",
     power: 88,
     rarity: "Epic",
     pop: 85,
@@ -233,7 +233,7 @@ export const CARDS: Card[] = [
     id: 15,
     title: "Summertime",
     artist: "Gershwin",
-    genre: "Jazz",
+    genre: "Vintage",
     power: 80,
     rarity: "Rare",
     pop: 79,
@@ -360,7 +360,7 @@ export const CARDS: Card[] = [
     id: 24,
     title: "Take Five",
     artist: "Dave Brubeck Quartet",
-    genre: "Jazz",
+    genre: "Vintage",
     power: 83,
     rarity: "Rare",
     pop: 80,
@@ -418,7 +418,7 @@ export const CARDS: Card[] = [
     id: 28,
     title: "These Boots Are Made For Walkin'",
     artist: "Nancy Sinatra",
-    genre: "Jazz",
+    genre: "Vintage",
     power: 82,
     rarity: "Rare",
     pop: 76,

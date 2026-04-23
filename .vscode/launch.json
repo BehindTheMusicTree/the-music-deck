@@ -19,7 +19,7 @@
       "name": "Next.js: debug (Chrome)",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3010",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "Next.js: dev"
     }
