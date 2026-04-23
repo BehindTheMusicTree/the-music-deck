@@ -22,18 +22,14 @@ export default function ChallengeScreen() {
   const [phase, setPhase] = useState<Phase>('pick');
   const [guess, setGuess] = useState<GuessState | null>(null);
 
-  // eslint-disable-next-line react-hooks/purity
   function startDefi(genre: Genre) {
     const pool = CARDS.filter(c => c.genre === genre);
     if (!pool.length) return;
-    // eslint-disable-next-line react-hooks/purity
     const card = pool[Math.floor(Math.random() * pool.length)];
 
     let decoyPool = CARDS.filter(c => c.id !== card.id && c.genre === genre);
     if (decoyPool.length < 2) decoyPool = CARDS.filter(c => c.id !== card.id);
-    // eslint-disable-next-line react-hooks/purity
     const decoys = decoyPool.sort(() => Math.random() - 0.5).slice(0, 2);
-    // eslint-disable-next-line react-hooks/purity
     const choices = [card, ...decoys].sort(() => Math.random() - 0.5);
 
     setGuess({ card, choices, chosenId: null, result: null });
