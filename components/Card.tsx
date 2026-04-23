@@ -1,7 +1,10 @@
-import { View, Text, Pressable, Image, StyleSheet } from 'react-native';
+import { View, Text, Pressable, Image, ImageSourcePropType, StyleSheet } from 'react-native';
+import artworkMap from '@/assets/cards/artworks/examples';
+import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Rect, Circle, Text as SvgText, RadialGradient, Defs, Stop } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import type { Card } from '@/lib/data/cards';
-import { GENRE_CFG } from '@/lib/data/genres';
+import { GENRE_CFG, RAR_SVG } from '@/lib/data/genres';
 import { genreColors, genreKey, fonts } from '@/lib/tokens';
 
 interface CardProps {
@@ -17,6 +20,18 @@ const CARD_W = 272;
 const CARD_H = 400;
 const SCALE_SM = 149 / CARD_W;
 const SCALE_LG = 285 / CARD_W;
+
+/** Compute glow shadow for score circle based on power (40–100 scale) */
+function scoreGlow(power: number) {
+  const t = Math.max(0, Math.min(1, (power - 40) / 60));
+  return {
+    shadowColor: '#c8a040',
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4 + t * 14,
+    shadowOpacity: 0.25 + t * 0.65,
+    elevation: Math.floor(t * 14),
+  };
+}
 
 function CardArt({ card }: { card: Card }) {
   const cfg = GENRE_CFG[card.genre] ?? GENRE_CFG.Pop;
@@ -65,31 +80,33 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
   const cfg = GENRE_CFG[card.genre] ?? GENRE_CFG.Pop;
   const gkey = genreKey[card.genre] ?? 'pop';
   const gc = genreColors[gkey];
-  const artSrc = card.artwork ? `/assets/cards/artworks/examples/${card.artwork}` : null;
-
-  // Rarity color
-  const rarityColors: Record<string, string> = {
-    Legendary: '#c8a040', Epic: '#a060c8', Rare: '#4a7aaa', Common: '#666',
-  };
-  const rarColor = rarityColors[card.rarity] ?? '#666';
+  const artSrc: ImageSourcePropType | null = card.artwork ? (artworkMap[card.artwork] ?? null) : null;
+  const rarSvg = RAR_SVG[card.rarity];
+  const borderColor = gc?.border ?? '#888';
+  const cardBgColor = gc?.cardBg ?? '#16141f';
+  const glow = scoreGlow(card.power);
 
   const cardEl = (
     <Pressable
       onPress={onClick}
-      style={[
-        styles.card,
-        {
-          borderColor: gc?.border ?? '#888',
-          backgroundColor: gc?.cardBg ?? '#16141f',
-        },
-        selected && styles.selected,
-      ]}
+      style={[styles.card, { borderColor }]}
     >
-      <View style={[styles.inner, { backgroundColor: gc?.cardBg ?? '#16141f' }]}>
+      {/* Card texture shimmer over genre bg color */}
+      <LinearGradient
+        colors={['rgba(255,255,255,0.09)', 'rgba(0,0,0,0.20)', 'rgba(255,255,255,0.04)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[StyleSheet.absoluteFill, { backgroundColor: cardBgColor }]}
+      />
+      {selected && (
+        <View style={[StyleSheet.absoluteFill, styles.selectedOverlay]} />
+      )}
+
+      <View style={styles.inner}>
         {/* Header */}
-        <View style={[styles.header, { backgroundColor: gc?.headerBg ?? '#100f18', borderBottomColor: (gc?.border ?? '#333') + '44' }]}>
+        <View style={[styles.header, { backgroundColor: gc?.headerBg ?? '#100f18', borderBottomColor: borderColor + '44' }]}>
           <View style={styles.headerLeft}>
-            <Text style={[styles.headerIcon, { color: gc?.textMain ?? '#fff' }]}>{cfg.sym}</Text>
+            <SvgXml xml={cfg.icon} width={16} height={16} color={gc?.textMain ?? '#fff'} />
             <View style={styles.headerTitles}>
               <Text style={[styles.cardTitle, { color: gc?.textMain ?? '#fff' }]} numberOfLines={2}>
                 {maskTitle ? '???' : card.title}
@@ -99,7 +116,8 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
               </Text>
             </View>
           </View>
-          <View style={[styles.scoreCircle, { borderColor: gc?.border ?? '#888', backgroundColor: gc?.headerBg ?? '#100f18' }]}>
+          {/* Score circle with power-based glow */}
+          <View style={[styles.scoreCircle, { borderColor }, glow]}>
             <Text style={[styles.scoreText, { color: gc?.textMain ?? '#fff' }]}>{card.power}</Text>
           </View>
         </View>
@@ -107,17 +125,22 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
         {/* Artwork */}
         <View style={styles.artArea}>
           {artSrc
-            ? <Image source={{ uri: artSrc }} style={styles.artImage} resizeMode="cover" />
+            ? <Image source={artSrc} style={styles.artImage} resizeMode="cover" />
             : <CardArt card={card} />
           }
         </View>
 
-        {/* Bottom: type strip */}
-        <View style={[styles.typeStrip, { borderColor: gc?.border ?? '#888' }]}>
+        {/* Type strip — parchment with notched diamond corners */}
+        <View style={[styles.typeStrip, { borderColor }]}>
+          {/* Rotated squares at each corner mask the border-radius, creating diamond notches */}
+          <View style={[styles.corner, styles.cornerTL, { backgroundColor: cardBgColor }]} />
+          <View style={[styles.corner, styles.cornerTR, { backgroundColor: cardBgColor }]} />
+          <View style={[styles.corner, styles.cornerBL, { backgroundColor: cardBgColor }]} />
+          <View style={[styles.corner, styles.cornerBR, { backgroundColor: cardBgColor }]} />
           <Text style={styles.typeText}>Song · {card.year}</Text>
           <View style={styles.typeRight}>
             <Text style={styles.typeGenre}>{cfg.genreLabel}</Text>
-            <View style={[styles.pip, { backgroundColor: gc?.border ?? '#888' }]} />
+            <View style={[styles.pip, { backgroundColor: borderColor }]} />
           </View>
         </View>
 
@@ -127,19 +150,25 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
           <Text style={styles.abilityDesc} numberOfLines={3}>{card.abilityDesc}</Text>
         </View>
 
-        {/* Stats */}
+        {/* Stats with gradient fills and glow */}
         <View style={styles.statsBox}>
           {[
-            { lbl: 'Popularity', val: card.pop, colors: gc?.barPop },
-            { lbl: 'Experimental', val: card.exp, colors: gc?.barExp },
-          ].map(({ lbl, val, colors: bc }) => (
+            { lbl: 'Popularity', val: card.pop, bc: gc?.barPop, bg: gc?.barGlowPop },
+            { lbl: 'Experimental', val: card.exp, bc: gc?.barExp, bg: gc?.barGlowExp },
+          ].map(({ lbl, val, bc, bg }) => (
             <View key={lbl} style={styles.statRow}>
               <Text style={styles.statLbl}>{lbl}</Text>
               <View style={styles.statBg}>
-                <View style={[styles.statFill, {
-                  width: `${val}%` as any,
-                  backgroundColor: bc ? bc[1] : '#888',
-                }]} />
+                <LinearGradient
+                  colors={(bc as [string, string]) ?? ['#444', '#888']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[
+                    styles.statFill,
+                    { width: `${val}%` as any },
+                    bg ? { shadowColor: bg, shadowOffset: { width: 0, height: 0 }, shadowRadius: 8, shadowOpacity: 1, elevation: 4 } : null,
+                  ]}
+                />
               </View>
               <Text style={styles.statVal}>{val}</Text>
             </View>
@@ -150,8 +179,8 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
         <View style={styles.footer}>
           <Text style={styles.brand}>THE MUSIC DECK</Text>
           <View style={styles.rarityRow}>
-            <View style={[styles.rarDot, { backgroundColor: rarColor }]} />
-            <Text style={[styles.rarText, { color: rarColor }]}>{card.rarity}</Text>
+            {rarSvg ? <SvgXml xml={rarSvg} width={10} height={10} /> : null}
+            <Text style={[styles.rarText, { color: rarityColor(card.rarity) }]}>{card.rarity}</Text>
           </View>
         </View>
       </View>
@@ -174,6 +203,11 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
   );
 }
 
+function rarityColor(rarity: string) {
+  const map: Record<string, string> = { Legendary: '#c8a040', Epic: '#a060c8', Rare: '#4a7aaa', Common: '#666' };
+  return map[rarity] ?? '#666';
+}
+
 const styles = StyleSheet.create({
   wrap: {
     overflow: 'hidden',
@@ -183,24 +217,22 @@ const styles = StyleSheet.create({
   card: {
     width: CARD_W,
     height: CARD_H,
-    borderRadius: 18,
+    borderRadius: 16,
     borderWidth: 1.5,
-    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 24 },
     shadowOpacity: 0.85,
     shadowRadius: 32,
     elevation: 24,
+    overflow: 'hidden',
   },
-  selected: {
-    borderWidth: 2.5,
-    shadowColor: '#a87c28',
-    shadowOpacity: 0.5,
+  selectedOverlay: {
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#a87c28',
   },
   inner: {
     flex: 1,
-    borderRadius: 8,
-    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
@@ -213,7 +245,6 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 7, flex: 1, overflow: 'hidden' },
-  headerIcon: { fontSize: 16, lineHeight: 18, flexShrink: 0 },
   headerTitles: { flexDirection: 'column', gap: 1, flex: 1, overflow: 'hidden' },
   cardTitle: {
     fontFamily: fonts.cinzelBold,
@@ -230,33 +261,48 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   scoreCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+    backgroundColor: 'rgba(0,0,0,0.35)',
   },
-  scoreText: { fontFamily: fonts.spaceMono, fontSize: 11 },
+  scoreText: { fontFamily: fonts.spaceMono, fontSize: 11, fontWeight: '700' },
 
   artArea: { flex: 1, overflow: 'hidden' },
   artImage: { width: '100%', height: '100%' },
 
   typeStrip: {
     backgroundColor: '#ede4cc',
-    borderWidth: 1.5,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     paddingVertical: 6,
     paddingHorizontal: 14,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
     marginTop: 3,
-    marginBottom: -6,
-    borderRadius: 3,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: 3,
+    // inset highlight
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.6,
+    shadowRadius: 0,
   },
+  corner: {
+    position: 'absolute',
+    width: 11,
+    height: 11,
+    transform: [{ rotate: '45deg' }],
+  },
+  cornerTL: { top: -5.5, left: -5.5 },
+  cornerTR: { top: -5.5, right: -5.5 },
+  cornerBL: { bottom: -5.5, left: -5.5 },
+  cornerBR: { bottom: -5.5, right: -5.5 },
   typeText: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: '#2e2010' },
   typeRight: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   typeGenre: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: '#2e2010' },
@@ -268,8 +314,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginHorizontal: 4,
     marginBottom: 2,
-    borderRadius: 3,
     zIndex: 2,
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 0,
   },
   abilityName: {
     fontFamily: fonts.cinzelBold,
@@ -287,11 +336,10 @@ const styles = StyleSheet.create({
   },
 
   statsBox: {
-    backgroundColor: 'rgba(0,0,0,.25)',
+    backgroundColor: 'rgba(0,0,0,.28)',
     padding: 8,
     marginHorizontal: 4,
     marginBottom: 2,
-    borderRadius: 3,
     gap: 6,
     zIndex: 1,
   },
@@ -327,7 +375,6 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    backgroundColor: 'transparent',
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginHorizontal: 4,
@@ -343,7 +390,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   rarityRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  rarDot: { width: 8, height: 8, borderRadius: 4 },
   rarText: {
     fontFamily: fonts.spaceMono,
     fontSize: 7,
