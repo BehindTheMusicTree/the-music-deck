@@ -131,15 +131,18 @@ h2 em { color: var(--gold); font-style: normal; }
 .gc-role { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 12px; color: var(--muted); line-height: 1.4; }
 
 /* ── Genre wheel ── */
-.genre-wheel-wrap { display: flex; gap: 64px; align-items: flex-start; margin-top: 40px; flex-wrap: wrap; }
-.genre-wheel { position: relative; width: 640px; height: 640px; flex-shrink: 0; }
+.genre-wheel-wrap { display: flex; flex-direction: column; align-items: center; gap: 48px; margin-top: 40px; }
+.genre-wheel { position: relative; width: 1000px; height: 1000px; flex-shrink: 0; }
 .gw-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 96px; height: 56px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px; color: #09080d; text-align: center; line-height: 1.5; z-index: 2; box-shadow: 0 0 0 2px #1e1c2c, 0 0 24px rgba(192,184,208,.2); cursor: pointer; }
-.gw-rect { position: absolute; transform: translate(-50%,-50%); width: 90px; height: 52px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,.5); transition: transform .15s; }
+.gw-rect { position: absolute; transform: translate(-50%,-50%); width: 110px; height: 64px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,.5); transition: transform .15s; }
 .gw-rect:hover { transform: translate(-50%,-50%) scale(1.07); }
-.gw-rect-name { font-family: 'Cinzel', serif; font-size: 7.5px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,.92); text-shadow: 0 1px 4px rgba(0,0,0,.7); white-space: nowrap; }
-.gw-rect-hex  { font-family: 'Space Mono', monospace; font-size: 6.5px; color: rgba(255,255,255,.6); text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.gw-rect-name { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,.92); text-shadow: 0 1px 4px rgba(0,0,0,.7); white-space: nowrap; }
+.gw-rect-hex  { font-family: 'Space Mono', monospace; font-size: 7.5px; color: rgba(255,255,255,.6); text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.gw-rect.sub { width: 80px; height: 44px; border-radius: 3px; }
+.gw-rect.sub .gw-rect-name { font-size: 7px; }
+.gw-rect.sub .gw-rect-hex  { font-size: 6px; }
 /* world aside */
-.genre-world-aside { flex: 1; min-width: 220px; }
+.genre-world-aside { width: 100%; max-width: 800px; display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; }
 .gwa-title { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--white); font-weight: 700; margin-bottom: 12px; }
 .gwa-desc { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
 .gwa-example { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
@@ -493,6 +496,29 @@ footer { border-top: 1px solid var(--border); padding: 36px 64px; max-width: 112
   <p class="intro">Each genre owns a border colour that defines the card frame, the type-line pip, the corner diamonds, and the progress bar glow. World is the exception — it has no fixed colour, using instead a dotted pattern overlaid on the host genre's colour.</p>
   <div class="genre-wheel-wrap">
     <div class="genre-wheel" id="genre-wheel">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;" viewBox="0 0 1000 1000">
+        <defs>
+          <path id="arc-genre"    d="M 500,230 A 270,270 0 1,1 499.9,230" />
+          <path id="arc-hardcore" d="M 500, 30 A 470,470 0 1,1 499.9, 30" />
+        </defs>
+        <!-- genre circle -->
+        <circle cx="500" cy="500" r="270" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <!-- inside label: POP repeated -->
+        <text font-family="Cinzel, serif" font-size="11" fill="rgba(255,255,255,.85)" letter-spacing="8" dy="20">
+          <textPath href="#arc-genre" startOffset="0%">POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP · POP ·</textPath>
+        </text>
+        <text font-family="Cinzel, serif" font-size="10" fill="rgba(255,255,255,.22)" letter-spacing="5" dy="-8">
+          <textPath href="#arc-genre" startOffset="0%">EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL ·</textPath>
+        </text>
+        <!-- hardcore circle -->
+        <circle cx="500" cy="500" r="470" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <text font-family="Cinzel, serif" font-size="10" fill="rgba(255,255,255,.18)" letter-spacing="5" dy="18">
+          <textPath href="#arc-hardcore" startOffset="0%">EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL · EXPERIMENTAL ·</textPath>
+        </text>
+        <text font-family="Cinzel, serif" font-size="10" fill="rgba(255,255,255,.15)" letter-spacing="5" dy="-8">
+          <textPath href="#arc-hardcore" startOffset="0%">HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE · HARDCORE ·</textPath>
+        </text>
+      </svg>
       <div class="gw-center" style="background:#c0b8d0;box-shadow:0 0 0 3px #1e1c2c,0 0 24px rgba(192,184,208,.25);" onclick="navigator.clipboard.writeText('#c0b8d0')" title="#c0b8d0">POP<br><span style="font-size:6px;letter-spacing:1px;opacity:.7;">#c0b8d0</span></div>
     </div>
     <div class="genre-world-aside">
@@ -847,14 +873,14 @@ const panels = [
   { n:'Ink',          h:'#1a1208', r:'Text on parchment' },
 ];
 const genres = [
-  { n:'Rock',       h:'#d01828', r:'Rouge clinquant — énergie scène' },
   { n:'Reggae/Dub', h:'#3a9030', r:'Vert gazon — roots naturelles' },
-  { n:'Vintage',    h:'#787878', r:'Gris — nostalgie monochrome' },
-  { n:'Classical',  h:'#5c2a0a', r:'Brun bois — élégance concert' },
   { n:'Electronic', h:'#2850c8', r:'Bleu roi — circuits & synthèse' },
-  { n:'Country',    h:'#7a4e20', r:'Brun sienna — grand air & poussière' },
   { n:'Disco/Funk', h:'#c0387a', r:'Rose chaud — nuits dancefloor' },
   { n:'Hip-hop',    h:'#c8960a', r:'Or antique — crown & street' },
+  { n:'Rock',       h:'#d01828', r:'Rouge clinquant — énergie scène' },
+  { n:'Country',    h:'#7a4e20', r:'Brun sienna — grand air & poussière' },
+  { n:'Classical',  h:'#5c2a0a', r:'Brun bois — élégance concert' },
+  { n:'Vintage',    h:'#787878', r:'Gris — nostalgie monochrome' },
   // World n'a pas de couleur propre — voir section World ci-dessus
   // Pop est au centre du nuancier (universel, connecteur)
 ];
@@ -874,7 +900,7 @@ document.getElementById('pal-panels').append(...panels.map(mk));
 // Genre wheel
 (function() {
   const wheel = document.getElementById('genre-wheel');
-  const cx0 = 320, cy0 = 320, rInner = 210, rOuter = 290;
+  const cx0 = 500, cy0 = 500, rInner = 270, rOuter = 370;
 
   // Inner circle — 8 genres, Rock at index 0 (top, -90°)
   genres.forEach((g, i) => {
@@ -891,19 +917,87 @@ document.getElementById('pal-panels').append(...panels.map(mk));
     wheel.appendChild(el);
   });
 
+  // Helper — render a middle-ring subgenre rect at explicit angle
+  function mkMidAngle(name, hex, angleDeg, darkText) {
+    const rd  = angleDeg * Math.PI / 180;
+    const ex  = cx0 + Math.cos(rd) * 140;
+    const ey  = cy0 + Math.sin(rd) * 140;
+    const el  = document.createElement('div');
+    el.className = 'gw-rect sub';
+    el.style.cssText = `left:${ex}px; top:${ey}px; background:${hex}; box-shadow:0 2px 14px ${hex}88`;
+    el.title = hex;
+    el.onclick = () => navigator.clipboard.writeText(hex);
+    const tc = darkText ? 'rgba(10,10,10,.85)' : 'rgba(255,255,255,.9)';
+    const hc = darkText ? 'rgba(10,10,10,.5)'  : 'rgba(255,255,255,.55)';
+    el.innerHTML = `<span class="gw-rect-name" style="color:${tc};">${name}</span><span class="gw-rect-hex" style="color:${hc};">${hex}</span>`;
+    wheel.appendChild(el);
+  }
+
+  // Helper — render a middle-ring subgenre rect
+  function mkMid(name, hex, parentName, darkText) {
+    const idx = genres.findIndex(g => g.n === parentName);
+    const ang = (idx / genres.length) * 360 - 90;
+    const rd  = ang * Math.PI / 180;
+    const ex  = cx0 + Math.cos(rd) * 140;
+    const ey  = cy0 + Math.sin(rd) * 140;
+    const el  = document.createElement('div');
+    el.className = 'gw-rect sub';
+    el.style.cssText = `left:${ex}px; top:${ey}px; background:${hex}; box-shadow:0 2px 14px ${hex}88`;
+    el.title = hex;
+    el.onclick = () => navigator.clipboard.writeText(hex);
+    const tc = darkText ? 'rgba(10,10,10,.85)' : 'rgba(255,255,255,.9)';
+    const hc = darkText ? 'rgba(10,10,10,.5)'  : 'rgba(255,255,255,.55)';
+    el.innerHTML = `<span class="gw-rect-name" style="color:${tc};">${name}</span><span class="gw-rect-hex" style="color:${hc};">${hex}</span>`;
+    wheel.appendChild(el);
+  }
+
+  mkMid('Disco',       '#f0a0c0', 'Disco/Funk', true);
+  mkMid('Roots',       '#5ab848', 'Reggae/Dub', false);
+  // Between Reggae/Dub (-45°) and Electronic (0°) — outer ring
+  function mkOuter(name, hex, angleDeg) {
+    const rd = angleDeg * Math.PI / 180;
+    const ex = cx0 + Math.cos(rd) * rOuter;
+    const ey = cy0 + Math.sin(rd) * rOuter;
+    const el = document.createElement('div');
+    el.className = 'gw-rect sub';
+    el.style.cssText = `left:${ex}px; top:${ey}px; background:${hex}; box-shadow:0 2px 16px ${hex}88`;
+    el.title = hex;
+    el.onclick = () => navigator.clipboard.writeText(hex);
+    el.innerHTML = `<span class="gw-rect-name">${name}</span><span class="gw-rect-hex">${hex}</span>`;
+    wheel.appendChild(el);
+  }
+  const reggaeAngle = (genres.findIndex(g => g.n === 'Reggae/Dub') / genres.length) * 360 - 90;
+  const electroAngle = (genres.findIndex(g => g.n === 'Electronic') / genres.length) * 360 - 90;
+  mkOuter('Dub',         '#28b870', reggaeAngle);
+  mkOuter('Drum & Bass', '#3070c8', electroAngle);
+  mkOuter('Techno',      '#1a2e6a', (genres.findIndex(g => g.n === 'Electronic') / genres.length) * 360 - 90);
+  mkOuter('House',       '#4030a0', (genres.findIndex(g => g.n === 'Electronic') / genres.length) * 360 - 90 + 12);
+  mkMid('Pop Rock',   '#f07080', 'Rock',       false);
+  mkMid('EDM',        '#7090e8', 'Electronic', false);
+  const classicalAngle = (genres.findIndex(g => g.n === 'Classical') / genres.length) * 360 - 90;
+  const vintageAngle   = (genres.findIndex(g => g.n === 'Vintage')   / genres.length) * 360 - 90;
+  mkOuter('Jazz', '#7a6858', classicalAngle + (vintageAngle - classicalAngle) * 0.35);
+  mkMid('Pop Country','#d4a06a', 'Country',    false);
+  mkMid('R&B',        '#f0d870', 'Hip-hop',    true);
+
   // Outer circle — Metal, same angle as Rock (index 0 → -90°)
   const metal = { n:'Metal', h:'#7a0810' };
-  const mAngle = (0 / genres.length) * 360 - 90;
+  const mAngle = (genres.findIndex(g => g.n === 'Rock') / genres.length) * 360 - 90;
   const mRad = mAngle * Math.PI / 180;
   const mx = cx0 + Math.cos(mRad) * rOuter;
   const my = cy0 + Math.sin(mRad) * rOuter;
   const mel = document.createElement('div');
-  mel.className = 'gw-rect';
-  mel.style.cssText = `left:${mx}px; top:${my}px; background:${metal.h}; box-shadow:0 2px 16px ${metal.h}88; outline:2px dashed rgba(208,24,40,.4); outline-offset:3px;`;
+  mel.className = 'gw-rect sub';
+  mel.style.cssText = `left:${mx}px; top:${my}px; background:${metal.h}; box-shadow:0 2px 16px ${metal.h}88;`;
   mel.title = metal.h;
   mel.onclick = () => navigator.clipboard.writeText(metal.h);
   mel.innerHTML = `<span class="gw-rect-name">${metal.n}</span><span class="gw-rect-hex">${metal.h}</span>`;
   wheel.appendChild(mel);
+
+  // Nu Metal — outer ring, between Hip-hop and Metal
+  const hipHopAngle = (genres.findIndex(g => g.n === 'Hip-hop') / genres.length) * 360 - 90;
+  const nuMetalAngle = hipHopAngle + (mAngle - hipHopAngle) * 0.5;
+  mkOuter('Nu Metal', '#c86010', nuMetalAngle);
 })();
 </script>
 </body>
