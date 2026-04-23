@@ -56,7 +56,7 @@ Trois axes de classement permettent aux joueurs de se situer et de se mesurer:
 
 - **Mondial**: classement general par points cumules, ouvert a tous les joueurs.
 - **Par pays**: classement restreint aux joueurs d'un meme pays, pour une competition plus locale et accessible.
-- **Par genre / sous-genre**: classement specialise base sur les points gagnes uniquement avec des lineups ou enigmes rattaches a un genre donne (ex: Rock, Hip-Hop, Jazz, Metal progressif...). Valorise la maitrise d'une niche musicale plutot que la collection exhaustive.
+- **Par genre / sous-genre**: classement specialise base sur les points gagnes uniquement avec des lineups ou enigmes rattaches a un genre donne (ex: Rock, Hip-hop, Jazz, Metal progressif...). Valorise la maitrise d'une niche musicale plutot que la collection exhaustive.
 
 Les classements par genre/sous-genre sont particulierement coherents avec le `MusicTree`: un joueur qui approfondit un sous-genre specifique peut y dominer sans rivaliser avec les joueurs generalistes au classement mondial.
 

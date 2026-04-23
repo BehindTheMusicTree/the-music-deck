@@ -1,0 +1,5 @@
+🎨 Illustration‑Only Prompt (Magic‑style)
+“High‑detail fantasy illustration in the style of Magic: The Gathering. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subject, focal point, and strongest visual elements in the upper third. No text, no symbols, no borders, no card frame. A richly painted digital artwork with dramatic lighting, deep colors, and a mystical atmosphere. The lower area should remain simple or atmospheric since it will be hidden.”
+
+🎨 Magic‑Style Illustration Prompt — “Lacrimosa” (Brown‑Wood Palette)
+“High‑detail fantasy illustration inspired by Mozart’s Requiem – Lacrimosa. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subject and all key visual elements in the upper third. A solemn, ethereal scene evoking grief and transcendence: ghostly or angelic figures emerging from soft light, flowing robes, a sense of sacred sorrow. Dominant color palette of warm brown wood tones, with subtle golden highlights. Dramatic, divine lighting from above. No text, no symbols, no borders.”
