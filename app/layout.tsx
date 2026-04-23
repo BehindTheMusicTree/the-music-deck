@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GameProvider>
           <div id="app">
             <TopBar />
-            <div id="screens">
+            <div className="screens">
               {children}
             </div>
             <BottomNav />
