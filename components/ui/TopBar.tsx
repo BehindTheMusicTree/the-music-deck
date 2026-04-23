@@ -1,16 +1,65 @@
-'use client';
-
+import { View, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGame } from '@/lib/game-state';
+import { colors, fonts } from '@/lib/tokens';
 
 export default function TopBar() {
   const { state } = useGame();
+  const insets = useSafeAreaInsets();
+
   return (
-    <header className="top-bar">
-      <div className="top-logo"><span>THE</span> MUSIC DECK</div>
-      <div className="top-right">
-        <div className="top-level">Lv. 7 · Collector</div>
-        <div className="top-coins">⬡ <span>{state.coins}</span></div>
-      </div>
-    </header>
+    <View style={[styles.topBar, { paddingTop: insets.top }]}>
+      <View style={styles.inner}>
+        <Text style={styles.logo}>
+          <Text style={styles.logoThe}>THE </Text>
+          MUSIC DECK
+        </Text>
+        <View style={styles.right}>
+          <Text style={styles.level}>Lv. 7 · Collector</Text>
+          <Text style={styles.coins}>⬡ {state.coins}</Text>
+        </View>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'rgba(9,8,13,0.97)',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    zIndex: 200,
+  },
+  inner: {
+    height: colors.topH,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 28,
+  },
+  logo: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: 11,
+    letterSpacing: 4,
+    color: colors.gold,
+  },
+  logoThe: {
+    color: colors.muted,
+    fontFamily: fonts.cinzel,
+  },
+  right: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
+  level: {
+    fontFamily: fonts.spaceMono,
+    fontSize: 10,
+    color: colors.muted,
+  },
+  coins: {
+    fontFamily: fonts.spaceMono,
+    fontSize: 11,
+    color: colors.gold,
+  },
+});

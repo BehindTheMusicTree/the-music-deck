@@ -1,10 +1,10 @@
-'use client';
-
 import { useState } from 'react';
+import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRE_CFG, DEFI_GENRES } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
+import { colors, fonts, genreColors, genreKey } from '@/lib/tokens';
 import type { Card, Genre } from '@/lib/data/cards';
 
 type Phase = 'pick' | 'guess';
@@ -26,12 +26,10 @@ export default function ChallengeScreen() {
     const pool = CARDS.filter(c => c.genre === genre);
     if (!pool.length) return;
     const card = pool[Math.floor(Math.random() * pool.length)];
-
     let decoyPool = CARDS.filter(c => c.id !== card.id && c.genre === genre);
     if (decoyPool.length < 2) decoyPool = CARDS.filter(c => c.id !== card.id);
     const decoys = decoyPool.sort(() => Math.random() - 0.5).slice(0, 2);
     const choices = [card, ...decoys].sort(() => Math.random() - 0.5);
-
     setGuess({ card, choices, chosenId: null, result: null });
     setPhase('guess');
   }
@@ -54,56 +52,115 @@ export default function ChallengeScreen() {
   }
 
   return (
-    <section id="screen-defi" className="screen active">
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       {phase === 'pick' && (
-        <div id="defi-genre-pick">
-          <div className="s-hdr"><div className="lbl">DAILY</div><h2>CHALLENGE</h2></div>
-          <p className="defi-intro">Pick a genre and identify the mystery card to win it!</p>
-          <div className="defi-genres">
+        <View style={styles.pickWrap}>
+          <View style={styles.sHdr}>
+            <Text style={styles.lbl}>DAILY</Text>
+            <Text style={styles.h2}>CHALLENGE</Text>
+          </View>
+          <Text style={styles.intro}>Pick a genre and identify the mystery card to win it!</Text>
+          <View style={styles.genreGrid}>
             {DEFI_GENRES.map(g => {
               const cfg = GENRE_CFG[g];
+              const gk = genreKey[g] ?? 'pop';
+              const gc = genreColors[gk];
               return (
-                <button key={g} className="defi-genre-btn" style={{ '--accent': cfg.accent } as React.CSSProperties} onClick={() => startDefi(g)}>
-                  <span className="defi-genre-icon">{cfg.sym}</span>
-                  <span>{cfg.genreLabel}</span>
-                </button>
+                <Pressable
+                  key={g}
+                  style={[styles.genreBtn, { borderColor: gc?.border ?? colors.border }]}
+                  onPress={() => startDefi(g)}
+                >
+                  <Text style={styles.genreIcon}>{cfg.sym}</Text>
+                  <Text style={[styles.genreLabel, { color: gc?.textMain ?? colors.white }]}>{cfg.genreLabel}</Text>
+                </Pressable>
               );
             })}
-          </div>
-        </div>
+          </View>
+        </View>
       )}
 
       {phase === 'guess' && guess && (
-        <div id="defi-guess" style={{ display: 'flex' }}>
-          <div className="defi-card-wrap">
+        <View style={styles.guessWrap}>
+          <View style={styles.cardWrap}>
             <CardComponent card={guess.card} maskTitle wrapClass="csm" />
-          </div>
-          <div className="defi-form">
-            <p className="defi-question">What is the title of this card?</p>
-            <div className="defi-choices">
+          </View>
+          <View style={styles.form}>
+            <Text style={styles.question}>What is the title of this card?</Text>
+            <View style={styles.choices}>
               {guess.choices.map(c => {
-                let cls = 'defi-choice';
-                if (guess.result !== null) {
-                  if (c.id === guess.card.id) cls += ' correct';
-                  else if (c.id === guess.chosenId) cls += ' wrong';
-                }
+                const isCorrect = guess.result !== null && c.id === guess.card.id;
+                const isWrong   = guess.result !== null && c.id === guess.chosenId && c.id !== guess.card.id;
                 return (
-                  <button key={c.id} className={cls} disabled={guess.result !== null} onClick={() => checkDefi(c.id)}>
-                    {c.title}
-                  </button>
+                  <Pressable
+                    key={c.id}
+                    style={[styles.choice, isCorrect && styles.choiceCorrect, isWrong && styles.choiceWrong]}
+                    disabled={guess.result !== null}
+                    onPress={() => checkDefi(c.id)}
+                  >
+                    <Text style={[styles.choiceText, isCorrect && styles.choiceTextCorrect, isWrong && styles.choiceTextWrong]}>
+                      {c.title}
+                    </Text>
+                  </Pressable>
                 );
               })}
-            </div>
-            <div className={`defi-feedback ${guess.result === 'correct' ? 'ok won' : guess.result === 'wrong' ? 'err' : ''}`}>
-              {guess.result === 'correct' && `🎉 Correct! "${guess.card.title}" added to your collection.`}
-              {guess.result === 'wrong' && `✗ Wrong! The answer was "${guess.card.title}".`}
-            </div>
-            {guess.result !== null && (
-              <button className="btn-primary" style={{ marginTop: 16 }} onClick={reset}>Play Again</button>
+            </View>
+            {guess.result && (
+              <View style={[styles.feedback, guess.result === 'correct' ? styles.feedbackOk : styles.feedbackErr]}>
+                <Text style={styles.feedbackText}>
+                  {guess.result === 'correct'
+                    ? `🎉 Correct! "${guess.card.title}" added to your collection.`
+                    : `✗ Wrong! The answer was "${guess.card.title}".`}
+                </Text>
+              </View>
             )}
-          </div>
-        </div>
+            {guess.result && (
+              <Pressable style={styles.btnPrimary} onPress={reset}>
+                <Text style={styles.btnPrimaryText}>Play Again</Text>
+              </Pressable>
+            )}
+          </View>
+        </View>
       )}
-    </section>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: 24, gap: 20 },
+  pickWrap: { gap: 20 },
+  sHdr: { gap: 4 },
+  lbl: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
+  h2: { fontFamily: fonts.cinzelBold, fontSize: 22, letterSpacing: 3, color: colors.white },
+  intro: { fontFamily: fonts.cormorant, fontStyle: 'italic', fontSize: 15, color: colors.muted, lineHeight: 24 },
+  genreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  genreBtn: {
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 16,
+    width: '47%',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.surface,
+  },
+  genreIcon: { fontSize: 28 },
+  genreLabel: { fontFamily: fonts.cinzel, fontSize: 10, letterSpacing: 1 },
+  guessWrap: { flexDirection: 'row', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' },
+  cardWrap: { alignItems: 'center' },
+  form: { flex: 1, minWidth: 220, gap: 16 },
+  question: { fontFamily: fonts.cinzelBold, fontSize: 14, letterSpacing: 1, color: colors.white },
+  choices: { gap: 8 },
+  choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface },
+  choiceCorrect: { borderColor: '#50a840', backgroundColor: 'rgba(80,168,64,.12)' },
+  choiceWrong:   { borderColor: '#c03030', backgroundColor: 'rgba(192,48,48,.12)' },
+  choiceText: { fontFamily: fonts.cinzel, fontSize: 11, letterSpacing: 0.5, color: colors.white },
+  choiceTextCorrect: { color: '#50a840' },
+  choiceTextWrong:   { color: '#c03030' },
+  feedback: { borderRadius: 4, padding: 14, borderWidth: 1 },
+  feedbackOk:  { borderColor: 'rgba(80,168,64,.4)',  backgroundColor: 'rgba(80,168,64,.1)' },
+  feedbackErr: { borderColor: 'rgba(192,48,48,.4)',  backgroundColor: 'rgba(192,48,48,.1)' },
+  feedbackText: { fontFamily: fonts.cormorant, fontStyle: 'italic', fontSize: 14, color: colors.white, lineHeight: 22 },
+  btnPrimary: { backgroundColor: colors.gold, paddingVertical: 13, paddingHorizontal: 32, borderRadius: 3, alignItems: 'center', marginTop: 8 },
+  btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 2, color: '#0a0600' },
+});

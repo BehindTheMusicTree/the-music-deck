@@ -1,26 +1,37 @@
 {
-  "name": "music-deck-next",
+  "name": "the-music-deck",
   "version": "0.1.0",
   "private": true,
+  "main": "expo-router/entry",
   "scripts": {
-    "dev": "next dev -p 3010",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "expo start --web",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "build": "expo export --platform web",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "next": "^15.5.15",
+    "@expo-google-fonts/cinzel": "^0.4.2",
+    "@expo-google-fonts/space-mono": "^0.4.2",
+    "@expo/metro-runtime": "^55.0.10",
+    "expo": "^55.0.17",
+    "expo-font": "^55.0.6",
+    "expo-router": "^55.0.13",
+    "expo-splash-screen": "^55.0.19",
+    "expo-status-bar": "^55.0.5",
+    "expo-system-ui": "^55.0.16",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-native": "^0.85.2",
+    "react-native-safe-area-context": "^5.7.0",
+    "react-native-screens": "^4.24.0",
+    "react-native-svg": "^15.15.4",
     "react-native-web": "^0.21.2"
   },
   "devDependencies": {
-    "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.4",
     "typescript": "^5"
   }
 }

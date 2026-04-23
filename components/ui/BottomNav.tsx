@@ -1,6 +1,7 @@
-'use client';
-
-import { usePathname, useRouter } from 'next/navigation';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter, usePathname } from 'expo-router';
+import { colors, fonts } from '@/lib/tokens';
 
 const NAV = [
   { screen: '',            label: 'Home',       icon: '🏠' },
@@ -15,23 +16,64 @@ const NAV = [
 export default function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
 
   return (
-    <nav className="bottom-nav">
+    <View style={[styles.nav, { paddingBottom: insets.bottom }]}>
       {NAV.map(({ screen, label, icon }) => {
         const href = screen ? `/${screen}` : '/';
-        const active = pathname === href;
+        const active = pathname === href || (href === '/' && pathname === '/index');
         return (
-          <button
+          <Pressable
             key={screen}
-            className={`nav-item${active ? ' active' : ''}`}
-            onClick={() => router.push(href)}
+            style={[styles.item, active ? styles.itemActive : styles.itemInactive]}
+            onPress={() => router.push(href as any)}
           >
-            <span className="nav-icon">{icon}</span>
-            <span className="nav-label">{label}</span>
-          </button>
+            <Text style={[styles.icon, active && styles.activeColor]}>{icon}</Text>
+            <Text style={[styles.label, active && styles.activeColor]}>{label}</Text>
+          </Pressable>
         );
       })}
-    </nav>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  nav: {
+    backgroundColor: 'rgba(9,8,13,0.98)',
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 4,
+    zIndex: 200,
+    minHeight: colors.navH,
+  },
+  item: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+  },
+  itemInactive: { opacity: 0.4 },
+  itemActive: { opacity: 1 },
+  icon: {
+    fontSize: 19,
+    lineHeight: 22,
+    color: colors.white,
+  },
+  label: {
+    fontFamily: fonts.spaceMono,
+    fontSize: 7,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.white,
+  },
+  activeColor: {
+    color: colors.gold,
+  },
+});
