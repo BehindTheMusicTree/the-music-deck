@@ -319,9 +319,9 @@ body { background: var(--bg); color: var(--white); font-family: 'Cormorant Garam
 .defi-genre-btn { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all .2s; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
 .defi-genre-btn:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.4); }
 .defi-genre-icon { font-size: 26px; line-height: 1; }
-#defi-guess { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; padding-top: 4px; }
+#defi-guess { display: flex; flex-direction: row; align-items: flex-start; justify-content: center; gap: 40px; width: 100%; padding-top: 20px; flex-wrap: wrap; }
 .defi-card-wrap { position: relative; }
-.defi-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 320px; }
+.defi-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 320px; padding-top: 40px; }
 .defi-question { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--white); text-align: center; }
 .defi-choices { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 .defi-choice { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 13px 16px; font-family: 'Cinzel', serif; font-size: 11px; color: var(--white); letter-spacing: 1px; cursor: pointer; transition: all .2s; text-align: center; }
