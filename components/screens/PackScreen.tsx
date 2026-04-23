@@ -49,6 +49,7 @@ export default function PackScreen() {
       {phase === 'idle' && (
         <>
           <div className={`pack-visual${shaking ? ' shaking' : ''}`} id="pack-visual" onClick={startOpen}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/ui/booster-pack-season1-v1.png" alt="Season One booster pack" />
           </div>
           <p className="pack-tap-hint">TAP TO OPEN</p>
@@ -62,6 +63,7 @@ export default function PackScreen() {
               <div className="pack-slot" key={card.id}>
                 <div className={`pack-flip${flipped[i] ? ' flipped' : ''}`} onClick={() => flip(i)}>
                   <div className="pack-flip-back">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/assets/ui/card-back-v1.png" alt="Card back" />
                   </div>
                   <div className="pack-flip-front">
