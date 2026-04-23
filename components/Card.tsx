@@ -34,7 +34,7 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
             <span className="ch-icon" dangerouslySetInnerHTML={{ __html: cfg.icon }} />
             <div className="ch-titles">
               {maskTitle
-                ? <span className="ch-title" style={{ background: 'var(--border)', color: 'transparent', borderRadius: 3, minWidth: 80 }}>▓▓▓▓▓▓▓▓▓</span>
+                ? <span className="ch-title">???</span>
                 : <span className="ch-title">{card.title}</span>
               }
               <span className="ch-artist">{card.artist}</span>
