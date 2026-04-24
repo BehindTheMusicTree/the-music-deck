@@ -67,9 +67,11 @@ const defaultBattle: BattleState = {
   log: [],
 };
 
+const INITIAL_TRACK_LIST = [1, 25, 30, 3, 12] as const;
+
 const initialState: GameState = {
   collection: [1,2,3,4,5,6,7,8,9,10,11,12,25,27,29,30,31,32,33,34,35,36,37],
-  trackList: [],
+  trackList: [...INITIAL_TRACK_LIST],
   coins: 750,
   missions: [
     { id:1, name:'Open 1 Pack',               reward:50,  prog:0, total:1, done:false },

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
@@ -31,21 +32,26 @@ function hpColor(pct: number) {
 }
 
 export default function BattleScreen() {
+  const router = useRouter();
   const { state, showToast, advanceMission, earnCoins } = useGame();
-  const { collection } = state;
-  const [pickedId, setPickedId] = useState<number | null>(null);
+  const { trackList } = state;
   const [fight, setFight] = useState<FightState | null>(null);
   const logRef = useRef<ScrollView>(null);
 
-  const pool = collection.map(id => CARDS.find(c => c.id === id)!).filter(Boolean);
+  const lineupCards = trackList
+    .map((id) => CARDS.find((c) => c.id === id))
+    .filter((c): c is Card => c != null);
+  const canStart = lineupCards.length > 0;
 
   const addLog = useCallback((fs: FightState, type: string, msg: string): FightState =>
     ({ ...fs, log: [...fs.log, { type, msg }] }), []);
 
   function startBattle() {
-    if (!pickedId) return;
-    const playerCard = CARDS.find(c => c.id === pickedId)!;
-    const enemies = CARDS.filter(c => c.id !== pickedId);
+    const leadId = trackList[0];
+    if (leadId == null) return;
+    const playerCard = CARDS.find((c) => c.id === leadId);
+    if (!playerCard) return;
+    const enemies = CARDS.filter((c) => c.id !== playerCard.id);
     const enemyCard = enemies[Math.floor(Math.random() * enemies.length)];
     let fs: FightState = {
       playerCard, enemyCard,
@@ -148,22 +154,49 @@ export default function BattleScreen() {
       <View style={styles.screen}>
         <View style={styles.sHdr}>
           <Text style={styles.lbl}>BATTLE ARENA</Text>
-          <Text style={styles.h2}>CHOOSE YOUR CARD</Text>
+          <Text style={styles.h2}>YOUR TRACK LIST</Text>
         </View>
-        <Text style={styles.pickLabel}>SELECT A CARD FROM YOUR COLLECTION</Text>
-        <ScrollView contentContainerStyle={styles.pickGrid}>
-          {pool.map(card => (
-            <CardComponent
-              key={card.id}
-              card={card}
-              wrapClass="csm"
-              selected={pickedId === card.id}
-              onClick={() => setPickedId(card.id)}
-            />
-          ))}
-        </ScrollView>
+        {canStart ? (
+          <>
+            <Text style={styles.pickLabel}>
+              This duel uses your saved track list. Slot 1 is your fighter for now; the rest of
+              the lineup is for future rules.
+            </Text>
+            <ScrollView contentContainerStyle={styles.pickGrid}>
+              {lineupCards.map((card, i) => (
+                <View key={card.id} style={styles.pickCardWrap}>
+                  <Text style={styles.pickSlotNum}>{i + 1}</Text>
+                  <CardComponent card={card} wrapClass="csm" />
+                </View>
+              ))}
+            </ScrollView>
+            <Text style={styles.leadHint}>
+              Lead fighter: {lineupCards[0]?.title}
+              {lineupCards.length > 1
+                ? ` · ${lineupCards.length} cards in lineup`
+                : ''}
+            </Text>
+          </>
+        ) : (
+          <View style={styles.emptyLineup}>
+            <Text style={styles.emptyTitle}>No track list yet</Text>
+            <Text style={styles.emptyBody}>
+              Add at least one card to your track list before you can enter the arena.
+            </Text>
+            <Pressable
+              style={styles.btnPrimary}
+              onPress={() => router.push('/tracklist')}
+            >
+              <Text style={styles.btnPrimaryText}>Build track list</Text>
+            </Pressable>
+          </View>
+        )}
         <View style={styles.startRow}>
-          <Pressable style={[styles.btnAttack, !pickedId && styles.btnDisabled]} disabled={!pickedId} onPress={startBattle}>
+          <Pressable
+            style={[styles.btnAttack, !canStart && styles.btnDisabled]}
+            disabled={!canStart}
+            onPress={startBattle}
+          >
             <Text style={styles.btnAttackText}>Start Battle</Text>
           </Pressable>
         </View>
@@ -220,7 +253,7 @@ export default function BattleScreen() {
             <Text style={styles.resultSub}>
               {result === 'win' ? 'The music triumphs.' : 'The beat goes on…'}
             </Text>
-            <Pressable style={styles.btnPrimary} onPress={() => { setFight(null); setPickedId(null); }}>
+            <Pressable style={styles.btnPrimary} onPress={() => setFight(null)}>
               <Text style={styles.btnPrimaryText}>Play Again</Text>
             </Pressable>
           </View>
@@ -243,8 +276,47 @@ const styles = StyleSheet.create({
   sHdr: { padding: 20, gap: 4 },
   lbl: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
   h2: { fontFamily: fonts.cinzelBold, fontSize: fs(22), letterSpacing: 3, color: colors.white },
-  pickLabel: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 2, color: colors.muted, paddingHorizontal: 20, marginBottom: 12, textTransform: 'uppercase' },
+  pickLabel: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(8),
+    letterSpacing: 0.4,
+    color: colors.muted,
+    paddingHorizontal: 20,
+    marginBottom: 12,
+    textAlign: 'center',
+    lineHeight: fs(16),
+  },
   pickGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, padding: 20, justifyContent: 'center' },
+  pickCardWrap: { alignItems: 'center', gap: 6 },
+  pickSlotNum: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(8),
+    color: colors.muted,
+    letterSpacing: 1,
+  },
+  leadHint: {
+    fontFamily: fonts.cormorantItalic,
+    fontSize: fs(13),
+    color: colors.muted,
+    textAlign: 'center',
+    paddingHorizontal: 24,
+    marginBottom: 8,
+  },
+  emptyLineup: { paddingHorizontal: 28, paddingVertical: 24, gap: 14, alignItems: 'center' },
+  emptyTitle: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(16),
+    letterSpacing: 2,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  emptyBody: {
+    fontFamily: fonts.cormorantItalic,
+    fontSize: fs(15),
+    color: colors.muted,
+    textAlign: 'center',
+    lineHeight: fs(22),
+  },
   startRow: { padding: 20, alignItems: 'center' },
   arena: { flex: 1, padding: 16, gap: 16 },
   fighters: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start' },
