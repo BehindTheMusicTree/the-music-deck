@@ -5,6 +5,7 @@ import Svg, { Rect, Circle, Text as SvgText, RadialGradient, Defs, Stop } from '
 import { SvgXml } from 'react-native-svg';
 import type { Card } from '@/lib/data/cards';
 import { GENRE_CFG, RAR_SVG } from '@/lib/data/genres';
+import { useCardSizeMultiplier } from '@/lib/card-layout';
 import { genreColors, genreKey, fonts, fs, colors, rarity as rarityTokens, shadows } from '@/lib/tokens';
 
 interface CardProps {
@@ -77,6 +78,7 @@ function CardArt({ card }: { card: Card }) {
 }
 
 export default function CardComponent({ card, wrapClass = '', selected = false, maskTitle = false, onClick }: CardProps) {
+  const m = useCardSizeMultiplier();
   const cfg = GENRE_CFG[card.genre] ?? GENRE_CFG.Pop;
   const gkey = genreKey[card.genre] ?? 'pop';
   const gc = genreColors[gkey];
@@ -187,15 +189,29 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
     </Pressable>
   );
 
-  if (!wrapClass) return cardEl;
+  if (!wrapClass) {
+    if (m === 1) return cardEl;
+    return (
+      <View
+        style={[
+          styles.wrap,
+          { width: CARD_W * m, height: CARD_H * m, borderRadius: 16 * m },
+        ]}
+      >
+        <View style={{ transform: [{ scale: m }], transformOrigin: 'top left' as any }}>
+          {cardEl}
+        </View>
+      </View>
+    );
+  }
 
   const isSmall = wrapClass === 'csm';
-  const scale = isSmall ? SCALE_SM : SCALE_LG;
-  const wrapW = isSmall ? 149 : 285;
-  const wrapH = isSmall ? 220 : 420;
+  const scale = (isSmall ? SCALE_SM : SCALE_LG) * m;
+  const wrapW = (isSmall ? 149 : 285) * m;
+  const wrapH = (isSmall ? 220 : 420) * m;
 
   return (
-    <View style={[styles.wrap, { width: wrapW, height: wrapH }]}>
+    <View style={[styles.wrap, { width: wrapW, height: wrapH, borderRadius: 10 * m }]}>
       <View style={{ transform: [{ scale }], transformOrigin: 'top left' as any }}>
         {cardEl}
       </View>

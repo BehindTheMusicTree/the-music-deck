@@ -3,10 +3,12 @@ import { View, Text, ScrollView, Pressable, Image, StyleSheet } from 'react-nati
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
+import { useCardSizeMultiplier } from '@/lib/card-layout';
 import { colors, fonts, fs } from '@/lib/tokens';
 import type { Card } from '@/lib/data/cards';
 
 export default function PackScreen() {
+  const m = useCardSizeMultiplier();
   const { dispatch, showToast, advanceMission } = useGame();
   const [phase, setPhase] = useState<'idle' | 'reveal'>('idle');
   const [packCards, setPackCards] = useState<Card[]>([]);

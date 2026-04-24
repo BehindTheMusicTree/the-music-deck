@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   StyleSheet,
+  useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useGame } from "@/lib/game-state";
@@ -12,10 +13,19 @@ import { CARDS } from "@/lib/data/cards";
 import CardComponent from "@/components/Card";
 import { colors, fonts, fs } from "@/lib/tokens";
 
+const HERO_H_PAD = 24;
+const ACTION_ROW_GAP = 16;
+const MAX_ACTION_ICON = 168;
+
 export default function HomeScreen() {
   const { state, dispatch } = useGame();
   const router = useRouter();
+  const { width: winW } = useWindowDimensions();
   const { collection, deck } = state;
+  const actionIconSize = Math.min(
+    MAX_ACTION_ICON,
+    Math.floor((winW - HERO_H_PAD * 2 - ACTION_ROW_GAP) / 2),
+  );
 
   const picks: typeof CARDS = [];
   for (const rarity of ["Legendary", "Epic", "Rare", "Common"] as const) {
@@ -45,14 +55,14 @@ export default function HomeScreen() {
         </View>
         <View style={styles.bar} />
         <View style={styles.actions}>
-          <View style={styles.actionRow}>
+          <View style={[styles.actionRow, { gap: ACTION_ROW_GAP }]}>
             <Pressable
               style={styles.btnPrimary}
               onPress={() => router.push("/pack")}
             >
               <Image
                 source={require("@/assets/ui/booster-pack-season1-v1.png")}
-                style={styles.boosterPackIcon}
+                style={{ width: actionIconSize, height: actionIconSize }}
                 resizeMode="contain"
               />
               <Text style={styles.btnPrimaryText}>Open a Pack</Text>
@@ -63,7 +73,7 @@ export default function HomeScreen() {
             >
               <Image
                 source={require("@/assets/ui/dig-crate-chest-v1.png")}
-                style={styles.digCrateIcon}
+                style={{ width: actionIconSize, height: actionIconSize }}
                 resizeMode="contain"
               />
               <Text style={styles.btnDigCrateText}>Crate Dig</Text>
@@ -154,29 +164,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 26,
   },
-  actions: { gap: 10, width: "100%", alignItems: "center", marginTop: 8 },
+  actions: { gap: 14, width: "100%", alignItems: "center", marginTop: 8 },
   actionRow: {
     flexDirection: "row",
-    alignSelf: "center",
-    gap: 12,
+    alignSelf: "stretch",
+    width: "100%",
     justifyContent: "center",
   },
   btnPrimary: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    flex: 1,
+    minWidth: 0,
+    paddingVertical: 20,
+    paddingHorizontal: 8,
     borderRadius: 3,
-    width: 128,
     alignItems: "center",
-    gap: 6,
-  },
-  boosterPackIcon: {
-    width: 64,
-    height: 64,
+    gap: 12,
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(11),
-    letterSpacing: 2,
+    fontSize: fs(16),
+    letterSpacing: 2.5,
     color: colors.gold,
     textAlign: "center",
   },
@@ -196,21 +203,18 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   btnDigCrate: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    flex: 1,
+    minWidth: 0,
+    paddingVertical: 20,
+    paddingHorizontal: 8,
     borderRadius: 3,
-    width: 128,
     alignItems: "center",
-    gap: 6,
-  },
-  digCrateIcon: {
-    width: 64,
-    height: 64,
+    gap: 12,
   },
   btnDigCrateText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(11),
-    letterSpacing: 2,
+    fontSize: fs(16),
+    letterSpacing: 2.5,
     color: colors.rust,
     textAlign: "center",
   },
