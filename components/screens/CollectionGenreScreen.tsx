@@ -123,13 +123,9 @@ export default function CollectionGenreScreen({ genre }: Props) {
 
   const tileH = cardSmH * tileScale;
 
-  const showEmpty =
-    onlyOwned && ownedCount === 0 && totalInGenre > 0;
+  const showEmpty = onlyOwned && ownedCount === 0 && totalInGenre > 0;
 
-  const albumRows = chunkRows(
-    albumEntriesForGenre(genre, ownedIds),
-    3,
-  );
+  const albumRows = chunkRows(albumEntriesForGenre(genre, ownedIds), 3);
 
   return (
     <View style={styles.screen}>
@@ -241,6 +237,7 @@ export default function CollectionGenreScreen({ genre }: Props) {
                           <View
                             style={[
                               styles.backShell,
+                              styles.backShellUndiscovered,
                               {
                                 width: cardSmW,
                                 height: cardSmH,
@@ -248,11 +245,20 @@ export default function CollectionGenreScreen({ genre }: Props) {
                               },
                             ]}
                           >
-                            <Image
-                              source={require("@/assets/ui/card-back-v1.png")}
-                              style={styles.backImage}
-                              resizeMode="cover"
-                            />
+                            <View style={styles.backMutedStack}>
+                              <Image
+                                source={require("@/assets/ui/card-back-v1.png")}
+                                style={[
+                                  styles.backImage,
+                                  styles.backImageTernie,
+                                ]}
+                                resizeMode="cover"
+                              />
+                              <View
+                                style={styles.backTarnishWash}
+                                pointerEvents="none"
+                              />
+                            </View>
                             <View style={styles.slotBadgeWrap}>
                               <Text style={styles.slotBadge}>{entry.slot}</Text>
                             </View>
@@ -282,9 +288,7 @@ export default function CollectionGenreScreen({ genre }: Props) {
       >
         <View style={styles.modalRoot}>
           <Pressable style={styles.modalBackdrop} onPress={clearFocus}>
-            <Animated.View
-              style={[styles.modalDim, { opacity: dimOpacity }]}
-            />
+            <Animated.View style={[styles.modalDim, { opacity: dimOpacity }]} />
           </Pressable>
           <View style={styles.modalCenter} pointerEvents="box-none">
             {focused ? (
@@ -387,9 +391,25 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: colors.surface,
   },
+  /** Undiscovered backs: duller frame + muted art. */
+  backShellUndiscovered: {
+    borderColor: "rgba(120,110,100,0.35)",
+    backgroundColor: "rgba(12,10,8,0.9)",
+  },
+  backMutedStack: {
+    ...StyleSheet.absoluteFill,
+    overflow: "hidden",
+  },
   backImage: {
     width: "100%",
     height: "100%",
+  },
+  backImageTernie: {
+    opacity: 1,
+  },
+  backTarnishWash: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: "rgba(34, 27, 21, 0.48)",
   },
   slotBadgeWrap: {
     position: "absolute",
@@ -397,6 +417,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+    zIndex: 2,
   },
   slotBadge: {
     fontFamily: fonts.spaceMono,
