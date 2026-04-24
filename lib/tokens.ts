@@ -9,9 +9,72 @@ export const colors = {
   white:   '#d8d4f0',
   muted:   '#6a6480',
   dim:     '#28263a',
+  // Parchment — card type strip, ability box, ink on parch
+  parch:   '#f0e8d4',
+  parch2:  '#e8dfc4',
+  ink:     '#1a1208',
+  // Logo background variants (charter: dark/sepia/parch/violet)
+  logoBgSepia:  '#180e04',
+  logoBgViolet: '#100818',
   navH:    64,
   topH:    52,
 };
+
+export const rarity = {
+  Legendary: '#c8a040',
+  Epic:      '#b070e0',
+  Rare:      '#6090e0',
+  Common:    '#7878a0',
+} as const;
+
+export const spacing = {
+  xs:   4,
+  sm:   8,
+  md:   16,
+  lg:   24,
+  xl:   32,
+  xxl:  48,
+  xxxl: 64,
+} as const;
+
+export const radius = {
+  xs:   2,
+  sm:   4,
+  md:   8,
+  lg:   16,
+  xl:   18,
+  pill: 999,
+} as const;
+
+export const shadows = {
+  card: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 24 },
+    shadowOpacity: 0.85,
+    shadowRadius: 32,
+    elevation: 24,
+  },
+  medium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  subtle: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+} as const;
+
+export const animation = {
+  fast:   150,
+  normal: 200,
+  slow:   300,
+} as const;
 
 export const genreColors: Record<string, {
   border: string; cardBg: string; headerBg: string;
@@ -40,10 +103,12 @@ export const genreKey: Record<string, string> = {
 };
 
 export const fonts = {
-  cinzel: 'Cinzel_400Regular',
-  cinzelBold: 'Cinzel_700Bold',
-  spaceMono: 'SpaceMono_400Regular',
-  spaceMonoBold: 'SpaceMono_700Bold',
-  // Cormorant Garamond not in expo-google-fonts; use system serif fallback
-  cormorant: 'serif',
+  cinzel:           'Cinzel_400Regular',
+  cinzelBold:       'Cinzel_700Bold',
+  spaceMono:        'SpaceMono_400Regular',
+  spaceMonoBold:    'SpaceMono_700Bold',
+  cormorant:        'CormorantGaramond_400Regular',
+  cormorantItalic:  'CormorantGaramond_400Regular_Italic',
+  cormorantLight:   'CormorantGaramond_300Light',
+  cormorantLightIt: 'CormorantGaramond_300Light_Italic',
 };

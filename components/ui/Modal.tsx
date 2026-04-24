@@ -3,11 +3,7 @@ import { useRouter } from 'expo-router';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
-
-const RARITY_COLOR: Record<string, string> = {
-  Legendary: '#c8a040', Epic: '#b070e0', Rare: '#6090e0', Common: '#7878a0',
-};
+import { colors, fonts, rarity as rarityTokens } from '@/lib/tokens';
 
 export default function Modal() {
   const { state, dispatch, showToast } = useGame();
@@ -18,7 +14,7 @@ export default function Modal() {
   const card = CARDS.find(c => c.id === modalCardId);
   if (!card) return null;
 
-  const rarityColor = RARITY_COLOR[card.rarity] ?? '#888';
+  const rarityColor = rarityTokens[card.rarity as keyof typeof rarityTokens] ?? rarityTokens.Common;
   const owned = collection.includes(card.id);
   const inDeck = deck.includes(card.id);
 
@@ -167,8 +163,7 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   artist: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 16,
     color: colors.muted,
     marginTop: 2,
@@ -228,8 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   abilityText: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 15,
     color: colors.muted,
     lineHeight: 24,

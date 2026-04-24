@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/cinzel": "^0.4.2",
+    "@expo-google-fonts/cormorant-garamond": "^0.4.1",
     "@expo-google-fonts/space-mono": "^0.4.2",
     "@expo/metro-runtime": "^55.0.10",
     "expo": "^55.0.17",

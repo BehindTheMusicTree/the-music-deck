@@ -5,7 +5,7 @@ import Svg, { Rect, Circle, Text as SvgText, RadialGradient, Defs, Stop } from '
 import { SvgXml } from 'react-native-svg';
 import type { Card } from '@/lib/data/cards';
 import { GENRE_CFG, RAR_SVG } from '@/lib/data/genres';
-import { genreColors, genreKey, fonts } from '@/lib/tokens';
+import { genreColors, genreKey, fonts, colors, rarity as rarityTokens, shadows } from '@/lib/tokens';
 
 interface CardProps {
   card: Card;
@@ -203,9 +203,8 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
   );
 }
 
-function rarityColor(rarity: string) {
-  const map: Record<string, string> = { Legendary: '#c8a040', Epic: '#a060c8', Rare: '#4a7aaa', Common: '#666' };
-  return map[rarity] ?? '#666';
+function rarityColor(r: string) {
+  return rarityTokens[r as keyof typeof rarityTokens] ?? rarityTokens.Common;
 }
 
 const styles = StyleSheet.create({
@@ -219,17 +218,13 @@ const styles = StyleSheet.create({
     height: CARD_H,
     borderRadius: 16,
     borderWidth: 1.5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 24 },
-    shadowOpacity: 0.85,
-    shadowRadius: 32,
-    elevation: 24,
+    ...shadows.card,
     overflow: 'hidden',
   },
   selectedOverlay: {
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: '#a87c28',
+    borderColor: colors.gold,
   },
   inner: {
     flex: 1,
@@ -253,8 +248,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   cardArtist: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 10,
     letterSpacing: 0.4,
     lineHeight: 12,
@@ -276,7 +270,7 @@ const styles = StyleSheet.create({
   artImage: { width: '100%', height: '100%' },
 
   typeStrip: {
-    backgroundColor: '#ede4cc',
+    backgroundColor: colors.parch2,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     paddingVertical: 6,
@@ -303,13 +297,13 @@ const styles = StyleSheet.create({
   cornerTR: { top: -5.5, right: -5.5 },
   cornerBL: { bottom: -5.5, left: -5.5 },
   cornerBR: { bottom: -5.5, right: -5.5 },
-  typeText: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: '#2e2010' },
+  typeText: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: colors.ink },
   typeRight: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  typeGenre: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: '#2e2010' },
+  typeGenre: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: colors.ink },
   pip: { width: 7, height: 7, borderRadius: 1, transform: [{ rotate: '45deg' }], opacity: 0.9 },
 
   abilityBox: {
-    backgroundColor: '#f4edd8',
+    backgroundColor: colors.parch,
     paddingVertical: 8,
     paddingHorizontal: 10,
     marginHorizontal: 4,
@@ -323,15 +317,14 @@ const styles = StyleSheet.create({
   abilityName: {
     fontFamily: fonts.cinzelBold,
     fontSize: 9,
-    color: '#1a1208',
+    color: colors.ink,
     letterSpacing: 1,
     marginBottom: 4,
   },
   abilityDesc: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 11,
-    color: '#2e2010',
+    color: colors.ink,
     lineHeight: 15,
   },
 
