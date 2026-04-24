@@ -27,10 +27,8 @@ interface FightState {
   enemyCard: Card;
   /** Second enemy engagement slot (rival bench). */
   enemyCard2: Card | null;
-  playerHP: number;
-  playerMaxHP: number;
-  enemyHP: number;
-  enemyMaxHP: number;
+  /** Shared crowd mood: -100 (you’re losing the room) … +100 (encore). */
+  mood: number;
   log: BattleLog[];
   phase: "fighting" | "done";
   specialUsed: boolean;
@@ -49,10 +47,14 @@ function calcDmg(card: Card, base?: number): number {
   return Math.max(1, dmg);
 }
 
-function hpColor(pct: number) {
-  if (pct < 25) return "#c03030";
-  if (pct < 50) return "#cca030";
-  return "#5aba40";
+function moodDeltaFromHit(dmg: number): number {
+  return Math.max(3, Math.min(30, Math.round(dmg * 0.95)));
+}
+
+function moodValueColor(mood: number) {
+  if (mood <= -40) return "#b04050";
+  if (mood >= 40) return colors.gold;
+  return colors.muted;
 }
 
 /** Match `cxs` wrap in `Card.tsx` (battle slots). */
@@ -566,41 +568,40 @@ export default function BattleScreen() {
               {renderEngageSlot(playerCard, "player", 0)}
               {renderEngageSlot(playerCard2, "player", 1)}
             </View>
+
+            {phase === "fighting" && (
+              <View style={styles.controlsColumn}>
+                {!buttonsDisabled && !attackPrimed ? (
+                  <Text style={styles.controlsHint}>
+                    Tap one of your cards to zoom, then confirm to unlock
+                    Attack.
+                  </Text>
+                ) : null}
+                <View style={styles.controlsRow}>
+                  {attackPrimed && !buttonsDisabled ? (
+                    <Pressable style={styles.btnAttack} onPress={doAttack}>
+                      <Text style={styles.btnAttackText}>Attack</Text>
+                    </Pressable>
+                  ) : (
+                    <View style={styles.controlsAttackSpacer} />
+                  )}
+                  <Pressable
+                    style={[
+                      styles.btnSpecial,
+                      (buttonsDisabled || specialUsed) && styles.btnDisabled,
+                    ]}
+                    disabled={buttonsDisabled || specialUsed}
+                    onPress={doSpecial}
+                  >
+                    <Text style={styles.btnSpecialText} numberOfLines={2}>
+                      ✦ {playerCard.ability}
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
           </View>
         </View>
-
-        {phase === "fighting" && (
-          <View style={styles.controls}>
-            {attackPrimed ? (
-              <Pressable
-                style={[
-                  styles.btnAttack,
-                  buttonsDisabled && styles.btnDisabled,
-                ]}
-                disabled={buttonsDisabled}
-                onPress={doAttack}
-              >
-                <Text style={styles.btnAttackText}>Attack</Text>
-              </Pressable>
-            ) : !buttonsDisabled ? (
-              <Text style={styles.controlsHint}>
-                Tap one of your cards to zoom, then confirm to unlock Attack.
-              </Text>
-            ) : (
-              <View style={styles.controlsAttackSpacer} />
-            )}
-            <Pressable
-              style={[
-                styles.btnSpecial,
-                (buttonsDisabled || specialUsed) && styles.btnDisabled,
-              ]}
-              disabled={buttonsDisabled || specialUsed}
-              onPress={doSpecial}
-            >
-              <Text style={styles.btnSpecialText}>✦ {playerCard.ability}</Text>
-            </Pressable>
-          </View>
-        )}
 
         {phase === "done" && (
           <View style={styles.resultWrap}>
@@ -841,14 +842,13 @@ const styles = StyleSheet.create({
   startRow: { padding: 20, alignItems: "center" },
   arena: { flex: 1, padding: 12, gap: 12 },
   battleColumn: {
-    flex: 1,
+    flexShrink: 0,
     flexDirection: "column",
-    justifyContent: "space-between",
-    minHeight: 280,
-    gap: 8,
+    justifyContent: "flex-start",
+    gap: 12,
   },
-  enemyBand: { alignItems: "center", gap: 8 },
-  playerBand: { alignItems: "center", gap: 8 },
+  enemyBand: { alignItems: "center", gap: 8, width: "100%" },
+  playerBand: { alignItems: "center", gap: 8, width: "100%" },
   bandLabel: {
     fontFamily: fonts.spaceMono,
     fontSize: fs(9),
@@ -913,25 +913,32 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     color: colors.muted,
   },
-  controls: {
+  controlsColumn: {
+    width: "100%",
+    maxWidth: 400,
+    alignSelf: "center",
+    marginTop: 10,
+    gap: 10,
+    alignItems: "stretch",
+  },
+  controlsRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: 10,
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
   },
   controlsHint: {
-    flex: 1,
-    minWidth: 140,
-    maxWidth: 280,
+    width: "100%",
     fontFamily: fonts.spaceMono,
     fontSize: fs(7),
     letterSpacing: 0.5,
     color: colors.muted,
     textAlign: "center",
     lineHeight: fs(14),
+    paddingHorizontal: 4,
   },
-  controlsAttackSpacer: { width: 100, height: 1 },
+  controlsAttackSpacer: { width: 100, height: 44 },
   zoomRoot: {
     flex: 1,
     position: "relative",
@@ -956,17 +963,19 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   btnSpecial: {
+    maxWidth: 200,
     borderWidth: 1,
     borderColor: colors.gold,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
     borderRadius: 3,
   },
   btnSpecialText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(11),
+    fontSize: fs(10),
     letterSpacing: 1,
     color: colors.gold,
+    textAlign: "center",
   },
   btnDisabled: { opacity: 0.35 },
   resultWrap: { alignItems: "center", gap: 12 },
