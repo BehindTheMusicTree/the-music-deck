@@ -28,8 +28,8 @@ export default function ChallengeScreen() {
     if (!pool.length) return;
     const card = pool[Math.floor(Math.random() * pool.length)];
     let decoyPool = CARDS.filter(c => c.id !== card.id && c.genre === genre);
-    if (decoyPool.length < 2) decoyPool = CARDS.filter(c => c.id !== card.id);
-    const decoys = decoyPool.sort(() => Math.random() - 0.5).slice(0, 2);
+    if (decoyPool.length < 3) decoyPool = CARDS.filter(c => c.id !== card.id);
+    const decoys = decoyPool.sort(() => Math.random() - 0.5).slice(0, 3);
     const choices = [card, ...decoys].sort(() => Math.random() - 0.5);
     setGuess({ card, choices, chosenId: null, result: null });
     setPhase('guess');
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
   cardWrap: { alignItems: 'center' },
   form: { gap: 16 },
   question: { fontFamily: fonts.cinzelBold, fontSize: 14, letterSpacing: 1, color: colors.white },
-  choices: { gap: 8 },
-  choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface },
+  choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface, width: '48%' },
   choiceCorrect: { borderColor: '#50a840', backgroundColor: 'rgba(80,168,64,.12)' },
   choiceWrong:   { borderColor: '#c03030', backgroundColor: 'rgba(192,48,48,.12)' },
   choiceText: { fontFamily: fonts.cinzel, fontSize: 11, letterSpacing: 0.5, color: colors.white },
