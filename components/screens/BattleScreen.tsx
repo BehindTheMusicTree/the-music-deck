@@ -37,8 +37,9 @@ function hpColor(pct: number) {
   return '#5aba40';
 }
 
-const CSM_W = 149;
-const CSM_H = 220;
+/** Match `cxs` wrap in `Card.tsx` (battle slots). */
+const BATTLE_CARD_W = 112;
+const BATTLE_CARD_H = 165;
 
 export default function BattleScreen() {
   const router = useRouter();
@@ -190,7 +191,7 @@ export default function BattleScreen() {
               {lineupCards.map((card, i) => (
                 <View key={card.id} style={styles.pickCardWrap}>
                   <Text style={styles.pickSlotNum}>{i + 1}</Text>
-                  <CardComponent card={card} wrapClass="csm" />
+                  <CardComponent card={card} wrapClass="cxs" />
                 </View>
               ))}
             </ScrollView>
@@ -251,7 +252,7 @@ export default function BattleScreen() {
     if (card) {
       return (
         <View key={key} style={styles.engageSlot}>
-          <CardComponent card={card} wrapClass="csm" />
+          <CardComponent card={card} wrapClass="cxs" />
         </View>
       );
     }
@@ -261,7 +262,11 @@ export default function BattleScreen() {
         style={[
           styles.engageSlot,
           styles.engageSlotEmpty,
-          { width: CSM_W * cardM, height: CSM_H * cardM, borderRadius: 10 * cardM },
+          {
+            width: BATTLE_CARD_W * cardM,
+            height: BATTLE_CARD_H * cardM,
+            borderRadius: 8 * cardM,
+          },
         ]}
       >
         <Text style={styles.engageSlotEmptyText}>—</Text>

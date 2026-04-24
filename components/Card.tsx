@@ -10,8 +10,8 @@ import { genreColors, genreKey, fonts, fs, colors, rarity as rarityTokens, shado
 
 interface CardProps {
   card: Card;
-  /** 'csm' = small (149×220), 'clg' = large (285×420), undefined = full (272×400) */
-  wrapClass?: 'csm' | 'clg' | '';
+  /** 'cxs' = battle/extra-small (112×165), 'csm' = small (149×220), 'clg' = large (285×420), undefined = full (272×400) */
+  wrapClass?: 'cxs' | 'csm' | 'clg' | '';
   selected?: boolean;
   maskTitle?: boolean;
   onClick?: () => void;
@@ -19,8 +19,11 @@ interface CardProps {
 
 const CARD_W = 272;
 const CARD_H = 400;
+const WRAP_XS_W = 112;
+const WRAP_XS_H = 165;
 const SCALE_SM = 149 / CARD_W;
 const SCALE_LG = 285 / CARD_W;
+const SCALE_XS = WRAP_XS_W / CARD_W;
 
 /** Compute glow shadow for score circle based on power (40–100 scale) */
 function scoreGlow(power: number) {
@@ -207,13 +210,15 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
     );
   }
 
+  const isXs = wrapClass === 'cxs';
   const isSmall = wrapClass === 'csm';
-  const scale = (isSmall ? SCALE_SM : SCALE_LG) * m;
-  const wrapW = (isSmall ? 149 : 285) * m;
-  const wrapH = (isSmall ? 220 : 420) * m;
+  const scale = (isXs ? SCALE_XS : isSmall ? SCALE_SM : SCALE_LG) * m;
+  const wrapW = (isXs ? WRAP_XS_W : isSmall ? 149 : 285) * m;
+  const wrapH = (isXs ? WRAP_XS_H : isSmall ? 220 : 420) * m;
+  const wrapRadius = (isXs ? 8 : 10) * m;
 
   return (
-    <View style={[styles.wrap, { width: wrapW, height: wrapH, borderRadius: 10 * m }]}>
+    <View style={[styles.wrap, { width: wrapW, height: wrapH, borderRadius: wrapRadius }]}>
       <View style={{ transform: [{ scale }], transformOrigin: 'top left' as any }}>
         {cardEl}
       </View>
