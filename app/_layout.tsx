@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   screensWeb: {
-    maxWidth: 480,
+    maxWidth: 1024,
     width: '100%',
     alignSelf: 'center',
   },

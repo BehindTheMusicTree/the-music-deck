@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
-/** Slightly scale text on web so browser preview is closer to phone readability. */
-const WEB_TEXT_SCALE = 1.125;
+/** Slightly scale text on web: density matches phone UI, and desktop layout uses a wider column. */
+const WEB_TEXT_SCALE = 1.28;
 
 export function fs(n: number): number {
   if (Platform.OS !== 'web') return n;
