@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useGame } from "@/lib/game-state";
-import { CARDS } from "@/lib/data/cards";
+import { CARDS, type Card } from "@/lib/data/cards";
 import { GENRES_ALL } from "@/lib/data/genres";
 import { useCardSizeMultiplier } from "@/lib/card-layout";
 import CardComponent from "@/components/Card";
@@ -20,8 +20,6 @@ const WEB_MAX_CONTENT_W = 1024;
 const SIDEBAR_W = 200;
 const MAIN_H_PAD = 20;
 const GRID_GAP = 10;
-/** Same height for every action row so cards + gaps line up across columns. */
-const LIST_BTN_MIN_H = 52;
 const CARD_SM_BASE_W = 149;
 const CARD_SM_BASE_H = 220;
 
@@ -31,6 +29,66 @@ function chunkRows<T>(items: T[], rowSize: number): T[][] {
     rows.push(items.slice(i, i + rowSize));
   }
   return rows;
+}
+
+function TrackListGridTile({
+  card,
+  onList,
+  colW,
+  tileH,
+  cardSmW,
+  cardSmH,
+  tileScale,
+  onOpenCard,
+}: {
+  card: Card;
+  onList: boolean;
+  colW: number;
+  tileH: number;
+  cardSmW: number;
+  cardSmH: number;
+  tileScale: number;
+  onOpenCard: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const muted = !onList && !hovered;
+  const webCellMouse =
+    Platform.OS === "web"
+      ? {
+          onMouseEnter: () => setHovered(true),
+          onMouseLeave: () => setHovered(false),
+        }
+      : null;
+
+  return (
+    <View
+      style={[styles.gridCell, { width: colW, minHeight: tileH }]}
+      {...(webCellMouse ?? {})}
+    >
+      <View style={[styles.tileSlot, { height: tileH }]}>
+        <View
+          style={[
+            styles.tileInner,
+            {
+              width: cardSmW,
+              height: cardSmH,
+              left: (colW - cardSmW * tileScale) / 2,
+              transform: [{ scale: tileScale }],
+              transformOrigin: "top left" as any,
+            },
+          ]}
+        >
+          <View style={muted ? styles.cardMuted : undefined}>
+            <CardComponent
+              card={card}
+              wrapClass="csm"
+              onClick={onOpenCard}
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
 }
 
 export default function TrackListBuilderScreen() {
@@ -48,7 +106,6 @@ export default function TrackListBuilderScreen() {
   const cardSmH = CARD_SM_BASE_H * cardM;
   const tileScale = Math.min(1, colW / cardSmW);
   const tileH = cardSmH * tileScale;
-  const cellHeight = tileH + GRID_GAP + LIST_BTN_MIN_H;
 
   const totalPower = trackList.reduce((sum, id) => {
     const c = CARDS.find((x) => x.id === id);
@@ -96,7 +153,10 @@ export default function TrackListBuilderScreen() {
                   <Text style={styles.slotGenre}>{card.genre}</Text>
                 </View>
                 <Text style={styles.slotPower}>{card.power}</Text>
-                <Pressable onPress={() => toggleTrackList(id)} style={styles.slotRm}>
+                <Pressable
+                  onPress={() => toggleTrackList(id)}
+                  style={styles.slotRm}
+                >
                   <Text style={styles.slotRmText}>✕</Text>
                 </Pressable>
               </View>
@@ -151,71 +211,26 @@ export default function TrackListBuilderScreen() {
         >
           {chunkRows(cards, 3).map((row, rowIdx) => (
             <View key={rowIdx} style={[styles.gridRow, { gap: GRID_GAP }]}>
-              {row.map((card) => {
-                const onList = trackList.includes(card.id);
-                return (
-                  <View
-                    key={card.id}
-                    style={[
-                      styles.gridCell,
-                      { width: colW, minHeight: cellHeight, gap: GRID_GAP },
-                    ]}
-                  >
-                    <View style={[styles.tileSlot, { height: tileH }]}>
-                      <View
-                        style={[
-                          styles.tileInner,
-                          {
-                            width: cardSmW,
-                            height: cardSmH,
-                            left: (colW - cardSmW * tileScale) / 2,
-                            transform: [{ scale: tileScale }],
-                            transformOrigin: "top left" as any,
-                          },
-                        ]}
-                      >
-                        <View
-                          style={onList ? styles.cardDim : undefined}
-                        >
-                          <CardComponent
-                            card={card}
-                            wrapClass="csm"
-                            onClick={() =>
-                              dispatch({
-                                type: "OPEN_MODAL",
-                                cardId: card.id,
-                              })
-                            }
-                          />
-                        </View>
-                      </View>
-                    </View>
-                    <Pressable
-                      style={[
-                        styles.listBtn,
-                        onList && styles.listBtnRemove,
-                        { width: colW, minHeight: LIST_BTN_MIN_H },
-                      ]}
-                      onPress={() => toggleTrackList(card.id)}
-                    >
-                      <Text
-                        style={[
-                          styles.listBtnText,
-                          onList && styles.listBtnTextRemove,
-                        ]}
-                        numberOfLines={2}
-                      >
-                        {onList ? "— Remove" : "+ Add to track list"}
-                      </Text>
-                    </Pressable>
-                  </View>
-                );
-              })}
+              {row.map((card) => (
+                <TrackListGridTile
+                  key={card.id}
+                  card={card}
+                  onList={trackList.includes(card.id)}
+                  colW={colW}
+                  tileH={tileH}
+                  cardSmW={cardSmW}
+                  cardSmH={cardSmH}
+                  tileScale={tileScale}
+                  onOpenCard={() =>
+                    dispatch({ type: "OPEN_MODAL", cardId: card.id })
+                  }
+                />
+              ))}
               {row.length < 3
                 ? Array.from({ length: 3 - row.length }).map((_, i) => (
                     <View
                       key={`pad-${rowIdx}-${i}`}
-                      style={{ width: colW, minHeight: cellHeight }}
+                      style={{ width: colW, minHeight: tileH }}
                     />
                   ))
                 : null}
@@ -348,7 +363,11 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: colors.white,
   },
-  filters: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.border },
+  filters: {
+    flexGrow: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
   filtersContent: {
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -391,23 +410,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-  cardDim: { opacity: 0.5 },
-  listBtn: {
-    backgroundColor: colors.gold,
-    borderRadius: 2,
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  listBtnRemove: { backgroundColor: "rgba(200,50,50,.8)" },
-  listBtnText: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(8),
-    letterSpacing: 0.5,
-    color: "#0a0600",
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  listBtnTextRemove: { color: "#fff" },
+  cardMuted: { opacity: 0.5 },
 });
