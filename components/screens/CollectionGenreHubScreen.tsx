@@ -1,11 +1,16 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   COLLECTION_GENRE_HUB,
   type CollectionHubCell,
 } from "@/lib/data/collection-hub";
-import { GENRE_CFG } from "@/lib/data/genres";
 import { colors, fonts, fs } from "@/lib/tokens";
 
 export default function CollectionGenreHubScreen() {
@@ -24,42 +29,36 @@ export default function CollectionGenreHubScreen() {
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        {COLLECTION_GENRE_HUB.map((row, rowIdx) => (
-          <View key={rowIdx} style={styles.row}>
-            {row.map((cell) => {
-              const cfg = GENRE_CFG[cell.genre];
-              return (
-                <Pressable
-                  key={cell.genre}
-                  style={styles.cellOuter}
-                  onPress={() => go(cell)}
-                >
-                  <LinearGradient
-                    colors={[cfg.bg0, cfg.bg1]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.cell}
-                  >
-                    <Text style={styles.sym}>{cfg.sym}</Text>
-                    <Text
-                      style={[styles.label, { color: cfg.accent }]}
-                      numberOfLines={2}
-                    >
-                      {cell.label}
-                    </Text>
-                  </LinearGradient>
-                </Pressable>
-              );
-            })}
+        <View style={styles.gridWrap}>
+          <View style={styles.squareFrame}>
+            <Image
+              source={require("@/assets/ui/collection-genre-grid-v1.png")}
+              style={styles.gridImage}
+              resizeMode="cover"
+            />
+            <View style={styles.overlay} pointerEvents="box-none">
+              {COLLECTION_GENRE_HUB.map((row, rowIdx) => (
+                <View key={rowIdx} style={styles.overlayRow}>
+                  {row.map((cell) => (
+                    <Pressable
+                      key={cell.genre}
+                      style={styles.hitCell}
+                      onPress={() => go(cell)}
+                      accessibilityRole="button"
+                      accessibilityLabel={cell.label}
+                    />
+                  ))}
+                </View>
+              ))}
+            </View>
           </View>
-        ))}
+        </View>
       </ScrollView>
     </View>
   );
 }
-
-const GAP = 12;
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
@@ -83,39 +82,41 @@ const styles = StyleSheet.create({
     color: colors.muted,
   },
   scroll: {
-    padding: 20,
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
     paddingBottom: 32,
-    gap: GAP,
+    alignItems: "stretch",
   },
-  row: {
-    flexDirection: "row",
-    gap: GAP,
+  gridWrap: {
+    width: "100%",
+    alignItems: "center",
   },
-  cellOuter: {
-    flex: 1,
-    minWidth: 0,
+  /** Square matches artwork (1024×1024); overlay rows/cells split it 3×3. */
+  squareFrame: {
+    width: "100%",
+    maxWidth: 520,
     aspectRatio: 1,
-    borderRadius: 6,
+    borderRadius: 4,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
-  cell: {
+  gridImage: {
+    ...StyleSheet.absoluteFill,
+    width: "100%",
+    height: "100%",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFill,
+    flexDirection: "column",
+  },
+  overlayRow: {
     flex: 1,
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
+    flexDirection: "row",
   },
-  sym: {
-    fontSize: fs(28),
-    lineHeight: fs(32),
-  },
-  label: {
-    fontFamily: fonts.cinzelBold,
-    fontSize: fs(10),
-    letterSpacing: 1,
-    textAlign: "center",
-    textTransform: "uppercase",
+  hitCell: {
+    flex: 1,
   },
 });
