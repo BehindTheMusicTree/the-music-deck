@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, Modal } from 'react-native';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRE_CFG, DEFI_GENRES } from '@/lib/data/genres';
@@ -21,6 +21,7 @@ export default function ChallengeScreen() {
   const { dispatch, showToast } = useGame();
   const [phase, setPhase] = useState<Phase>('pick');
   const [guess, setGuess] = useState<GuessState | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
 
   function startDefi(genre: Genre) {
     const pool = CARDS.filter(c => c.genre === genre);
@@ -81,9 +82,15 @@ export default function ChallengeScreen() {
       )}
 
       {phase === 'guess' && guess && (
+        <>
+        <Modal visible={fullscreen} transparent animationType="fade" onRequestClose={() => setFullscreen(false)}>
+          <Pressable style={styles.modalBg} onPress={() => setFullscreen(false)}>
+            <CardComponent card={guess.card} maskTitle />
+          </Pressable>
+        </Modal>
         <View style={styles.guessWrap}>
           <View style={styles.cardWrap}>
-            <CardComponent card={guess.card} maskTitle wrapClass="csm" />
+            <CardComponent card={guess.card} maskTitle wrapClass="csm" onClick={() => setFullscreen(true)} />
           </View>
           <View style={styles.form}>
             <Text style={styles.question}>What is the title of this card?</Text>
@@ -121,6 +128,7 @@ export default function ChallengeScreen() {
             )}
           </View>
         </View>
+        </>
       )}
     </ScrollView>
   );
@@ -146,6 +154,7 @@ const styles = StyleSheet.create({
   },
   genreIcon: { fontSize: 28 },
   genreLabel: { fontFamily: fonts.cinzel, fontSize: 10, letterSpacing: 1 },
+  modalBg: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center' },
   guessWrap: { flexDirection: 'column', gap: 20, alignItems: 'stretch' },
   cardWrap: { alignItems: 'center' },
   form: { gap: 16 },
