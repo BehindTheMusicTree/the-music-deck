@@ -112,8 +112,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   tagline: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 16,
     color: colors.muted,
     textAlign: 'center',

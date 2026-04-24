@@ -78,8 +78,7 @@ const styles = StyleSheet.create({
   pillTextActive: { color: '#0a0600' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   emptyText: {
-    fontFamily: fonts.cormorant,
-    fontStyle: 'italic',
+    fontFamily: fonts.cormorantItalic,
     fontSize: 16,
     color: colors.muted,
     textAlign: 'center',

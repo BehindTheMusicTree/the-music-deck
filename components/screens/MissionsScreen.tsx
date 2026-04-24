@@ -171,6 +171,6 @@ const styles = StyleSheet.create({
   },
   weeklyLabel: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
   weeklyTitle: { fontFamily: fonts.cinzelBold, fontSize: 16, letterSpacing: 2, color: colors.white },
-  weeklyDesc: { fontFamily: fonts.cormorant, fontStyle: 'italic', fontSize: 14, color: colors.muted, lineHeight: 22 },
+  weeklyDesc: { fontFamily: fonts.cormorantItalic, fontSize: 14, color: colors.muted, lineHeight: 22 },
   weeklyReward: { fontFamily: fonts.cinzelBold, fontSize: 18, color: colors.gold },
 });

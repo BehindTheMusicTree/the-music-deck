@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   info: { flex: 1, gap: 4 },
   song: { fontFamily: fonts.cinzelBold, fontSize: 11, color: colors.white, letterSpacing: 0.5 },
-  artist: { fontFamily: fonts.cormorant, fontStyle: 'italic', fontSize: 12, color: colors.muted },
+  artist: { fontFamily: fonts.cormorantItalic, fontSize: 12, color: colors.muted },
   tags: { flexDirection: 'row', gap: 6, marginTop: 4, flexWrap: 'wrap' },
   tag: { borderWidth: 1, borderColor: colors.border, borderRadius: 3, paddingHorizontal: 6, paddingVertical: 2 },
   tagText: { fontFamily: fonts.spaceMono, fontSize: 7, color: colors.muted, letterSpacing: 0.5 },

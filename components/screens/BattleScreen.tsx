@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   btnDisabled: { opacity: 0.35 },
   resultWrap: { alignItems: 'center', gap: 12 },
   resultTitle: { fontFamily: fonts.cinzelBold, fontSize: 28, letterSpacing: 4 },
-  resultSub: { fontFamily: fonts.cormorant, fontStyle: 'italic', fontSize: 18, color: colors.muted },
+  resultSub: { fontFamily: fonts.cormorantItalic, fontSize: 18, color: colors.muted },
   btnPrimary: { backgroundColor: colors.gold, paddingVertical: 13, paddingHorizontal: 32, borderRadius: 3, marginTop: 8 },
   btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 2, color: '#0a0600' },
   log: { flex: 1, backgroundColor: 'rgba(0,0,0,.3)', borderRadius: 4, padding: 10, maxHeight: 160 },
