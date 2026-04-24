@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   useWindowDimensions,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useGame } from "@/lib/game-state";
@@ -15,16 +16,22 @@ import { colors, fonts, fs } from "@/lib/tokens";
 
 const HERO_H_PAD = 24;
 const ACTION_ROW_GAP = 16;
-const MAX_ACTION_ICON = 168;
+/** Must match `screensWeb.maxWidth` in `app/_layout.tsx` so hero CTAs size to the real column. */
+const WEB_MAX_CONTENT_W = 1024;
+const MAX_ACTION_ICON = 300;
 
 export default function HomeScreen() {
   const { state, dispatch } = useGame();
   const router = useRouter();
   const { width: winW } = useWindowDimensions();
   const { collection, deck } = state;
-  const actionIconSize = Math.min(
-    MAX_ACTION_ICON,
-    Math.floor((winW - HERO_H_PAD * 2 - ACTION_ROW_GAP) / 2),
+  const contentW =
+    Platform.OS === "web" ? Math.min(winW, WEB_MAX_CONTENT_W) : winW;
+  const colW =
+    (contentW - HERO_H_PAD * 2 - ACTION_ROW_GAP) / 2;
+  const actionIconSize = Math.max(
+    96,
+    Math.min(MAX_ACTION_ICON, Math.floor(colW * 0.88)),
   );
 
   const picks: typeof CARDS = [];
@@ -174,15 +181,15 @@ const styles = StyleSheet.create({
   btnPrimary: {
     flex: 1,
     minWidth: 0,
-    paddingVertical: 20,
+    paddingVertical: Platform.OS === "web" ? 24 : 20,
     paddingHorizontal: 8,
     borderRadius: 3,
     alignItems: "center",
-    gap: 12,
+    gap: 14,
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(16),
+    fontSize: Platform.OS === "web" ? fs(20) : fs(16),
     letterSpacing: 2.5,
     color: colors.gold,
     textAlign: "center",
@@ -205,15 +212,15 @@ const styles = StyleSheet.create({
   btnDigCrate: {
     flex: 1,
     minWidth: 0,
-    paddingVertical: 20,
+    paddingVertical: Platform.OS === "web" ? 24 : 20,
     paddingHorizontal: 8,
     borderRadius: 3,
     alignItems: "center",
-    gap: 12,
+    gap: 14,
   },
   btnDigCrateText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(16),
+    fontSize: Platform.OS === "web" ? fs(20) : fs(16),
     letterSpacing: 2.5,
     color: colors.rust,
     textAlign: "center",
