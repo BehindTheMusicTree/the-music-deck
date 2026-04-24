@@ -9,11 +9,17 @@ import {
   Animated,
   useWindowDimensions,
   Platform,
+  Image,
+  Switch,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useGame } from "@/lib/game-state";
 import type { Card, Genre } from "@/lib/data/cards";
 import { CARDS } from "@/lib/data/cards";
+import {
+  albumSlotsForGenre,
+  totalCardsInGenre,
+} from "@/lib/data/collection-album-slots";
 import { collectionHubLabel } from "@/lib/data/collection-hub";
 import { useCardSizeMultiplier } from "@/lib/card-layout";
 import CardComponent from "@/components/Card";
@@ -29,12 +35,25 @@ const GRID_GAP = 10;
 const CARD_SM_BASE_W = 149;
 const CARD_SM_BASE_H = 220;
 
+type AlbumEntry = { slot: number; card: Card | null; owned: boolean };
+
 function chunkRows<T>(items: T[], rowSize: number): T[][] {
   const rows: T[][] = [];
   for (let i = 0; i < items.length; i += rowSize) {
     rows.push(items.slice(i, i + rowSize));
   }
   return rows;
+}
+
+function albumEntriesForGenre(
+  genre: Genre,
+  ownedIds: Set<number>,
+): AlbumEntry[] {
+  return albumSlotsForGenre(genre).map(({ slot, card }) => ({
+    slot,
+    card,
+    owned: card != null && ownedIds.has(card.id),
+  }));
 }
 
 export default function CollectionGenreScreen({ genre }: Props) {
@@ -45,14 +64,17 @@ export default function CollectionGenreScreen({ genre }: Props) {
   const { collection } = state;
   const label = collectionHubLabel(genre);
 
+  const [onlyOwned, setOnlyOwned] = useState(true);
   const [focused, setFocused] = useState<Card | null>(null);
   const zoomScale = useRef(new Animated.Value(1)).current;
   const dimOpacity = useRef(new Animated.Value(0)).current;
 
-  const cards = collection
-    .map((id) => CARDS.find((c) => c.id === id)!)
-    .filter(Boolean)
-    .filter((c) => c.genre === genre);
+  const ownedIds = new Set(collection);
+  const cardsOwned = CARDS.filter(
+    (c) => c.genre === genre && ownedIds.has(c.id),
+  );
+  const totalInGenre = totalCardsInGenre(genre);
+  const ownedCount = cardsOwned.length;
 
   const layoutW =
     Platform.OS === "web" ? Math.min(winW, WEB_MAX_CONTENT_W) : winW;
@@ -101,6 +123,14 @@ export default function CollectionGenreScreen({ genre }: Props) {
 
   const tileH = cardSmH * tileScale;
 
+  const showEmpty =
+    onlyOwned && ownedCount === 0 && totalInGenre > 0;
+
+  const albumRows = chunkRows(
+    albumEntriesForGenre(genre, ownedIds),
+    3,
+  );
+
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
@@ -112,16 +142,30 @@ export default function CollectionGenreScreen({ genre }: Props) {
             {label}
           </Text>
           <Text style={styles.count}>
-            {cards.length} card{cards.length === 1 ? "" : "s"}
+            {onlyOwned
+              ? `${ownedCount} card${ownedCount === 1 ? "" : "s"}`
+              : `${ownedCount} / ${totalInGenre} collected`}
           </Text>
         </View>
         <View style={styles.backSpacer} />
       </View>
 
-      {cards.length === 0 ? (
+      <View style={styles.optionRow}>
+        <Text style={styles.optionLabel}>Only cards I own</Text>
+        <Switch
+          value={onlyOwned}
+          onValueChange={setOnlyOwned}
+          trackColor={{ false: "#3a3848", true: "rgba(168,124,40,.45)" }}
+          thumbColor={onlyOwned ? colors.gold : "#8a8894"}
+          ios_backgroundColor="#3a3848"
+        />
+      </View>
+
+      {showEmpty ? (
         <View style={styles.empty}>
           <Text style={styles.emptyText}>
-            No {label} cards yet.{"\n"}Open packs to grow this stack.
+            No {label} cards yet.{"\n"}Open packs to grow this stack — or turn
+            off “Only cards I own” to preview the full set.
           </Text>
         </View>
       ) : (
@@ -132,42 +176,101 @@ export default function CollectionGenreScreen({ genre }: Props) {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {chunkRows(cards, 3).map((row, rowIdx) => (
-            <View key={rowIdx} style={[styles.row, { gap: GRID_GAP }]}>
-              {row.map((card) => (
-                <View
-                  key={card.id}
-                  style={[styles.cell, { width: colW, height: tileH }]}
-                >
-                  <View
-                    style={[
-                      styles.tileInner,
-                      {
-                        width: cardSmW,
-                        height: cardSmH,
-                        left: (colW - cardSmW * tileScale) / 2,
-                        transform: [{ scale: tileScale }],
-                      },
-                    ]}
-                  >
-                    <CardComponent
-                      card={card}
-                      wrapClass="csm"
-                      onClick={() => setFocused(card)}
-                    />
-                  </View>
+          {onlyOwned
+            ? chunkRows(cardsOwned, 3).map((row, rowIdx) => (
+                <View key={rowIdx} style={[styles.row, { gap: GRID_GAP }]}>
+                  {row.map((card) => (
+                    <View
+                      key={card.id}
+                      style={[styles.cell, { width: colW, height: tileH }]}
+                    >
+                      <View
+                        style={[
+                          styles.tileInner,
+                          {
+                            width: cardSmW,
+                            height: cardSmH,
+                            left: (colW - cardSmW * tileScale) / 2,
+                            transform: [{ scale: tileScale }],
+                          },
+                        ]}
+                      >
+                        <CardComponent
+                          card={card}
+                          wrapClass="csm"
+                          onClick={() => setFocused(card)}
+                        />
+                      </View>
+                    </View>
+                  ))}
+                  {row.length < 3
+                    ? Array.from({ length: 3 - row.length }).map((_, i) => (
+                        <View
+                          key={`pad-${rowIdx}-${i}`}
+                          style={{ width: colW, height: tileH }}
+                        />
+                      ))
+                    : null}
+                </View>
+              ))
+            : albumRows.map((row, rowIdx) => (
+                <View key={rowIdx} style={[styles.row, { gap: GRID_GAP }]}>
+                  {row.map((entry) => (
+                    <View
+                      key={entry.slot}
+                      style={[styles.cell, { width: colW, height: tileH }]}
+                    >
+                      <View
+                        style={[
+                          styles.tileInner,
+                          {
+                            width: cardSmW,
+                            height: cardSmH,
+                            left: (colW - cardSmW * tileScale) / 2,
+                            transform: [{ scale: tileScale }],
+                          },
+                        ]}
+                      >
+                        {entry.card && entry.owned ? (
+                          <CardComponent
+                            card={entry.card}
+                            wrapClass="csm"
+                            onClick={() => setFocused(entry.card!)}
+                          />
+                        ) : (
+                          <View
+                            style={[
+                              styles.backShell,
+                              {
+                                width: cardSmW,
+                                height: cardSmH,
+                                borderRadius: 10 * cardM,
+                              },
+                            ]}
+                          >
+                            <Image
+                              source={require("@/assets/ui/card-back-v1.png")}
+                              style={styles.backImage}
+                              resizeMode="cover"
+                            />
+                            <View style={styles.slotBadgeWrap}>
+                              <Text style={styles.slotBadge}>{entry.slot}</Text>
+                            </View>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                  ))}
+                  {row.length < 3
+                    ? Array.from({ length: 3 - row.length }).map((_, i) => (
+                        <View
+                          key={`apad-${rowIdx}-${i}`}
+                          style={{ width: colW, height: tileH }}
+                        />
+                      ))
+                    : null}
                 </View>
               ))}
-              {row.length < 3
-                ? Array.from({ length: 3 - row.length }).map((_, i) => (
-                    <View
-                      key={`pad-${rowIdx}-${i}`}
-                      style={{ width: colW, height: tileH }}
-                    />
-                  ))
-                : null}
-            </View>
-          ))}
         </ScrollView>
       )}
 
@@ -235,6 +338,22 @@ const styles = StyleSheet.create({
     fontSize: fs(8),
     color: colors.muted,
   },
+  optionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    gap: 10,
+  },
+  optionLabel: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(11),
+    letterSpacing: 1.5,
+    color: colors.white,
+  },
   empty: { flex: 1, alignItems: "center", justifyContent: "center" },
   emptyText: {
     fontFamily: fonts.cormorantItalic,
@@ -261,6 +380,34 @@ const styles = StyleSheet.create({
   tileInner: {
     position: "absolute",
     top: 0,
+  },
+  backShell: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: "hidden",
+    backgroundColor: colors.surface,
+  },
+  backImage: {
+    width: "100%",
+    height: "100%",
+  },
+  slotBadgeWrap: {
+    position: "absolute",
+    bottom: 6,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+  slotBadge: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(8),
+    letterSpacing: 1,
+    color: "rgba(255,255,255,.55)",
+    backgroundColor: "rgba(0,0,0,.45)",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 2,
+    overflow: "hidden",
   },
   modalRoot: {
     flex: 1,
