@@ -28,9 +28,18 @@ export interface BattleState {
   log: { type: string; msg: string }[];
 }
 
+/** Saved lineup for battles (same shape as a track list, max 10 cards). */
+export interface BattleDeck {
+  id: string;
+  name: string;
+  cardIds: number[];
+}
+
 export interface GameState {
   collection: number[];
   trackList: number[];
+  /** Saved track lists for the arena; at least one starter entry is seeded. */
+  decks: BattleDeck[];
   coins: number;
   missions: Mission[];
   battle: BattleState;
@@ -69,9 +78,18 @@ const defaultBattle: BattleState = {
 
 const INITIAL_TRACK_LIST = [1, 25, 30, 3, 12] as const;
 
+const initialDecks: BattleDeck[] = [
+  {
+    id: 'starter',
+    name: 'Track List Starter',
+    cardIds: [...INITIAL_TRACK_LIST],
+  },
+];
+
 const initialState: GameState = {
   collection: [1,2,3,4,5,6,7,8,9,10,11,12,25,27,29,30,31,32,33,34,35,36,37],
   trackList: [...INITIAL_TRACK_LIST],
+  decks: initialDecks,
   coins: 750,
   missions: [
     { id:1, name:'Open 1 Pack',               reward:50,  prog:0, total:1, done:false },

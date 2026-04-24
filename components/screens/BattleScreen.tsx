@@ -8,7 +8,7 @@ import {
   Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useGame } from "@/lib/game-state";
+import { useGame, type BattleDeck } from "@/lib/game-state";
 import { CARDS } from "@/lib/data/cards";
 import { useCardSizeMultiplier } from "@/lib/card-layout";
 import CardComponent from "@/components/Card";
@@ -63,7 +63,11 @@ export default function BattleScreen() {
   const router = useRouter();
   const cardM = useCardSizeMultiplier();
   const { state, showToast, advanceMission, earnCoins } = useGame();
-  const { trackList } = state;
+  const { collection, decks } = state;
+  const [selectedDeckId, setSelectedDeckId] = useState(
+    () => state.decks[0]?.id ?? "",
+  );
+  const [expandedDeckId, setExpandedDeckId] = useState<string | null>(null);
   const [fight, setFight] = useState<FightState | null>(null);
   const [zoomCard, setZoomCard] = useState<Card | null>(null);
   const [attackPrimed, setAttackPrimed] = useState(false);
@@ -86,10 +90,29 @@ export default function BattleScreen() {
     }
   }, [fight]);
 
-  const lineupCards = trackList
+  useEffect(() => {
+    if (!state.decks.some((d) => d.id === selectedDeckId)) {
+      setSelectedDeckId(state.decks[0]?.id ?? "");
+    }
+  }, [state.decks, selectedDeckId]);
+
+  const lineupCards = (
+    state.decks.find((d) => d.id === selectedDeckId)?.cardIds ?? []
+  )
     .map((id) => CARDS.find((c) => c.id === id))
-    .filter((c): c is Card => c != null);
+    .filter(
+      (c): c is Card => c != null && collection.includes(c.id),
+    );
   const canStart = lineupCards.length > 0;
+  const hasDecks = state.decks.length > 0;
+
+  function resolvedCardsForDeck(deck: BattleDeck) {
+    return deck.cardIds
+      .map((id) => CARDS.find((c) => c.id === id))
+      .filter(
+        (c): c is Card => c != null && collection.includes(c.id),
+      );
+  }
 
   const addLog = useCallback(
     (fs: FightState, type: string, msg: string): FightState => ({
@@ -100,11 +123,16 @@ export default function BattleScreen() {
   );
 
   function startBattle() {
-    const leadId = trackList[0];
-    if (leadId == null) return;
-    const playerCard = CARDS.find((c) => c.id === leadId);
-    if (!playerCard) return;
-    const sid = trackList[1];
+    const deck = state.decks.find((d) => d.id === selectedDeckId);
+    if (!deck || deck.cardIds.length === 0) return;
+    const resolved = deck.cardIds
+      .map((id) => CARDS.find((c) => c.id === id))
+      .filter(
+        (c): c is Card => c != null && collection.includes(c.id),
+      );
+    if (resolved.length === 0) return;
+    const playerCard = resolved[0];
+    const sid = resolved[1]?.id;
     const playerCard2 =
       sid != null ? (CARDS.find((c) => c.id === sid) ?? null) : null;
     const avoidIds: number[] = [playerCard.id];
@@ -134,6 +162,8 @@ export default function BattleScreen() {
       playerDebuff: 0,
       buttonsDisabled: false,
     };
+    fs = addLog(fs, "sys", `${playerCard.title} vs ${enemyCard.title}`);
+    fs = addLog(fs, "sys", "Let the music decide the winner…");
     setFight(fs);
   }
 
@@ -302,43 +332,110 @@ export default function BattleScreen() {
       <View style={styles.screen}>
         <View style={styles.sHdr}>
           <Text style={styles.lbl}>BATTLE ARENA</Text>
-          <Text style={styles.h2}>YOUR TRACK LIST</Text>
+          <Text style={styles.h2}>Track lists</Text>
         </View>
-        {canStart ? (
-          <>
-            <Text style={styles.pickLabel}>
-              This duel uses your saved track list. Slot 1 is your fighter for
-              now; the rest of the lineup is for future rules.
-            </Text>
-            <ScrollView contentContainerStyle={styles.pickGrid}>
-              {lineupCards.map((card, i) => (
-                <View key={card.id} style={styles.pickCardWrap}>
-                  <Text style={styles.pickSlotNum}>{i + 1}</Text>
-                  <CardComponent card={card} wrapClass="cxs" />
-                </View>
-              ))}
-            </ScrollView>
-            <Text style={styles.leadHint}>
-              Lead fighter: {lineupCards[0]?.title}
-              {lineupCards.length > 1
-                ? ` · ${lineupCards.length} cards in lineup`
-                : ""}
-            </Text>
-          </>
-        ) : (
+        {!hasDecks ? (
           <View style={styles.emptyLineup}>
-            <Text style={styles.emptyTitle}>No track list yet</Text>
+            <Text style={styles.emptyTitle}>Aucune track list</Text>
             <Text style={styles.emptyBody}>
-              Add at least one card to your track list before you can enter the
-              arena.
+              Ajoute des lineups sauvegardées pour l’arène — ou réinitialise
+              l’app avec les données de démo.
             </Text>
             <Pressable
               style={styles.btnPrimary}
               onPress={() => router.push("/tracklist")}
             >
-              <Text style={styles.btnPrimaryText}>Build track list</Text>
+              <Text style={styles.btnPrimaryText}>Track list</Text>
             </Pressable>
           </View>
+        ) : (
+          <>
+            <Text style={styles.pickLabel}>
+              Une track list par défaut est déjà là. Touche une ligne pour la
+              déplier et voir les cartes ; dans la zone ouverte, appuie sur
+              « Utiliser pour ce duel » pour l’engager. Slot 1 = combattant.
+            </Text>
+            <View style={styles.tlList}>
+              {decks.map((deck) => {
+                const expanded = expandedDeckId === deck.id;
+                const forDuel = deck.id === selectedDeckId;
+                const resolved = resolvedCardsForDeck(deck);
+                return (
+                  <View key={deck.id} style={styles.tlItem}>
+                    <Pressable
+                      onPress={() =>
+                        setExpandedDeckId((prev) =>
+                          prev === deck.id ? null : deck.id,
+                        )
+                      }
+                      style={[
+                        styles.tlHeader,
+                        forDuel && styles.tlHeaderForDuel,
+                      ]}
+                    >
+                      <Text style={styles.tlChevron}>
+                        {expanded ? "▼" : "▶"}
+                      </Text>
+                      <View style={styles.tlHeaderMain}>
+                        <Text style={styles.tlName}>{deck.name}</Text>
+                        {forDuel ? (
+                          <Text style={styles.tlForDuelLbl}>
+                            Sélectionnée pour ce duel
+                          </Text>
+                        ) : null}
+                      </View>
+                      <Text style={styles.tlCount}>
+                        {deck.cardIds.length}
+                      </Text>
+                    </Pressable>
+                    {expanded ? (
+                      <View style={styles.tlBody}>
+                        {resolved.length > 0 ? (
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.tlCardsRow}
+                          >
+                            {resolved.map((card, i) => (
+                              <View key={card.id} style={styles.pickCardWrap}>
+                                <Text style={styles.pickSlotNum}>{i + 1}</Text>
+                                <CardComponent card={card} wrapClass="cxs" />
+                              </View>
+                            ))}
+                          </ScrollView>
+                        ) : (
+                          <Text style={styles.tlEmptyResolved}>
+                            Aucune carte de cette liste n’est dans ta collection.
+                          </Text>
+                        )}
+                        <Pressable
+                          style={styles.tlUseBtn}
+                          onPress={() => setSelectedDeckId(deck.id)}
+                        >
+                          <Text style={styles.tlUseBtnText}>
+                            Utiliser pour ce duel
+                          </Text>
+                        </Pressable>
+                      </View>
+                    ) : null}
+                  </View>
+                );
+              })}
+            </View>
+            {canStart ? (
+              <Text style={styles.leadHint}>
+                Lineup active : {lineupCards[0]?.title}
+                {lineupCards.length > 1
+                  ? ` · ${lineupCards.length} cartes`
+                  : ""}
+              </Text>
+            ) : (
+              <Text style={styles.warnHint}>
+                Déplie une track list puis choisis « Utiliser pour ce duel »
+                pour une lineup avec au moins une carte dans ta collection.
+              </Text>
+            )}
+          </>
         )}
         <View style={styles.startRow}>
           <Pressable
@@ -346,7 +443,7 @@ export default function BattleScreen() {
             disabled={!canStart}
             onPress={startBattle}
           >
-            <Text style={styles.btnAttackText}>Start Battle</Text>
+            <Text style={styles.btnAttackText}>Lancer le combat</Text>
           </Pressable>
         </View>
       </View>
@@ -607,6 +704,99 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "center",
     lineHeight: fs(16),
+  },
+  tlList: {
+    paddingHorizontal: 16,
+    gap: 10,
+    marginBottom: 8,
+  },
+  tlItem: {
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: "rgba(0,0,0,.22)",
+    overflow: "hidden",
+  },
+  tlHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  tlHeaderForDuel: {
+    borderLeftWidth: 3,
+    borderLeftColor: colors.gold,
+    backgroundColor: "rgba(168,124,40,.08)",
+  },
+  tlChevron: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(10),
+    color: colors.muted,
+    width: 20,
+  },
+  tlHeaderMain: { flex: 1, gap: 2 },
+  tlName: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(12),
+    letterSpacing: 0.8,
+    color: colors.white,
+  },
+  tlForDuelLbl: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    letterSpacing: 0.6,
+    color: colors.gold,
+    textTransform: "uppercase",
+  },
+  tlCount: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(9),
+    color: colors.muted,
+  },
+  tlBody: {
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+    paddingTop: 4,
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: "rgba(0,0,0,.18)",
+  },
+  tlCardsRow: {
+    flexDirection: "row",
+    gap: 10,
+    paddingVertical: 8,
+    alignItems: "flex-end",
+  },
+  tlEmptyResolved: {
+    fontFamily: fonts.cormorantItalic,
+    fontSize: fs(13),
+    color: colors.muted,
+    paddingVertical: 8,
+  },
+  tlUseBtn: {
+    alignSelf: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.gold,
+  },
+  tlUseBtnText: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(10),
+    letterSpacing: 1,
+    color: colors.gold,
+  },
+  warnHint: {
+    fontFamily: fonts.cormorantItalic,
+    fontSize: fs(13),
+    color: colors.muted,
+    textAlign: "center",
+    paddingHorizontal: 24,
+    marginTop: 8,
+    lineHeight: fs(20),
   },
   pickGrid: {
     flexDirection: "row",
