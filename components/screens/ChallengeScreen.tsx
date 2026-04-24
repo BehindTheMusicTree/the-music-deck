@@ -90,7 +90,7 @@ export default function ChallengeScreen() {
         </Modal>
         <View style={styles.guessWrap}>
           <View style={styles.cardWrap}>
-            <CardComponent card={guess.card} maskTitle wrapClass="csm" onClick={() => setFullscreen(true)} />
+            <CardComponent card={guess.card} maskTitle wrapClass="clg" onClick={() => setFullscreen(true)} />
           </View>
           <View style={styles.form}>
             <Text style={styles.question}>What is the title of this card?</Text>
@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
   genreIcon: { fontSize: 28 },
   genreLabel: { fontFamily: fonts.cinzel, fontSize: 10, letterSpacing: 1 },
   modalBg: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center' },
-  guessWrap: { flexDirection: 'column', gap: 20, alignItems: 'stretch' },
+  guessWrap: { flexDirection: 'column', gap: 20, alignItems: 'center', maxWidth: 380, alignSelf: 'center', width: '100%' },
   cardWrap: { alignItems: 'center' },
-  form: { gap: 16 },
+  form: { gap: 16, width: '100%' },
   question: { fontFamily: fonts.cinzelBold, fontSize: 14, letterSpacing: 1, color: colors.white },
   choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface, width: '48%' },
+  choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface, flexBasis: '47%', flexGrow: 1 },
   choiceCorrect: { borderColor: '#50a840', backgroundColor: 'rgba(80,168,64,.12)' },
   choiceWrong:   { borderColor: '#c03030', backgroundColor: 'rgba(192,48,48,.12)' },
   choiceText: { fontFamily: fonts.cinzel, fontSize: 11, letterSpacing: 0.5, color: colors.white },
