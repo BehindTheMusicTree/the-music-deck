@@ -13,7 +13,7 @@ Duration: ~1.2 seconds. No sound cue needed.
 
 Starting frame: the sealed Season One booster pack, front-facing,
 identical to the static asset — black background, gold holographic foil surface,
-vinyl record artwork, "THE MUSIC TRACK LIST / SEASON ONE" typography.
+vinyl record artwork, "THE MUSIC DECK / SEASON ONE" typography.
 
 Action: a clean horizontal cut appears at the tear-notch line (~15% from the top),
 travelling from left to right across the full width of the pack in ~0.6 seconds.

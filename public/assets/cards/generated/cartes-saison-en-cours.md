@@ -1,6 +1,6 @@
 # Cartes de la saison en cours
 
-Ce fichier liste les cartes de la saison en cours du jeu The Music Track List.
+Ce fichier liste les cartes de la saison en cours du jeu The Music Deck.
 
 ## Format du tableau
 

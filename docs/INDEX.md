@@ -1,6 +1,6 @@
 # Documentation Index
 
-This folder contains the product design documentation for The Music Track List.
+This folder contains the product design documentation for The Music Deck.
 
 ## Start Here
 

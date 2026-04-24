@@ -57,8 +57,7 @@ export default function HomeScreen() {
         <View style={styles.titleRow}>
           <Text style={styles.titleThe}>THE{"\n"}</Text>
           <Text style={styles.title}>
-            MUSIC{"\n"}
-            <Text style={styles.titleGold}>TRACK LIST</Text>
+            MUSIC <Text style={styles.titleGold}>DECK</Text>
           </Text>
         </View>
         <View style={styles.bar} />

@@ -1,6 +1,6 @@
 # Glossary
 
-Canonical terms used across The Music Track List documentation.
+Canonical terms used across The Music Deck documentation.
 
 ## Core Terms
 

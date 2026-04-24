@@ -82,7 +82,7 @@ Example schema:
 Use this prompt when asking an AI to generate one complete card object.
 
 ```text
-You are generating one complete card example for a music card game called "The Music Track List".
+You are generating one complete card example for a music card game called "The Music Deck".
 
 Goal:
 Create a single card example, including every card element listed below.
