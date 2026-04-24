@@ -145,7 +145,7 @@ export default function BattleScreen() {
       enemies2.length > 0
         ? enemies2[Math.floor(Math.random() * enemies2.length)]
         : null;
-    let fs: FightState = {
+    const fs: FightState = {
       playerCard,
       playerCard2,
       enemyCard,
@@ -162,8 +162,6 @@ export default function BattleScreen() {
       playerDebuff: 0,
       buttonsDisabled: false,
     };
-    fs = addLog(fs, "sys", `${playerCard.title} vs ${enemyCard.title}`);
-    fs = addLog(fs, "sys", "Let the music decide the winner…");
     setFight(fs);
   }
 
