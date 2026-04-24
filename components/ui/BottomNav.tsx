@@ -24,7 +24,8 @@ export default function BottomNav() {
         const isHome = href === '/';
         const active =
           pathname === href
-          || (isHome && (pathname === '/index' || pathname === '/pack'));
+          || (isHome && (pathname === '/index' || pathname === '/pack'))
+          || (screen === 'collection' && pathname.startsWith('/collection'));
         return (
           <Pressable
             key={screen}
