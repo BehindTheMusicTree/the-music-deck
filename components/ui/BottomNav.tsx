@@ -21,7 +21,10 @@ export default function BottomNav() {
     <View style={[styles.nav, { paddingBottom: insets.bottom }]}>
       {NAV.map(({ screen, label, icon }) => {
         const href = screen ? `/${screen}` : '/';
-        const active = pathname === href || (href === '/' && pathname === '/index');
+        const isHome = href === '/';
+        const active =
+          pathname === href
+          || (isHome && (pathname === '/index' || pathname === '/pack'));
         return (
           <Pressable
             key={screen}
@@ -48,6 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     zIndex: 200,
     minHeight: colors.navH,
+    flexShrink: 0,
   },
   item: {
     flex: 1,
