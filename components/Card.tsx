@@ -108,7 +108,9 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
         {/* Header */}
         <View style={[styles.header, { backgroundColor: gc?.headerBg ?? '#100f18', borderBottomColor: borderColor + '44' }]}>
           <View style={styles.headerLeft}>
-            <SvgXml xml={cfg.icon} width={16} height={16} color={gc?.textMain ?? '#fff'} />
+            <View style={styles.headerIcon}>
+              <SvgXml xml={cfg.icon} width={16} height={16} color={gc?.textMain ?? '#fff'} />
+            </View>
             <View style={styles.headerTitles}>
               <Text style={[styles.cardTitle, { color: gc?.textMain ?? '#fff' }]} numberOfLines={2}>
                 {maskTitle ? '???' : card.title}
@@ -248,14 +250,21 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 11,
     paddingVertical: 7,
     gap: 8,
     borderBottomWidth: 1,
     minHeight: 44,
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 7, flex: 1, overflow: 'hidden' },
+  headerLeft: { flexDirection: 'row', alignItems: 'flex-start', gap: 7, flex: 1, overflow: 'hidden' },
+  headerIcon: {
+    marginTop: 2,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerTitles: { flexDirection: 'column', gap: 1, flex: 1, overflow: 'hidden' },
   cardTitle: {
     fontFamily: fonts.cinzelBold,
@@ -278,6 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+    marginTop: 1,
     backgroundColor: 'rgba(0,0,0,0.35)',
   },
   scoreText: { fontFamily: fonts.spaceMono, fontSize: fs(11), fontWeight: '700' },

@@ -188,6 +188,7 @@ export default function CollectionGenreScreen({ genre }: Props) {
                             height: cardSmH,
                             left: (colW - cardSmW * tileScale) / 2,
                             transform: [{ scale: tileScale }],
+                            transformOrigin: "top left" as any,
                           },
                         ]}
                       >
@@ -224,6 +225,7 @@ export default function CollectionGenreScreen({ genre }: Props) {
                             height: cardSmH,
                             left: (colW - cardSmW * tileScale) / 2,
                             transform: [{ scale: tileScale }],
+                            transformOrigin: "top left" as any,
                           },
                         ]}
                       >
@@ -378,7 +380,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   cell: {
-    overflow: "hidden",
+    overflow: "visible",
     alignItems: "center",
   },
   tileInner: {
