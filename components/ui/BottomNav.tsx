@@ -10,7 +10,7 @@ const NAV = [
   { screen: 'deckbuilder', label: 'Deck',        icon: '⚔️' },
   { screen: 'battle',      label: 'Battle',      icon: '🎯' },
   { screen: 'market',      label: 'Market',      icon: '🛒' },
-  { screen: 'challenge',   label: 'Challenge',   icon: '🎲' },
+  { screen: 'digcrate',   label: 'Crate Dig',   icon: '🎲' },
 ];
 
 export default function BottomNav() {

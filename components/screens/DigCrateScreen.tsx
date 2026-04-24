@@ -17,7 +17,7 @@ interface GuessState {
   result: ChoiceResult;
 }
 
-export default function ChallengeScreen() {
+export default function DigCrateScreen() {
   const { dispatch, showToast } = useGame();
   const [phase, setPhase] = useState<Phase>('pick');
   const [guess, setGuess] = useState<GuessState | null>(null);
@@ -57,8 +57,8 @@ export default function ChallengeScreen() {
       {phase === 'pick' && (
         <View style={styles.pickWrap}>
           <View style={styles.sHdr}>
-            <Text style={styles.lbl}>DAILY</Text>
-            <Text style={styles.h2}>CHALLENGE</Text>
+            <Text style={styles.lbl}>CRATE</Text>
+            <Text style={styles.h2}>DIG</Text>
           </View>
           <Text style={styles.intro}>Pick a genre and identify the mystery card to win it!</Text>
           <View style={styles.genreGrid}>
@@ -89,6 +89,10 @@ export default function ChallengeScreen() {
           </Pressable>
         </Modal>
         <View style={styles.guessWrap}>
+          <View style={styles.sHdr}>
+            <Text style={styles.lbl}>CRATE</Text>
+            <Text style={styles.h2}>DIG</Text>
+          </View>
           <View style={styles.cardWrap}>
             <CardComponent card={guess.card} maskTitle wrapClass="clg" onClick={() => setFullscreen(true)} />
           </View>

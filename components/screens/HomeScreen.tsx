@@ -1,9 +1,16 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useGame } from '@/lib/game-state';
-import { CARDS } from '@/lib/data/cards';
-import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  Image,
+  StyleSheet,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { useGame } from "@/lib/game-state";
+import { CARDS } from "@/lib/data/cards";
+import CardComponent from "@/components/Card";
+import { colors, fonts } from "@/lib/tokens";
 
 export default function HomeScreen() {
   const { state, dispatch } = useGame();
@@ -11,14 +18,19 @@ export default function HomeScreen() {
   const { collection, deck } = state;
 
   const picks: typeof CARDS = [];
-  for (const rarity of ['Legendary', 'Epic', 'Rare', 'Common'] as const) {
+  for (const rarity of ["Legendary", "Epic", "Rare", "Common"] as const) {
     if (picks.length >= 4) break;
-    const c = collection.map(id => CARDS.find(x => x.id === id)!).find(c => c && c.rarity === rarity && !picks.includes(c));
+    const c = collection
+      .map((id) => CARDS.find((x) => x.id === id)!)
+      .find((c) => c && c.rarity === rarity && !picks.includes(c));
     if (c) picks.push(c);
   }
   while (picks.length < 4 && picks.length < collection.length) {
-    const c = CARDS.find(x => collection.includes(x.id) && !picks.includes(x));
-    if (c) picks.push(c); else break;
+    const c = CARDS.find(
+      (x) => collection.includes(x.id) && !picks.includes(x),
+    );
+    if (c) picks.push(c);
+    else break;
   }
 
   return (
@@ -26,29 +38,49 @@ export default function HomeScreen() {
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>TRADING CARD GAME · SEASON 1</Text>
         <View style={styles.titleRow}>
-          <Text style={styles.titleThe}>THE{'\n'}</Text>
-          <Text style={styles.title}>MUSIC <Text style={styles.titleGold}>DECK</Text></Text>
+          <Text style={styles.titleThe}>THE{"\n"}</Text>
+          <Text style={styles.title}>
+            MUSIC <Text style={styles.titleGold}>DECK</Text>
+          </Text>
         </View>
         <View style={styles.bar} />
-        <Text style={styles.tagline}>Collect iconic songs.{'\n'}Build your deck.{'\n'}Let the music decide the winner.</Text>
         <View style={styles.actions}>
-          <Pressable style={styles.btnPrimary} onPress={() => router.push('/pack')}>
+          <Pressable
+            style={styles.btnPrimary}
+            onPress={() => router.push("/pack")}
+          >
+            <Image
+              source={require("@/assets/ui/booster-pack-season1-v1.png")}
+              style={styles.boosterPackIcon}
+              resizeMode="contain"
+            />
             <Text style={styles.btnPrimaryText}>Open a Pack</Text>
           </Pressable>
-          <Pressable style={styles.btnSecondary} onPress={() => router.push('/collection')}>
+          <Pressable
+            style={styles.btnSecondary}
+            onPress={() => router.push("/collection")}
+          >
             <Text style={styles.btnSecondaryText}>My Collection</Text>
           </Pressable>
-          <Pressable style={styles.btnDefi} onPress={() => router.push('/challenge')}>
-            <Text style={styles.btnDefiText}>Challenge</Text>
+          <Pressable
+            style={styles.btnDefi}
+            onPress={() => router.push("/digcrate")}
+          >
+            <Image
+              source={require("@/assets/ui/dig-crate-chest-v1.png")}
+              style={styles.digCrateIcon}
+              resizeMode="contain"
+            />
+            <Text style={styles.btnDefiText}>Crate Dig</Text>
           </Pressable>
         </View>
       </View>
 
       <View style={styles.stats}>
         {[
-          { num: collection.length, unit: 'Cards' },
-          { num: deck.length,       unit: 'In Deck' },
-          { num: 'S1',              unit: 'Season' },
+          { num: collection.length, unit: "Cards" },
+          { num: deck.length, unit: "In Deck" },
+          { num: "S1", unit: "Season" },
         ].map(({ num, unit }) => (
           <View key={unit} style={styles.stat}>
             <Text style={styles.statNum}>{num}</Text>
@@ -60,12 +92,14 @@ export default function HomeScreen() {
       {picks.length > 0 && (
         <View style={styles.preview}>
           <View style={styles.previewCards}>
-            {picks.map(card => (
+            {picks.map((card) => (
               <CardComponent
                 key={card.id}
                 card={card}
                 wrapClass="csm"
-                onClick={() => dispatch({ type: 'OPEN_MODAL', cardId: card.id })}
+                onClick={() =>
+                  dispatch({ type: "OPEN_MODAL", cardId: card.id })
+                }
               />
             ))}
           </View>
@@ -76,10 +110,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen:  { flex: 1, backgroundColor: colors.bg },
+  screen: { flex: 1, backgroundColor: colors.bg },
   content: { paddingBottom: 32 },
   hero: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 48,
     paddingHorizontal: 24,
     gap: 16,
@@ -90,7 +124,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: colors.muted,
   },
-  titleRow: { alignItems: 'center' },
+  titleRow: { alignItems: "center" },
   titleThe: {
     fontFamily: fonts.cinzel,
     fontSize: 13,
@@ -102,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     letterSpacing: 6,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
   },
   titleGold: { color: colors.gold },
   bar: {
@@ -115,23 +149,29 @@ const styles = StyleSheet.create({
     fontFamily: fonts.cormorantItalic,
     fontSize: 16,
     color: colors.muted,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 26,
   },
-  actions: { gap: 10, width: '100%', alignItems: 'center', marginTop: 8 },
+  actions: { gap: 10, width: "100%", alignItems: "center", marginTop: 8 },
   btnPrimary: {
-    backgroundColor: colors.gold,
-    paddingVertical: 13,
+    borderWidth: 1,
+    borderColor: colors.gold,
+    paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 3,
     width: 240,
-    alignItems: 'center',
+    alignItems: "center",
+    gap: 6,
+  },
+  boosterPackIcon: {
+    width: 64,
+    height: 64,
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
     fontSize: 11,
     letterSpacing: 2,
-    color: '#0a0600',
+    color: colors.gold,
   },
   btnSecondary: {
     borderWidth: 1,
@@ -140,7 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 3,
     width: 240,
-    alignItems: 'center',
+    alignItems: "center",
   },
   btnSecondaryText: {
     fontFamily: fonts.cinzelBold,
@@ -151,11 +191,16 @@ const styles = StyleSheet.create({
   btnDefi: {
     borderWidth: 1,
     borderColor: colors.rust,
-    paddingVertical: 13,
+    paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 3,
     width: 240,
-    alignItems: 'center',
+    alignItems: "center",
+    gap: 6,
+  },
+  digCrateIcon: {
+    width: 64,
+    height: 64,
   },
   btnDefiText: {
     fontFamily: fonts.cinzelBold,
@@ -164,8 +209,8 @@ const styles = StyleSheet.create({
     color: colors.rust,
   },
   stats: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 32,
     paddingVertical: 32,
     borderTopWidth: 1,
@@ -174,7 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 32,
   },
-  stat: { alignItems: 'center', gap: 4 },
+  stat: { alignItems: "center", gap: 4 },
   statNum: {
     fontFamily: fonts.cinzelBold,
     fontSize: 28,
@@ -185,13 +230,13 @@ const styles = StyleSheet.create({
     fontSize: 8,
     letterSpacing: 1,
     color: colors.muted,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   preview: { marginTop: 24, paddingHorizontal: 24 },
   previewCards: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
