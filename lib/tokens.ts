@@ -1,3 +1,13 @@
+import { Platform } from 'react-native';
+
+/** Slightly scale text on web so browser preview is closer to phone readability. */
+const WEB_TEXT_SCALE = 1.125;
+
+export function fs(n: number): number {
+  if (Platform.OS !== 'web') return n;
+  return Math.round(n * WEB_TEXT_SCALE * 10) / 10;
+}
+
 export const colors = {
   bg:      '#09080d',
   surface: '#100f18',

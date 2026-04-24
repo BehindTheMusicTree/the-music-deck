@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGame } from '@/lib/game-state';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 export default function TopBar() {
   const { state } = useGame();
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 4,
     color: colors.gold,
   },
@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
   },
   level: {
     fontFamily: fonts.spaceMono,
-    fontSize: 10,
+    fontSize: fs(10),
     color: colors.muted,
   },
   coins: {
     fontFamily: fonts.spaceMono,
-    fontSize: 11,
+    fontSize: fs(11),
     color: colors.gold,
   },
 });

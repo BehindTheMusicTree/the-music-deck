@@ -4,7 +4,7 @@ import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRES_ALL } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 export default function CollectionScreen() {
   const { state, dispatch } = useGame();
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  title: { fontFamily: fonts.cinzelBold, fontSize: 16, letterSpacing: 2, color: colors.white },
-  count: { fontFamily: fonts.spaceMono, fontSize: 9, color: colors.muted },
+  title: { fontFamily: fonts.cinzelBold, fontSize: fs(16), letterSpacing: 2, color: colors.white },
+  count: { fontFamily: fonts.spaceMono, fontSize: fs(9), color: colors.muted },
   filters: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.border },
   filtersContent: { paddingHorizontal: 16, paddingVertical: 12, gap: 6, flexDirection: 'row' },
   pill: {
@@ -74,15 +74,15 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   pillActive: { backgroundColor: colors.gold, borderColor: colors.gold },
-  pillText: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 1, color: colors.muted },
+  pillText: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: colors.muted },
   pillTextActive: { color: '#0a0600' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   emptyText: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 16,
+    fontSize: fs(16),
     color: colors.muted,
     textAlign: 'center',
-    lineHeight: 26,
+    lineHeight: fs(26),
   },
   grid: {
     flexDirection: 'row',

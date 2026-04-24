@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 import type { Card } from '@/lib/data/cards';
 
 interface BattleLog { type: string; msg: string; }
@@ -241,21 +241,21 @@ export default function BattleScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   sHdr: { padding: 20, gap: 4 },
-  lbl: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
-  h2: { fontFamily: fonts.cinzelBold, fontSize: 22, letterSpacing: 3, color: colors.white },
-  pickLabel: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 2, color: colors.muted, paddingHorizontal: 20, marginBottom: 12, textTransform: 'uppercase' },
+  lbl: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
+  h2: { fontFamily: fonts.cinzelBold, fontSize: fs(22), letterSpacing: 3, color: colors.white },
+  pickLabel: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 2, color: colors.muted, paddingHorizontal: 20, marginBottom: 12, textTransform: 'uppercase' },
   pickGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, padding: 20, justifyContent: 'center' },
   startRow: { padding: 20, alignItems: 'center' },
   arena: { flex: 1, padding: 16, gap: 16 },
   fighters: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start' },
   side: { alignItems: 'center', gap: 8, flex: 1 },
-  sideLabel: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
+  sideLabel: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
   hpWrap: { width: '100%', gap: 4, alignItems: 'center' },
   hpBar: { width: '90%', height: 8, borderRadius: 4, backgroundColor: 'rgba(0,0,0,.5)', overflow: 'hidden' },
   hpFill: { height: '100%', borderRadius: 4 },
-  hpTxt: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted },
+  hpTxt: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
   vs: { position: 'absolute', left: '50%', top: '40%', transform: [{ translateX: -16 }] },
-  vsText: { fontFamily: fonts.cinzelBold, fontSize: 14, letterSpacing: 2, color: colors.muted },
+  vsText: { fontFamily: fonts.cinzelBold, fontSize: fs(14), letterSpacing: 2, color: colors.muted },
   controls: { flexDirection: 'row', gap: 12, justifyContent: 'center' },
   btnAttack: {
     backgroundColor: '#8a1a1a',
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     borderRadius: 3,
   },
-  btnAttackText: { fontFamily: fonts.cinzelBold, fontSize: 12, letterSpacing: 2, color: colors.white },
+  btnAttackText: { fontFamily: fonts.cinzelBold, fontSize: fs(12), letterSpacing: 2, color: colors.white },
   btnSpecial: {
     borderWidth: 1,
     borderColor: colors.gold,
@@ -271,15 +271,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 3,
   },
-  btnSpecialText: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 1, color: colors.gold },
+  btnSpecialText: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 1, color: colors.gold },
   btnDisabled: { opacity: 0.35 },
   resultWrap: { alignItems: 'center', gap: 12 },
-  resultTitle: { fontFamily: fonts.cinzelBold, fontSize: 28, letterSpacing: 4 },
-  resultSub: { fontFamily: fonts.cormorantItalic, fontSize: 18, color: colors.muted },
+  resultTitle: { fontFamily: fonts.cinzelBold, fontSize: fs(28), letterSpacing: 4 },
+  resultSub: { fontFamily: fonts.cormorantItalic, fontSize: fs(18), color: colors.muted },
   btnPrimary: { backgroundColor: colors.gold, paddingVertical: 13, paddingHorizontal: 32, borderRadius: 3, marginTop: 8 },
-  btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 2, color: '#0a0600' },
+  btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 2, color: '#0a0600' },
   log: { flex: 1, backgroundColor: 'rgba(0,0,0,.3)', borderRadius: 4, padding: 10, maxHeight: 160 },
-  logLine: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted, lineHeight: 16 },
+  logLine: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted, lineHeight: fs(16) },
   logDmg: { color: '#d05040' },
   logHeal: { color: '#50a840' },
   logSpecial: { color: colors.gold },

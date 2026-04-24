@@ -4,7 +4,7 @@ import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRE_CFG, DEFI_GENRES } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
-import { colors, fonts, genreColors, genreKey } from '@/lib/tokens';
+import { colors, fonts, fs, genreColors, genreKey } from '@/lib/tokens';
 import type { Card, Genre } from '@/lib/data/cards';
 
 type Phase = 'pick' | 'guess';
@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
   content: { padding: 24, gap: 20 },
   pickWrap: { gap: 20 },
   sHdr: { gap: 4 },
-  lbl: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
-  h2: { fontFamily: fonts.cinzelBold, fontSize: 22, letterSpacing: 3, color: colors.white },
-  intro: { fontFamily: fonts.cormorantItalic, fontSize: 15, color: colors.muted, lineHeight: 24 },
+  lbl: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
+  h2: { fontFamily: fonts.cinzelBold, fontSize: fs(22), letterSpacing: 3, color: colors.white },
+  intro: { fontFamily: fonts.cormorantItalic, fontSize: fs(15), color: colors.muted, lineHeight: fs(24) },
   genreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   genreBtn: {
     borderWidth: 1,
@@ -156,24 +156,24 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: colors.surface,
   },
-  genreIcon: { fontSize: 28 },
-  genreLabel: { fontFamily: fonts.cinzel, fontSize: 10, letterSpacing: 1 },
+  genreIcon: { fontSize: fs(28) },
+  genreLabel: { fontFamily: fonts.cinzel, fontSize: fs(10), letterSpacing: 1 },
   modalBg: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center' },
   guessWrap: { flexDirection: 'column', gap: 20, alignItems: 'center', maxWidth: 380, alignSelf: 'center', width: '100%' },
   cardWrap: { alignItems: 'center' },
   form: { gap: 16, width: '100%' },
-  question: { fontFamily: fonts.cinzelBold, fontSize: 14, letterSpacing: 1, color: colors.white },
+  question: { fontFamily: fonts.cinzelBold, fontSize: fs(14), letterSpacing: 1, color: colors.white },
   choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   choice: { borderWidth: 1, borderColor: colors.border, borderRadius: 4, padding: 14, backgroundColor: colors.surface, flexBasis: '47%', flexGrow: 1 },
   choiceCorrect: { borderColor: '#50a840', backgroundColor: 'rgba(80,168,64,.12)' },
   choiceWrong:   { borderColor: '#c03030', backgroundColor: 'rgba(192,48,48,.12)' },
-  choiceText: { fontFamily: fonts.cinzel, fontSize: 11, letterSpacing: 0.5, color: colors.white },
+  choiceText: { fontFamily: fonts.cinzel, fontSize: fs(11), letterSpacing: 0.5, color: colors.white },
   choiceTextCorrect: { color: '#50a840' },
   choiceTextWrong:   { color: '#c03030' },
   feedback: { borderRadius: 4, padding: 14, borderWidth: 1 },
   feedbackOk:  { borderColor: 'rgba(80,168,64,.4)',  backgroundColor: 'rgba(80,168,64,.1)' },
   feedbackErr: { borderColor: 'rgba(192,48,48,.4)',  backgroundColor: 'rgba(192,48,48,.1)' },
-  feedbackText: { fontFamily: fonts.cormorantItalic, fontSize: 14, color: colors.white, lineHeight: 22 },
+  feedbackText: { fontFamily: fonts.cormorantItalic, fontSize: fs(14), color: colors.white, lineHeight: fs(22) },
   btnPrimary: { backgroundColor: colors.gold, paddingVertical: 13, paddingHorizontal: 32, borderRadius: 3, alignItems: 'center', marginTop: 8 },
-  btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 2, color: '#0a0600' },
+  btnPrimaryText: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 2, color: '#0a0600' },
 });

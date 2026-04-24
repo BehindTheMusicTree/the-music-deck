@@ -3,7 +3,7 @@ import Svg, { Line } from 'react-native-svg';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRE_CFG, TREE_NODES, TREE_EDGES } from '@/lib/data/genres';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 const W = 320, H = 280;
 
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
   content: { padding: 20, gap: 28, paddingBottom: 40 },
   section: { gap: 16 },
   sHdr: { gap: 4 },
-  lbl: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
-  h2: { fontFamily: fonts.cinzelBold, fontSize: 22, letterSpacing: 3, color: colors.white },
+  lbl: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 3, color: colors.muted, textTransform: 'uppercase' },
+  h2: { fontFamily: fonts.cinzelBold, fontSize: fs(22), letterSpacing: 3, color: colors.white },
   missionsList: { gap: 10 },
   missionItem: {
     backgroundColor: colors.surface,
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkDone: { backgroundColor: colors.gold, borderColor: colors.gold },
-  checkMark: { fontFamily: fonts.spaceMono, fontSize: 10, color: '#0a0600' },
-  missionName: { flex: 1, fontFamily: fonts.cinzel, fontSize: 11, color: colors.white, letterSpacing: 0.5 },
-  missionReward: { fontFamily: fonts.spaceMono, fontSize: 10, color: colors.gold },
+  checkMark: { fontFamily: fonts.spaceMono, fontSize: fs(10), color: '#0a0600' },
+  missionName: { flex: 1, fontFamily: fonts.cinzel, fontSize: fs(11), color: colors.white, letterSpacing: 0.5 },
+  missionReward: { fontFamily: fonts.spaceMono, fontSize: fs(10), color: colors.gold },
   progWrap: { gap: 4 },
   progBar: { height: 6, borderRadius: 3, backgroundColor: 'rgba(0,0,0,.5)', overflow: 'hidden' },
   progFill: { height: '100%', borderRadius: 3, backgroundColor: colors.gold },
-  progTxt: { fontFamily: fonts.spaceMono, fontSize: 7, color: colors.muted, textAlign: 'right' },
+  progTxt: { fontFamily: fonts.spaceMono, fontSize: fs(7), color: colors.muted, textAlign: 'right' },
   treeWrap: { width: W, height: H + 60, position: 'relative', alignSelf: 'center' },
   treeSvg: { position: 'absolute', top: 0, left: 0 },
   node: {
@@ -158,9 +158,9 @@ const styles = StyleSheet.create({
   },
   nodeMastered: { opacity: 1 },
   nodeUnlocked: { opacity: 0.75 },
-  nodeIco: { fontSize: 20 },
-  nodeCnt: { fontFamily: fonts.spaceMono, fontSize: 7, color: colors.muted },
-  nodeLbl: { fontFamily: fonts.cinzel, fontSize: 7, color: colors.white, letterSpacing: 0.5, textAlign: 'center' },
+  nodeIco: { fontSize: fs(20) },
+  nodeCnt: { fontFamily: fonts.spaceMono, fontSize: fs(7), color: colors.muted },
+  nodeLbl: { fontFamily: fonts.cinzel, fontSize: fs(7), color: colors.white, letterSpacing: 0.5, textAlign: 'center' },
   weeklyBox: {
     backgroundColor: colors.surface,
     borderRadius: 6,
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     gap: 8,
   },
-  weeklyLabel: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
-  weeklyTitle: { fontFamily: fonts.cinzelBold, fontSize: 16, letterSpacing: 2, color: colors.white },
-  weeklyDesc: { fontFamily: fonts.cormorantItalic, fontSize: 14, color: colors.muted, lineHeight: 22 },
-  weeklyReward: { fontFamily: fonts.cinzelBold, fontSize: 18, color: colors.gold },
+  weeklyLabel: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
+  weeklyTitle: { fontFamily: fonts.cinzelBold, fontSize: fs(16), letterSpacing: 2, color: colors.white },
+  weeklyDesc: { fontFamily: fonts.cormorantItalic, fontSize: fs(14), color: colors.muted, lineHeight: fs(22) },
+  weeklyReward: { fontFamily: fonts.cinzelBold, fontSize: fs(18), color: colors.gold },
 });

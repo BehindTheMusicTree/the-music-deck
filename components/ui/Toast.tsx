@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Text, StyleSheet } from 'react-native';
 import { useGame } from '@/lib/game-state';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 export default function Toast() {
   const { state } = useGame();
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: fonts.spaceMono,
-    fontSize: 10,
+    fontSize: fs(10),
     letterSpacing: 1,
   },
 });

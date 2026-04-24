@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, usePathname } from 'expo-router';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 const NAV = [
   { screen: '',            label: 'Home',       icon: '🏠' },
@@ -62,13 +62,13 @@ const styles = StyleSheet.create({
   itemInactive: { opacity: 0.4 },
   itemActive: { opacity: 1 },
   icon: {
-    fontSize: 19,
-    lineHeight: 22,
+    fontSize: fs(19),
+    lineHeight: fs(22),
     color: colors.white,
   },
   label: {
     fontFamily: fonts.spaceMono,
-    fontSize: 7,
+    fontSize: fs(7),
     letterSpacing: 1,
     textTransform: 'uppercase',
     color: colors.white,

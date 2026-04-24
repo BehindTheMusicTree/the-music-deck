@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable, Image, StyleSheet } from 'react-nati
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 import type { Card } from '@/lib/data/cards';
 
 export default function PackScreen() {
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
   header: { alignItems: 'center', paddingTop: 28, paddingBottom: 20, gap: 6 },
   title: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 22,
+    fontSize: fs(22),
     letterSpacing: 3,
     color: colors.white,
   },
   subtitle: {
     fontFamily: fonts.spaceMono,
-    fontSize: 9,
+    fontSize: fs(9),
     letterSpacing: 2,
     color: colors.muted,
   },
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   packImage: { width: '100%', height: '100%' },
   tapHint: {
     fontFamily: fonts.spaceMono,
-    fontSize: 10,
+    fontSize: fs(10),
     letterSpacing: 3,
     color: colors.muted,
   },
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   cardBack: { width: 149, height: 220, borderRadius: 10 },
   hint: {
     fontFamily: fonts.spaceMono,
-    fontSize: 9,
+    fontSize: fs(9),
     letterSpacing: 2,
     color: colors.muted,
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     color: '#0a0600',
   },
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   btnSecondaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     color: colors.white,
   },

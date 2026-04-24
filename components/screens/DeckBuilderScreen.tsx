@@ -4,7 +4,7 @@ import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRES_ALL } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 export default function DeckBuilderScreen() {
   const { state, dispatch, showToast, advanceMission } = useGame();
@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  powerLbl: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 1, color: colors.muted, textTransform: 'uppercase' },
-  powerNum: { fontFamily: fonts.cinzelBold, fontSize: 28, color: colors.gold },
-  powerSub: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted },
-  deckTitle: { fontFamily: fonts.cinzelBold, fontSize: 11, letterSpacing: 2, color: colors.white, textTransform: 'uppercase' },
+  powerLbl: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: colors.muted, textTransform: 'uppercase' },
+  powerNum: { fontFamily: fonts.cinzelBold, fontSize: fs(28), color: colors.gold },
+  powerSub: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
+  deckTitle: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 2, color: colors.white, textTransform: 'uppercase' },
   slots: { flex: 1 },
   slotFilled: {
     flexDirection: 'row',
@@ -149,21 +149,21 @@ const styles = StyleSheet.create({
     gap: 6,
     opacity: 0.35,
   },
-  slotNum: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted, width: 16 },
+  slotNum: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted, width: 16 },
   slotInfo: { flex: 1, gap: 2 },
-  slotName: { fontFamily: fonts.cinzel, fontSize: 9, color: colors.white, letterSpacing: 0.5 },
-  slotGenre: { fontFamily: fonts.spaceMono, fontSize: 7, color: colors.muted },
-  slotPower: { fontFamily: fonts.spaceMono, fontSize: 9, color: colors.gold },
+  slotName: { fontFamily: fonts.cinzel, fontSize: fs(9), color: colors.white, letterSpacing: 0.5 },
+  slotGenre: { fontFamily: fonts.spaceMono, fontSize: fs(7), color: colors.muted },
+  slotPower: { fontFamily: fonts.spaceMono, fontSize: fs(9), color: colors.gold },
   slotRm: { width: 20, alignItems: 'center' },
-  slotRmText: { fontFamily: fonts.spaceMono, fontSize: 9, color: colors.muted },
-  slotEmptyText: { fontFamily: fonts.spaceMono, fontSize: 9, color: colors.muted, fontStyle: 'italic' },
+  slotRmText: { fontFamily: fonts.spaceMono, fontSize: fs(9), color: colors.muted },
+  slotEmptyText: { fontFamily: fonts.spaceMono, fontSize: fs(9), color: colors.muted, fontStyle: 'italic' },
   btnSave: {
     backgroundColor: colors.gold,
     borderRadius: 3,
     paddingVertical: 10,
     alignItems: 'center',
   },
-  btnSaveText: { fontFamily: fonts.cinzelBold, fontSize: 10, letterSpacing: 2, color: '#0a0600' },
+  btnSaveText: { fontFamily: fonts.cinzelBold, fontSize: fs(10), letterSpacing: 2, color: '#0a0600' },
   main: { flex: 1 },
   header: {
     paddingHorizontal: 20,
@@ -171,12 +171,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  title: { fontFamily: fonts.cinzelBold, fontSize: 16, letterSpacing: 2, color: colors.white },
+  title: { fontFamily: fonts.cinzelBold, fontSize: fs(16), letterSpacing: 2, color: colors.white },
   filters: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.border },
   filtersContent: { paddingHorizontal: 16, paddingVertical: 12, gap: 6, flexDirection: 'row' },
   pill: { borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 5 },
   pillActive: { backgroundColor: colors.gold, borderColor: colors.gold },
-  pillText: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 1, color: colors.muted },
+  pillText: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: colors.muted },
   pillTextActive: { color: '#0a0600' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 20, padding: 20, justifyContent: 'center' },
   cardWrap: { alignItems: 'center', gap: 6 },
@@ -189,6 +189,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   deckBtnRemove: { backgroundColor: 'rgba(200,50,50,.8)' },
-  deckBtnText: { fontFamily: fonts.spaceMono, fontSize: 9, letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
+  deckBtnText: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
   deckBtnTextRemove: { color: '#fff' },
 });

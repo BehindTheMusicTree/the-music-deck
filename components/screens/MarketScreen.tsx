@@ -4,7 +4,7 @@ import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import { GENRES_ALL, MARKET_PRICES } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
-import { colors, fonts } from '@/lib/tokens';
+import { colors, fonts, fs } from '@/lib/tokens';
 
 export default function MarketScreen() {
   const { state, dispatch, showToast } = useGame();
@@ -87,13 +87,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  title: { fontFamily: fonts.cinzelBold, fontSize: 16, letterSpacing: 2, color: colors.white },
-  coins: { fontFamily: fonts.spaceMono, fontSize: 11, color: colors.gold },
+  title: { fontFamily: fonts.cinzelBold, fontSize: fs(16), letterSpacing: 2, color: colors.white },
+  coins: { fontFamily: fonts.spaceMono, fontSize: fs(11), color: colors.gold },
   filters: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.border },
   filtersContent: { paddingHorizontal: 16, paddingVertical: 12, gap: 6, flexDirection: 'row' },
   pill: { borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 5 },
   pillActive: { backgroundColor: colors.gold, borderColor: colors.gold },
-  pillText: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 1, color: colors.muted },
+  pillText: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: colors.muted },
   pillTextActive: { color: '#0a0600' },
   list: { padding: 16, gap: 12 },
   item: {
@@ -107,14 +107,14 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   info: { flex: 1, gap: 4 },
-  song: { fontFamily: fonts.cinzelBold, fontSize: 11, color: colors.white, letterSpacing: 0.5 },
-  artist: { fontFamily: fonts.cormorantItalic, fontSize: 12, color: colors.muted },
+  song: { fontFamily: fonts.cinzelBold, fontSize: fs(11), color: colors.white, letterSpacing: 0.5 },
+  artist: { fontFamily: fonts.cormorantItalic, fontSize: fs(12), color: colors.muted },
   tags: { flexDirection: 'row', gap: 6, marginTop: 4, flexWrap: 'wrap' },
   tag: { borderWidth: 1, borderColor: colors.border, borderRadius: 3, paddingHorizontal: 6, paddingVertical: 2 },
-  tagText: { fontFamily: fonts.spaceMono, fontSize: 7, color: colors.muted, letterSpacing: 0.5 },
+  tagText: { fontFamily: fonts.spaceMono, fontSize: fs(7), color: colors.muted, letterSpacing: 0.5 },
   priceCol: { alignItems: 'center', gap: 6, minWidth: 72 },
-  price: { fontFamily: fonts.cinzelBold, fontSize: 13, color: colors.gold },
-  power: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted },
+  price: { fontFamily: fonts.cinzelBold, fontSize: fs(13), color: colors.gold },
+  power: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
   ownedBadge: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
-  ownedText: { fontFamily: fonts.spaceMono, fontSize: 8, color: colors.muted },
+  ownedText: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
   btnBuy: {
     backgroundColor: colors.gold,
     borderRadius: 2,
@@ -130,5 +130,5 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   btnBuyDisabled: { opacity: 0.4 },
-  btnBuyText: { fontFamily: fonts.spaceMono, fontSize: 8, letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
+  btnBuyText: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
 });

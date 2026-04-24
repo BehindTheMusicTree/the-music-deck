@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useGame } from "@/lib/game-state";
 import { CARDS } from "@/lib/data/cards";
 import CardComponent from "@/components/Card";
-import { colors, fonts } from "@/lib/tokens";
+import { colors, fonts, fs } from "@/lib/tokens";
 
 export default function HomeScreen() {
   const { state, dispatch } = useGame();
@@ -45,33 +45,35 @@ export default function HomeScreen() {
         </View>
         <View style={styles.bar} />
         <View style={styles.actions}>
-          <Pressable
-            style={styles.btnPrimary}
-            onPress={() => router.push("/pack")}
-          >
-            <Image
-              source={require("@/assets/ui/booster-pack-season1-v1.png")}
-              style={styles.boosterPackIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.btnPrimaryText}>Open a Pack</Text>
-          </Pressable>
+          <View style={styles.actionRow}>
+            <Pressable
+              style={styles.btnPrimary}
+              onPress={() => router.push("/pack")}
+            >
+              <Image
+                source={require("@/assets/ui/booster-pack-season1-v1.png")}
+                style={styles.boosterPackIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.btnPrimaryText}>Open a Pack</Text>
+            </Pressable>
+            <Pressable
+              style={styles.btnDigCrate}
+              onPress={() => router.push("/digcrate")}
+            >
+              <Image
+                source={require("@/assets/ui/dig-crate-chest-v1.png")}
+                style={styles.digCrateIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.btnDigCrateText}>Crate Dig</Text>
+            </Pressable>
+          </View>
           <Pressable
             style={styles.btnSecondary}
             onPress={() => router.push("/collection")}
           >
             <Text style={styles.btnSecondaryText}>My Collection</Text>
-          </Pressable>
-          <Pressable
-            style={styles.btnDefi}
-            onPress={() => router.push("/digcrate")}
-          >
-            <Image
-              source={require("@/assets/ui/dig-crate-chest-v1.png")}
-              style={styles.digCrateIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.btnDefiText}>Crate Dig</Text>
           </Pressable>
         </View>
       </View>
@@ -120,20 +122,20 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     fontFamily: fonts.spaceMono,
-    fontSize: 9,
+    fontSize: fs(9),
     letterSpacing: 2,
     color: colors.muted,
   },
   titleRow: { alignItems: "center" },
   titleThe: {
     fontFamily: fonts.cinzel,
-    fontSize: 13,
+    fontSize: fs(13),
     letterSpacing: 6,
     color: colors.muted,
   },
   title: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 32,
+    fontSize: fs(32),
     letterSpacing: 6,
     color: colors.white,
     textAlign: "center",
@@ -147,19 +149,23 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 16,
+    fontSize: fs(16),
     color: colors.muted,
     textAlign: "center",
     lineHeight: 26,
   },
   actions: { gap: 10, width: "100%", alignItems: "center", marginTop: 8 },
+  actionRow: {
+    flexDirection: "row",
+    alignSelf: "center",
+    gap: 12,
+    justifyContent: "center",
+  },
   btnPrimary: {
-    borderWidth: 1,
-    borderColor: colors.gold,
     paddingVertical: 10,
-    paddingHorizontal: 32,
+    paddingHorizontal: 10,
     borderRadius: 3,
-    width: 240,
+    width: 128,
     alignItems: "center",
     gap: 6,
   },
@@ -169,9 +175,10 @@ const styles = StyleSheet.create({
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     color: colors.gold,
+    textAlign: "center",
   },
   btnSecondary: {
     borderWidth: 1,
@@ -184,17 +191,15 @@ const styles = StyleSheet.create({
   },
   btnSecondaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     color: colors.white,
   },
-  btnDefi: {
-    borderWidth: 1,
-    borderColor: colors.rust,
+  btnDigCrate: {
     paddingVertical: 10,
-    paddingHorizontal: 32,
+    paddingHorizontal: 10,
     borderRadius: 3,
-    width: 240,
+    width: 128,
     alignItems: "center",
     gap: 6,
   },
@@ -202,11 +207,12 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
   },
-  btnDefiText: {
+  btnDigCrateText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     color: colors.rust,
+    textAlign: "center",
   },
   stats: {
     flexDirection: "row",
@@ -222,12 +228,12 @@ const styles = StyleSheet.create({
   stat: { alignItems: "center", gap: 4 },
   statNum: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 28,
+    fontSize: fs(28),
     color: colors.gold,
   },
   statUnit: {
     fontFamily: fonts.spaceMono,
-    fontSize: 8,
+    fontSize: fs(8),
     letterSpacing: 1,
     color: colors.muted,
     textTransform: "uppercase",

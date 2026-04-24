@@ -13,7 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { GameProvider } from '@/lib/game-state';
 import { colors } from '@/lib/tokens';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import TopBar from '@/components/ui/TopBar';
 import BottomNav from '@/components/ui/BottomNav';
 import Modal from '@/components/ui/Modal';
@@ -47,7 +47,7 @@ export default function RootLayout() {
         <StatusBar style="light" backgroundColor={colors.bg} />
         <View style={styles.root}>
           <TopBar />
-          <View style={styles.screens}>
+          <View style={[styles.screens, Platform.OS === 'web' && styles.screensWeb]}>
             <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }} />
           </View>
           <BottomNav />
@@ -67,5 +67,10 @@ const styles = StyleSheet.create({
   screens: {
     flex: 1,
     overflow: 'hidden',
+  },
+  screensWeb: {
+    maxWidth: 480,
+    width: '100%',
+    alignSelf: 'center',
   },
 });

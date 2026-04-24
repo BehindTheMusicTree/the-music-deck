@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
-import { colors, fonts, rarity as rarityTokens } from '@/lib/tokens';
+import { colors, fonts, fs, rarity as rarityTokens } from '@/lib/tokens';
 
 export default function Modal() {
   const { state, dispatch, showToast } = useGame();
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     zIndex: 10,
   },
-  closeText: { color: colors.white, fontSize: 18 },
+  closeText: { color: colors.white, fontSize: fs(18) },
   cardCol: {
     alignItems: 'center',
   },
@@ -157,14 +157,14 @@ const styles = StyleSheet.create({
   },
   songTitle: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 22,
+    fontSize: fs(22),
     color: colors.white,
     letterSpacing: 2,
-    lineHeight: 28,
+    lineHeight: fs(28),
   },
   artist: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 16,
+    fontSize: fs(16),
     color: colors.muted,
     marginTop: 2,
   },
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontFamily: fonts.spaceMono,
-    fontSize: 9,
+    fontSize: fs(9),
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   statRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   statLbl: {
     fontFamily: fonts.spaceMono,
-    fontSize: 9,
+    fontSize: fs(9),
     color: colors.muted,
     width: 80,
     letterSpacing: 0.8,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   statFill: { height: '100%', borderRadius: 4 },
   statVal: {
     fontFamily: fonts.spaceMono,
-    fontSize: 11,
+    fontSize: fs(11),
     fontWeight: '700',
     color: colors.white,
     width: 28,
@@ -217,16 +217,16 @@ const styles = StyleSheet.create({
   },
   abilityTitle: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 12,
+    fontSize: fs(12),
     color: colors.gold,
     letterSpacing: 1,
     marginBottom: 6,
   },
   abilityText: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 15,
+    fontSize: fs(15),
     color: colors.muted,
-    lineHeight: 24,
+    lineHeight: fs(24),
   },
   actions: { flexDirection: 'row', gap: 10 },
   btnPrimary: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   btnPrimaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     textTransform: 'uppercase',
     color: '#0a0600',
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
   btnSecondaryText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 11,
+    fontSize: fs(11),
     letterSpacing: 2,
     textTransform: 'uppercase',
     color: colors.gold,

@@ -5,7 +5,7 @@ import Svg, { Rect, Circle, Text as SvgText, RadialGradient, Defs, Stop } from '
 import { SvgXml } from 'react-native-svg';
 import type { Card } from '@/lib/data/cards';
 import { GENRE_CFG, RAR_SVG } from '@/lib/data/genres';
-import { genreColors, genreKey, fonts, colors, rarity as rarityTokens, shadows } from '@/lib/tokens';
+import { genreColors, genreKey, fonts, fs, colors, rarity as rarityTokens, shadows } from '@/lib/tokens';
 
 interface CardProps {
   card: Card;
@@ -243,15 +243,15 @@ const styles = StyleSheet.create({
   headerTitles: { flexDirection: 'column', gap: 1, flex: 1, overflow: 'hidden' },
   cardTitle: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 12.5,
+    fontSize: fs(12.5),
     letterSpacing: 1,
-    lineHeight: 15,
+    lineHeight: fs(15),
   },
   cardArtist: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 10,
+    fontSize: fs(10),
     letterSpacing: 0.4,
-    lineHeight: 12,
+    lineHeight: fs(12),
     opacity: 0.85,
   },
   scoreCircle: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     backgroundColor: 'rgba(0,0,0,0.35)',
   },
-  scoreText: { fontFamily: fonts.spaceMono, fontSize: 11, fontWeight: '700' },
+  scoreText: { fontFamily: fonts.spaceMono, fontSize: fs(11), fontWeight: '700' },
 
   artArea: { flex: 1, overflow: 'hidden' },
   artImage: { width: '100%', height: '100%' },
@@ -297,9 +297,9 @@ const styles = StyleSheet.create({
   cornerTR: { top: -5.5, right: -5.5 },
   cornerBL: { bottom: -5.5, left: -5.5 },
   cornerBR: { bottom: -5.5, right: -5.5 },
-  typeText: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: colors.ink },
+  typeText: { fontFamily: fonts.cinzel, fontSize: fs(8), letterSpacing: 1.5, color: colors.ink },
   typeRight: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  typeGenre: { fontFamily: fonts.cinzel, fontSize: 8, letterSpacing: 1.5, color: colors.ink },
+  typeGenre: { fontFamily: fonts.cinzel, fontSize: fs(8), letterSpacing: 1.5, color: colors.ink },
   pip: { width: 7, height: 7, borderRadius: 1, transform: [{ rotate: '45deg' }], opacity: 0.9 },
 
   abilityBox: {
@@ -316,16 +316,16 @@ const styles = StyleSheet.create({
   },
   abilityName: {
     fontFamily: fonts.cinzelBold,
-    fontSize: 9,
+    fontSize: fs(9),
     color: colors.ink,
     letterSpacing: 1,
     marginBottom: 4,
   },
   abilityDesc: {
     fontFamily: fonts.cormorantItalic,
-    fontSize: 11,
+    fontSize: fs(11),
     color: colors.ink,
-    lineHeight: 15,
+    lineHeight: fs(15),
   },
 
   statsBox: {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   statRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   statLbl: {
     fontFamily: fonts.spaceMono,
-    fontSize: 6.5,
+    fontSize: fs(6.5),
     color: 'rgba(255,255,255,.5)',
     width: 66,
     letterSpacing: 0.6,
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   },
   statVal: {
     fontFamily: fonts.spaceMono,
-    fontSize: 8,
+    fontSize: fs(8),
     color: 'rgba(255,255,255,.9)',
     width: 20,
     textAlign: 'right',
@@ -378,14 +378,14 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontFamily: fonts.spaceMono,
-    fontSize: 7,
+    fontSize: fs(7),
     color: 'rgba(255,255,255,.55)',
     letterSpacing: 1,
   },
   rarityRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   rarText: {
     fontFamily: fonts.spaceMono,
-    fontSize: 7,
+    fontSize: fs(7),
     letterSpacing: 1,
   },
 });
