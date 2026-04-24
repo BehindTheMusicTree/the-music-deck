@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGame } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
+import { useCardSizeMultiplier } from '@/lib/card-layout';
 import CardComponent from '@/components/Card';
 import { colors, fonts, fs } from '@/lib/tokens';
 import type { Card } from '@/lib/data/cards';
@@ -10,7 +11,12 @@ import type { Card } from '@/lib/data/cards';
 interface BattleLog { type: string; msg: string; }
 
 interface FightState {
-  playerCard: Card; enemyCard: Card;
+  playerCard: Card;
+  /** Second engaged slot from track list slot 2, if any. */
+  playerCard2: Card | null;
+  enemyCard: Card;
+  /** Second enemy engagement slot (rival bench). */
+  enemyCard2: Card | null;
   playerHP: number; playerMaxHP: number;
   enemyHP: number; enemyMaxHP: number;
   log: BattleLog[];
@@ -31,8 +37,12 @@ function hpColor(pct: number) {
   return '#5aba40';
 }
 
+const CSM_W = 149;
+const CSM_H = 220;
+
 export default function BattleScreen() {
   const router = useRouter();
+  const cardM = useCardSizeMultiplier();
   const { state, showToast, advanceMission, earnCoins } = useGame();
   const { trackList } = state;
   const [fight, setFight] = useState<FightState | null>(null);
@@ -51,10 +61,24 @@ export default function BattleScreen() {
     if (leadId == null) return;
     const playerCard = CARDS.find((c) => c.id === leadId);
     if (!playerCard) return;
-    const enemies = CARDS.filter((c) => c.id !== playerCard.id);
+    const sid = trackList[1];
+    const playerCard2 =
+      sid != null ? (CARDS.find((c) => c.id === sid) ?? null) : null;
+    const avoidIds: number[] = [playerCard.id];
+    if (playerCard2) avoidIds.push(playerCard2.id);
+    const avoid = new Set(avoidIds);
+    const enemies = CARDS.filter((c) => !avoid.has(c.id));
     const enemyCard = enemies[Math.floor(Math.random() * enemies.length)];
+    const enemies2 = enemies.filter((c) => c.id !== enemyCard.id);
+    const enemyCard2 =
+      enemies2.length > 0
+        ? enemies2[Math.floor(Math.random() * enemies2.length)]
+        : null;
     let fs: FightState = {
-      playerCard, enemyCard,
+      playerCard,
+      playerCard2,
+      enemyCard,
+      enemyCard2,
       playerHP: 100, playerMaxHP: 100,
       enemyHP: 100, enemyMaxHP: 100,
       log: [], phase: 'fighting',
@@ -204,30 +228,97 @@ export default function BattleScreen() {
     );
   }
 
-  const { playerCard, enemyCard, playerHP, playerMaxHP, enemyHP, enemyMaxHP, log, phase, result, specialUsed, buttonsDisabled } = fight;
+  const {
+    playerCard,
+    playerCard2,
+    enemyCard,
+    enemyCard2,
+    playerHP,
+    playerMaxHP,
+    enemyHP,
+    enemyMaxHP,
+    log,
+    phase,
+    result,
+    specialUsed,
+    buttonsDisabled,
+  } = fight;
   const ppct = (playerHP / playerMaxHP) * 100;
   const epct = (enemyHP / enemyMaxHP) * 100;
+
+  function renderEngageSlot(card: Card | null, side: 'enemy' | 'player', index: number) {
+    const key = `${side}-slot-${index}-${card?.id ?? 'empty'}`;
+    if (card) {
+      return (
+        <View key={key} style={styles.engageSlot}>
+          <CardComponent card={card} wrapClass="csm" />
+        </View>
+      );
+    }
+    return (
+      <View
+        key={key}
+        style={[
+          styles.engageSlot,
+          styles.engageSlotEmpty,
+          { width: CSM_W * cardM, height: CSM_H * cardM, borderRadius: 10 * cardM },
+        ]}
+      >
+        <Text style={styles.engageSlotEmptyText}>—</Text>
+        <Text style={styles.engageSlotEmptyLbl}>Libre</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
       <View style={styles.arena}>
-        <View style={styles.fighters}>
-          {[
-            { label: 'YOU',   card: playerCard, hp: playerHP, maxHP: playerMaxHP, pct: ppct },
-            { label: 'ENEMY', card: enemyCard,  hp: enemyHP,  maxHP: enemyMaxHP,  pct: epct },
-          ].map(({ label, card, hp, maxHP, pct }) => (
-            <View key={label} style={styles.side}>
-              <Text style={styles.sideLabel}>{label}</Text>
-              <View style={styles.hpWrap}>
-                <View style={styles.hpBar}>
-                  <View style={[styles.hpFill, { width: `${pct}%` as any, backgroundColor: hpColor(pct) }]} />
-                </View>
-                <Text style={styles.hpTxt}>{hp} / {maxHP}</Text>
+        <View style={styles.battleColumn}>
+          <View style={styles.enemyBand}>
+            <Text style={styles.bandLabel}>Adversaire</Text>
+            <View style={styles.hpWrap}>
+              <View style={styles.hpBar}>
+                <View
+                  style={[
+                    styles.hpFill,
+                    { width: `${epct}%` as any, backgroundColor: hpColor(epct) },
+                  ]}
+                />
               </View>
-              <CardComponent card={card} wrapClass="csm" />
+              <Text style={styles.hpTxt}>
+                {enemyHP} / {enemyMaxHP}
+              </Text>
             </View>
-          ))}
-          <View style={styles.vs}><Text style={styles.vsText}>VS</Text></View>
+            <View style={styles.engageRow}>
+              {renderEngageSlot(enemyCard, 'enemy', 0)}
+              {renderEngageSlot(enemyCard2, 'enemy', 1)}
+            </View>
+          </View>
+
+          <View style={styles.engageMid}>
+            <Text style={styles.vsText}>VS</Text>
+          </View>
+
+          <View style={styles.playerBand}>
+            <Text style={styles.bandLabel}>Vous</Text>
+            <View style={styles.hpWrap}>
+              <View style={styles.hpBar}>
+                <View
+                  style={[
+                    styles.hpFill,
+                    { width: `${ppct}%` as any, backgroundColor: hpColor(ppct) },
+                  ]}
+                />
+              </View>
+              <Text style={styles.hpTxt}>
+                {playerHP} / {playerMaxHP}
+              </Text>
+            </View>
+            <View style={styles.engageRow}>
+              {renderEngageSlot(playerCard, 'player', 0)}
+              {renderEngageSlot(playerCard2, 'player', 1)}
+            </View>
+          </View>
         </View>
 
         {phase === 'fighting' && (
@@ -318,16 +409,59 @@ const styles = StyleSheet.create({
     lineHeight: fs(22),
   },
   startRow: { padding: 20, alignItems: 'center' },
-  arena: { flex: 1, padding: 16, gap: 16 },
-  fighters: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start' },
-  side: { alignItems: 'center', gap: 8, flex: 1 },
-  sideLabel: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 2, color: colors.muted, textTransform: 'uppercase' },
-  hpWrap: { width: '100%', gap: 4, alignItems: 'center' },
-  hpBar: { width: '90%', height: 8, borderRadius: 4, backgroundColor: 'rgba(0,0,0,.5)', overflow: 'hidden' },
+  arena: { flex: 1, padding: 12, gap: 12 },
+  battleColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    minHeight: 280,
+    gap: 8,
+  },
+  enemyBand: { alignItems: 'center', gap: 8 },
+  playerBand: { alignItems: 'center', gap: 8 },
+  bandLabel: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(9),
+    letterSpacing: 2,
+    color: colors.muted,
+    textTransform: 'uppercase',
+  },
+  engageMid: { alignItems: 'center', justifyContent: 'center', paddingVertical: 4 },
+  engageRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    gap: 12,
+    flexWrap: 'wrap',
+  },
+  engageSlot: { alignItems: 'center' },
+  engageSlotEmpty: {
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderStyle: 'dashed',
+    backgroundColor: 'rgba(0,0,0,.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+  },
+  engageSlotEmptyText: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(22),
+    color: colors.muted,
+    opacity: 0.45,
+  },
+  engageSlotEmptyLbl: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    letterSpacing: 1,
+    color: colors.muted,
+    textTransform: 'uppercase',
+  },
+  hpWrap: { width: '100%', maxWidth: 320, gap: 4, alignItems: 'center', alignSelf: 'center' },
+  hpBar: { width: '100%', height: 8, borderRadius: 4, backgroundColor: 'rgba(0,0,0,.5)', overflow: 'hidden' },
   hpFill: { height: '100%', borderRadius: 4 },
   hpTxt: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
-  vs: { position: 'absolute', left: '50%', top: '40%', transform: [{ translateX: -16 }] },
-  vsText: { fontFamily: fonts.cinzelBold, fontSize: fs(14), letterSpacing: 2, color: colors.muted },
+  vsText: { fontFamily: fonts.cinzelBold, fontSize: fs(16), letterSpacing: 3, color: colors.muted },
   controls: { flexDirection: 'row', gap: 12, justifyContent: 'center' },
   btnAttack: {
     backgroundColor: '#8a1a1a',
