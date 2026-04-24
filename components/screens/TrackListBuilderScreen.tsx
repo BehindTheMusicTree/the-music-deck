@@ -6,12 +6,12 @@ import { GENRES_ALL } from '@/lib/data/genres';
 import CardComponent from '@/components/Card';
 import { colors, fonts, fs } from '@/lib/tokens';
 
-export default function DeckBuilderScreen() {
+export default function TrackListBuilderScreen() {
   const { state, dispatch, showToast, advanceMission } = useGame();
-  const { collection, deck } = state;
+  const { collection, trackList } = state;
   const [filter, setFilter] = useState<string>('All');
 
-  const totalPower = deck.reduce((sum, id) => {
+  const totalPower = trackList.reduce((sum, id) => {
     const c = CARDS.find(x => x.id === id);
     return sum + (c?.power ?? 0);
   }, 0);
@@ -21,32 +21,31 @@ export default function DeckBuilderScreen() {
     .filter(Boolean)
     .filter(c => filter === 'All' || c.genre === filter);
 
-  function toggleDeck(id: number) {
-    if (deck.includes(id)) {
-      dispatch({ type: 'REMOVE_FROM_DECK', id });
-      showToast('Card removed from deck');
-    } else if (deck.length >= 10) {
-      showToast('Deck full! Max 10 cards.', 'err');
+  function toggleTrackList(id: number) {
+    if (trackList.includes(id)) {
+      dispatch({ type: 'REMOVE_FROM_TRACK_LIST', id });
+      showToast('Card removed from track list');
+    } else if (trackList.length >= 10) {
+      showToast('Track list full! Max 10 cards.', 'err');
     } else {
-      dispatch({ type: 'ADD_TO_DECK', id });
-      showToast('Card added to deck', 'ok');
+      dispatch({ type: 'ADD_TO_TRACK_LIST', id });
+      showToast('Card added to track list', 'ok');
       advanceMission(2, 1);
     }
   }
 
   return (
     <View style={styles.screen}>
-      {/* Sidebar */}
       <View style={styles.sidebar}>
         <View style={styles.powerBox}>
           <Text style={styles.powerLbl}>Total Power</Text>
           <Text style={styles.powerNum}>{totalPower}</Text>
-          <Text style={styles.powerSub}>{deck.length} / 10 cards</Text>
+          <Text style={styles.powerSub}>{trackList.length} / 10 cards</Text>
         </View>
-        <Text style={styles.deckTitle}>Your Deck</Text>
+        <Text style={styles.trackListTitle}>Your track list</Text>
         <ScrollView style={styles.slots}>
           {Array.from({ length: 10 }, (_, i) => {
-            const id = deck[i];
+            const id = trackList[i];
             const card = id ? CARDS.find(c => c.id === id) : null;
             return card ? (
               <View key={i} style={styles.slotFilled}>
@@ -56,7 +55,7 @@ export default function DeckBuilderScreen() {
                   <Text style={styles.slotGenre}>{card.genre}</Text>
                 </View>
                 <Text style={styles.slotPower}>{card.power}</Text>
-                <Pressable onPress={() => toggleDeck(id)} style={styles.slotRm}>
+                <Pressable onPress={() => toggleTrackList(id)} style={styles.slotRm}>
                   <Text style={styles.slotRmText}>✕</Text>
                 </Pressable>
               </View>
@@ -68,15 +67,14 @@ export default function DeckBuilderScreen() {
             );
           })}
         </ScrollView>
-        <Pressable style={styles.btnSave} onPress={() => showToast(`Deck saved (${deck.length} cards) ✓`, 'ok')}>
-          <Text style={styles.btnSaveText}>Save Deck</Text>
+        <Pressable style={styles.btnSave} onPress={() => showToast(`Track list saved (${trackList.length} cards) ✓`, 'ok')}>
+          <Text style={styles.btnSaveText}>Save track list</Text>
         </Pressable>
       </View>
 
-      {/* Main */}
       <View style={styles.main}>
         <View style={styles.header}>
-          <Text style={styles.title}>Deck Builder</Text>
+          <Text style={styles.title}>Track list</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filters} contentContainerStyle={styles.filtersContent}>
           {GENRES_ALL.map(g => (
@@ -87,16 +85,16 @@ export default function DeckBuilderScreen() {
         </ScrollView>
         <ScrollView contentContainerStyle={styles.grid}>
           {cards.map(card => {
-            const inDeck = deck.includes(card.id);
+            const onList = trackList.includes(card.id);
             return (
-              <View key={card.id} style={[styles.cardWrap, inDeck && styles.cardInDeck]}>
+              <View key={card.id} style={[styles.cardWrap, onList && styles.cardOnList]}>
                 <CardComponent card={card} onClick={() => dispatch({ type: 'OPEN_MODAL', cardId: card.id })} />
                 <Pressable
-                  style={[styles.deckBtn, inDeck && styles.deckBtnRemove]}
-                  onPress={() => toggleDeck(card.id)}
+                  style={[styles.listBtn, onList && styles.listBtnRemove]}
+                  onPress={() => toggleTrackList(card.id)}
                 >
-                  <Text style={[styles.deckBtnText, inDeck && styles.deckBtnTextRemove]}>
-                    {inDeck ? '— Remove' : '+ Add to Deck'}
+                  <Text style={[styles.listBtnText, onList && styles.listBtnTextRemove]}>
+                    {onList ? '— Remove' : '+ Add to track list'}
                   </Text>
                 </Pressable>
               </View>
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
   powerLbl: { fontFamily: fonts.spaceMono, fontSize: fs(8), letterSpacing: 1, color: colors.muted, textTransform: 'uppercase' },
   powerNum: { fontFamily: fonts.cinzelBold, fontSize: fs(28), color: colors.gold },
   powerSub: { fontFamily: fonts.spaceMono, fontSize: fs(8), color: colors.muted },
-  deckTitle: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 2, color: colors.white, textTransform: 'uppercase' },
+  trackListTitle: { fontFamily: fonts.cinzelBold, fontSize: fs(11), letterSpacing: 2, color: colors.white, textTransform: 'uppercase' },
   slots: { flex: 1 },
   slotFilled: {
     flexDirection: 'row',
@@ -180,15 +178,15 @@ const styles = StyleSheet.create({
   pillTextActive: { color: '#0a0600' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 20, padding: 20, justifyContent: 'center' },
   cardWrap: { alignItems: 'center', gap: 6 },
-  cardInDeck: { opacity: 0.5 },
-  deckBtn: {
+  cardOnList: { opacity: 0.5 },
+  listBtn: {
     width: 272,
     backgroundColor: colors.gold,
     borderRadius: 2,
     paddingVertical: 8,
     alignItems: 'center',
   },
-  deckBtnRemove: { backgroundColor: 'rgba(200,50,50,.8)' },
-  deckBtnText: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
-  deckBtnTextRemove: { color: '#fff' },
+  listBtnRemove: { backgroundColor: 'rgba(200,50,50,.8)' },
+  listBtnText: { fontFamily: fonts.spaceMono, fontSize: fs(9), letterSpacing: 1, color: '#0a0600', fontWeight: '700' },
+  listBtnTextRemove: { color: '#fff' },
 });

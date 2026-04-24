@@ -24,11 +24,11 @@ export default function HomeScreen() {
   const { state, dispatch } = useGame();
   const router = useRouter();
   const { width: winW } = useWindowDimensions();
-  const { collection, deck } = state;
+  const { collection, trackList } = state;
   const contentW =
     Platform.OS === "web" ? Math.min(winW, WEB_MAX_CONTENT_W) : winW;
   const colW =
-    (contentW - HERO_H_PAD * 2 - ACTION_ROW_GAP) / 2;
+    (contentW - HERO_H_PAD * 2 - ACTION_ROW_GAP * 2) / 3;
   const actionIconSize = Math.max(
     96,
     Math.min(MAX_ACTION_ICON, Math.floor(colW * 0.88)),
@@ -57,7 +57,8 @@ export default function HomeScreen() {
         <View style={styles.titleRow}>
           <Text style={styles.titleThe}>THE{"\n"}</Text>
           <Text style={styles.title}>
-            MUSIC <Text style={styles.titleGold}>DECK</Text>
+            MUSIC{"\n"}
+            <Text style={styles.titleGold}>TRACK LIST</Text>
           </Text>
         </View>
         <View style={styles.bar} />
@@ -85,20 +86,25 @@ export default function HomeScreen() {
               />
               <Text style={styles.btnDigCrateText}>Crate Dig</Text>
             </Pressable>
+            <Pressable
+              style={styles.btnCollection}
+              onPress={() => router.push("/collection")}
+            >
+              <Image
+                source={require("@/assets/ui/collection-wall-v1.png")}
+                style={{ width: actionIconSize, height: actionIconSize }}
+                resizeMode="cover"
+              />
+              <Text style={styles.btnCollectionText}>My Collection</Text>
+            </Pressable>
           </View>
-          <Pressable
-            style={styles.btnSecondary}
-            onPress={() => router.push("/collection")}
-          >
-            <Text style={styles.btnSecondaryText}>My Collection</Text>
-          </Pressable>
         </View>
       </View>
 
       <View style={styles.stats}>
         {[
           { num: collection.length, unit: "Cards" },
-          { num: deck.length, unit: "In Deck" },
+          { num: trackList.length, unit: "On track list" },
           { num: "S1", unit: "Season" },
         ].map(({ num, unit }) => (
           <View key={unit} style={styles.stat}>
@@ -194,20 +200,21 @@ const styles = StyleSheet.create({
     color: colors.gold,
     textAlign: "center",
   },
-  btnSecondary: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 13,
-    paddingHorizontal: 32,
+  btnCollection: {
+    flex: 1,
+    minWidth: 0,
+    paddingVertical: Platform.OS === "web" ? 24 : 20,
+    paddingHorizontal: 8,
     borderRadius: 3,
-    width: 240,
     alignItems: "center",
+    gap: 14,
   },
-  btnSecondaryText: {
+  btnCollectionText: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(11),
-    letterSpacing: 2,
+    fontSize: Platform.OS === "web" ? fs(20) : fs(16),
+    letterSpacing: 2.5,
     color: colors.white,
+    textAlign: "center",
   },
   btnDigCrate: {
     flex: 1,

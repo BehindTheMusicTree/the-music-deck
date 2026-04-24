@@ -6,7 +6,7 @@ import { colors, fonts, fs } from '@/lib/tokens';
 const NAV = [
   { screen: '',            label: 'Home',       icon: '🏠' },
   { screen: 'collection',  label: 'Collection',  icon: '🎴' },
-  { screen: 'deckbuilder', label: 'Deck',        icon: '⚔️' },
+  { screen: 'tracklist', label: 'Track list',   icon: '⚔️' },
   { screen: 'battle',      label: 'Battle',      icon: '🎯' },
   { screen: 'market',      label: 'Market',      icon: '🛒' },
   { screen: 'digcrate',   label: 'Crate Dig',   icon: '🎲' },

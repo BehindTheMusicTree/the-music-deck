@@ -12,7 +12,7 @@ export default function TopBar() {
       <View style={styles.inner}>
         <Text style={styles.logo}>
           <Text style={styles.logoThe}>THE </Text>
-          MUSIC DECK
+          MUSIC TRACK LIST
         </Text>
         <View style={styles.right}>
           <Text style={styles.level}>Lv. 7 · Collector</Text>
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(11),
-    letterSpacing: 4,
+    fontSize: fs(9),
+    letterSpacing: 2,
     color: colors.gold,
   },
   logoThe: {

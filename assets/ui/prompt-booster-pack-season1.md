@@ -9,7 +9,7 @@ The image replaces the current CSS gradient placeholder in the prototype.
 ## Prompt
 
 ```
-Premium collectible card game booster pack for "The Music Deck — Season One".
+Premium collectible card game booster pack for "The Music Track List — Season One".
 Portrait format, 2:3 ratio, rounded corners (radius ~12px).
 Flat print-ready image with no UI chrome, no frame overlay, no text beyond what is specified.
 
@@ -20,7 +20,7 @@ layered over a deep gold (#a87c28) base, catching light differently across zones
 
 Front face layout (top to bottom):
 1. Top strip (~15% height): near-black (#09080d) band with the logotype
-   "THE MUSIC DECK" centered in Cinzel Black, antique gold (#c8a040),
+   "THE MUSIC TRACK LIST" centered in Cinzel Black, antique gold (#c8a040),
    small caps, tight letter-spacing.
    Below it, in Space Mono 7px: "SEASON ONE · 5 CARDS".
 2. Main artwork zone (~65% height): a large stylised vinyl record,

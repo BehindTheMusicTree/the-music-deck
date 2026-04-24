@@ -3,12 +3,12 @@
 ## Context
 
 The card back is the face shown when a card is face-down or in a booster pack.
-It must be instantly recognisable as "The Music Deck" without revealing the card's content.
+It must be instantly recognisable as "The Music Track List" without revealing the card's content.
 
 ## Prompt
 
 ```
-Card back design for a premium collectible card game called "The Music Deck".
+Card back design for a premium collectible card game called "The Music Track List".
 Portrait format, standard card ratio (2.5 × 3.5 in), with rounded corners (radius ~4mm).
 Print-ready flat image. No card frame overlay.
 
@@ -42,8 +42,8 @@ with a very faint radial vignette that concentrates warm amber light
 at the center and fades to pure dark at the corners.
 Subtle noise texture over the entire surface for a matte premium feel.
 
-At the bottom of the card, centered: the logotype "THE MUSIC DECK" in Cinzel Black,
-small but legible, in antique gold (#a87c28). "THE" in a smaller weight above "MUSIC DECK",
+At the bottom of the card, centered: the logotype "THE MUSIC TRACK LIST" in Cinzel Black,
+small but legible, in antique gold (#a87c28). "THE" in a smaller weight above "MUSIC TRACK LIST",
 matching the brand's logo treatment. No other text.
 
 Mood: dark luxury, collector edition, serious musicology.

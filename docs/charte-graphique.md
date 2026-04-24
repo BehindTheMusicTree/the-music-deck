@@ -1,4 +1,4 @@
-# Charte Graphique — The Music Deck
+# Charte Graphique — The Music Track List
 
 Visual identity reference for UI, card frames, and genre theming.
 

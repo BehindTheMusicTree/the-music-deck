@@ -1,8 +1,8 @@
-# Presentation Du Jeu - The Music Deck
+# Presentation Du Jeu - The Music Track List
 
 ## Pitch (30-45 secondes)
 
-The Music Deck est un jeu de cartes a collectionner autour de la musique.
+The Music Track List est un jeu de cartes a collectionner autour de la musique.
 Le joueur ouvre des boosters, collectionne des cartes chansons, artistes et cartes speciales, puis construit des lineups pour des batailles de festival tactiques.
 La difference: la strategie ne repose pas seulement sur la rarete, mais sur les synergies de genres, les stacks intelligents et la connaissance musicale.
 Chaque jour, 10 enigmes permettent de gagner des cartes en devinant des morceaux a partir d'indices visuels inspires par l'IA.
@@ -35,7 +35,7 @@ Notre ambition est de transformer la musique en terrain de jeu strategique et co
 - Score d'un stack: carte la plus forte comme base + `15%` par carte supplementaire.
 - Les synergies de genres, d'artistes, d'albums et de cartes speciales augmentent le score.
 - Les mauvais matchups de genres reduisent le score.
-- Le joueur peut **sauvegarder plusieurs decks** (configurations de lineup nommees) et les charger avant un combat: par exemple un deck pour la ligue competitive, un autre pour un event ou boss, un deck oriente genre pour les files classees par style, sans refaire toute la composition a chaque fois.
+- Le joueur peut **sauvegarder plusieurs track lists** (configurations de lineup nommees) et les charger avant un combat: par exemple une liste pour la ligue competitive, une autre pour un event ou boss, une liste orientee genre pour les files classees par style, sans refaire toute la composition a chaque fois.
 
 ## 3) Progression Quotidienne
 
@@ -64,7 +64,7 @@ Les classements par genre/sous-genre sont particulierement coherents avec le `Mu
 
 ### Labels
 
-Les joueurs peuvent creer ou rejoindre des **Labels**, l'equivalent de guildes dans The Music Deck.
+Les joueurs peuvent creer ou rejoindre des **Labels**, l'equivalent de guildes dans The Music Track List.
 Chaque Label regroupe des joueurs partageant une identite musicale commune (un genre, une scene, une epoque).
 
 - Un Label a un nom, une identite et un catalogue collectif de genres couverts.
@@ -137,7 +137,7 @@ Les badges recompensent les accomplissements notables du joueur et sont visibles
 
 ## Message De Cloture (10-15 secondes)
 
-The Music Deck, c'est la rencontre entre jeu de cartes strategique et passion musicale.
+The Music Track List, c'est la rencontre entre jeu de cartes strategique et passion musicale.
 On ne collectionne pas seulement des cartes: on construit une identite musicale, on optimise ses synergies, et on se mesure aux autres dans des festivals tactiques.
 
 ## Trame De Slides (10 slides)
@@ -155,7 +155,7 @@ On ne collectionne pas seulement des cartes: on construit une identite musicale,
 
 ## Script Court (90 secondes)
 
-The Music Deck est un jeu de cartes a collectionner inspire des meilleurs jeux de boosters, mais applique a la musique. Le joueur ouvre des boosters pour obtenir des cartes chansons, artistes et speciales, puis compose des lineups pour des batailles de festival.
+The Music Track List est un jeu de cartes a collectionner inspire des meilleurs jeux de boosters, mais applique a la musique. Le joueur ouvre des boosters pour obtenir des cartes chansons, artistes et speciales, puis compose des lineups pour des batailles de festival.
 
 La profondeur vient du systeme de stack: en 10 slots actifs, il faut optimiser les cartes qui se combinent entre elles. Une carte forte sert de base, et chaque carte supplementaire ajoute 15% sur le stack. Les synergies de genres, d'artistes et d'albums font la difference face aux adversaires.
 

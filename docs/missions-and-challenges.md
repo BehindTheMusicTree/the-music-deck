@@ -95,8 +95,8 @@ Each week, players can complete any of these missions:
    - Engagement: social features, marketplace, community building
 
 5. **Synergy Challenge**: Build and save a lineup with at least 5 active combo bonuses
-   - Reward: 75 points + deckslot expansion or themed cosmetic
-   - Engagement: strategic deck building, understanding synergies
+   - Reward: 75 points + track list slot expansion or themed cosmetic
+   - Engagement: strategic track list building, understanding synergies
    - Can be saved multiple times; only one "best" synergy counts
 
 6. **Genre Diversity Challenge**: Win battles using 5 different single genres
@@ -105,7 +105,7 @@ Each week, players can complete any of these missions:
    - Tracks battles won (not just participated)
 
 7. **Rarity Acquisition Challenge**: Open enough boosters to obtain 10 rare+ cards
-   - Reward: 90 points + rare cosmetic or deckslot
+   - Reward: 90 points + rare cosmetic or track list slot
    - Engagement: booster loop, economic engagement
    - Counts all rare+ rarities (Rare, Ultra Rare, Secret Rare, Shiny)
 
@@ -185,7 +185,7 @@ Each week, players can complete any of these missions:
 ### Non-Point Rewards
 
 - Cosmetics (card frames, sleeves, titles, avatars)
-- Deck slots (expanding collection/battle lineup capacity)
+- Track list slots (expanding collection/battle lineup capacity)
 - Cosmetic emotes or profile badges
 - Early access to limited-edition cards or packs
 - Marketplace fee discounts

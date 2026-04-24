@@ -179,7 +179,7 @@ export default function CardComponent({ card, wrapClass = '', selected = false, 
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.brand}>THE MUSIC DECK</Text>
+          <Text style={styles.brand}>THE MUSIC TRACK LIST</Text>
           <View style={styles.rarityRow}>
             {rarSvg ? <SvgXml xml={rarSvg} width={10} height={10} /> : null}
             <Text style={[styles.rarText, { color: rarityColor(card.rarity) }]}>{card.rarity}</Text>
@@ -394,9 +394,9 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontFamily: fonts.spaceMono,
-    fontSize: fs(7),
+    fontSize: fs(6),
     color: 'rgba(255,255,255,.55)',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   rarityRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   rarText: {

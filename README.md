@@ -1,10 +1,10 @@
-# Music Deck
+# Music Track List
 
 A collectible music card game inspired by Pokemon-style content packs, booster loops, rarity tiers, and tactical battles.
 
 ## Overview
 
-Music Deck lets players collect songs and special cards, then compete in festival battles using stack-based lineups and genre matchups.
+Music Track List lets players collect songs and special cards, then compete in festival battles using stack-based lineups and genre matchups.
 
 ## High-Level Product Snapshot
 
@@ -55,7 +55,7 @@ Chaque carte chanson appartient à un genre (type), qui influence les bonus/malu
 | Disco Funk   | Violet      |
 | Hip-hop      | Or          |
 
-🎵 **TABLEAU DES FORCES / FAIBLESSES — MUSIC DECK**
+🎵 **TABLEAU DES FORCES / FAIBLESSES — MUSIC TRACK LIST**
 
 | Genre / Type            | Fort contre →           | Faible contre ←         |
 | ----------------------- | ----------------------- | ----------------------- |

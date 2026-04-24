@@ -4,7 +4,7 @@ Tracks accepted product decisions.
 
 ## Accepted Decisions
 
-- Full collection has no hard deck-size limit.
+- Full collection has no hard track-list size limit (beyond battle slot rules).
 - Festival battles use 10 active slots.
 - Same-artist cards can stack into one active slot.
 - Same-album cards can stack into one active slot.

@@ -1,6 +1,6 @@
 # Charte Graphique
 
-Ce dossier contient la charte graphique du projet The Music Deck.
+Ce dossier contient la charte graphique du projet The Music Track List.
 
 Utilisation :
 

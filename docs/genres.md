@@ -169,7 +169,7 @@ Each subgenre is assigned a unique code:
 
 - `RK-HM-00666` → "666 (Number of the Beast)" by Iron Maiden (Genre: Rock/Metal, Subgenre: Heavy Metal, ID: 666)
 
-This file is the authoritative source for all genre/subgenre definitions and codes used in The Music Deck.
+This file is the authoritative source for all genre/subgenre definitions and codes used in The Music Track List.
 
 ## See Also
 

@@ -8,7 +8,7 @@ import { colors, fonts, fs, rarity as rarityTokens } from '@/lib/tokens';
 export default function Modal() {
   const { state, dispatch, showToast } = useGame();
   const router = useRouter();
-  const { modalCardId, collection, deck } = state;
+  const { modalCardId, collection, trackList } = state;
 
   if (!modalCardId) return null;
   const card = CARDS.find(c => c.id === modalCardId);
@@ -16,20 +16,20 @@ export default function Modal() {
 
   const rarityColor = rarityTokens[card.rarity as keyof typeof rarityTokens] ?? rarityTokens.Common;
   const owned = collection.includes(card.id);
-  const inDeck = deck.includes(card.id);
+  const onTrackList = trackList.includes(card.id);
 
   function close() { dispatch({ type: 'CLOSE_MODAL' }); }
-  function toggleDeck() {
+  function toggleTrackList() {
     if (!card) return;
-    if (inDeck) {
-      dispatch({ type: 'REMOVE_FROM_DECK', id: card.id });
-      showToast('Card removed from deck');
-    } else if (deck.length < 10) {
-      dispatch({ type: 'ADD_TO_DECK', id: card.id });
-      showToast('Card added to deck', 'ok');
+    if (onTrackList) {
+      dispatch({ type: 'REMOVE_FROM_TRACK_LIST', id: card.id });
+      showToast('Card removed from track list');
+    } else if (trackList.length < 10) {
+      dispatch({ type: 'ADD_TO_TRACK_LIST', id: card.id });
+      showToast('Card added to track list', 'ok');
       dispatch({ type: 'ADVANCE_MISSION', id: 2, amount: 1 });
     } else {
-      showToast('Deck full! Max 10 cards.', 'err');
+      showToast('Track list full! Max 10 cards.', 'err');
     }
     close();
   }
@@ -84,16 +84,16 @@ export default function Modal() {
             </View>
             <View style={styles.actions}>
               {owned
-                ? inDeck
-                  ? <Pressable style={styles.btnSecondary} onPress={toggleDeck}>
-                      <Text style={styles.btnSecondaryText}>Remove from Deck</Text>
+                ? onTrackList
+                  ? <Pressable style={styles.btnSecondary} onPress={toggleTrackList}>
+                      <Text style={styles.btnSecondaryText}>Remove from track list</Text>
                     </Pressable>
-                  : deck.length < 10
-                    ? <Pressable style={styles.btnPrimary} onPress={toggleDeck}>
-                        <Text style={styles.btnPrimaryText}>+ Add to Deck</Text>
+                  : trackList.length < 10
+                    ? <Pressable style={styles.btnPrimary} onPress={toggleTrackList}>
+                        <Text style={styles.btnPrimaryText}>+ Add to track list</Text>
                       </Pressable>
                     : <Pressable style={[styles.btnSecondary, { opacity: 0.4 }]}>
-                        <Text style={styles.btnSecondaryText}>Deck full</Text>
+                        <Text style={styles.btnSecondaryText}>Track list full</Text>
                       </Pressable>
                 : <Pressable style={styles.btnPrimary} onPress={() => { close(); router.push('/market'); }}>
                     <Text style={styles.btnPrimaryText}>Buy on Market</Text>

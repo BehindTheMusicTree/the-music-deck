@@ -30,7 +30,7 @@ export interface BattleState {
 
 export interface GameState {
   collection: number[];
-  deck: number[];
+  trackList: number[];
   coins: number;
   missions: Mission[];
   battle: BattleState;
@@ -40,8 +40,8 @@ export interface GameState {
 
 type Action =
   | { type: 'ADD_TO_COLLECTION'; ids: number[] }
-  | { type: 'ADD_TO_DECK'; id: number }
-  | { type: 'REMOVE_FROM_DECK'; id: number }
+  | { type: 'ADD_TO_TRACK_LIST'; id: number }
+  | { type: 'REMOVE_FROM_TRACK_LIST'; id: number }
   | { type: 'EARN_COINS'; amount: number }
   | { type: 'SPEND_COINS'; amount: number }
   | { type: 'ADVANCE_MISSION'; id: number; amount: number }
@@ -69,11 +69,11 @@ const defaultBattle: BattleState = {
 
 const initialState: GameState = {
   collection: [1,2,3,4,5,6,7,8,9,10,11,12,25,27,29,30,31,32,33,34,35,36,37],
-  deck: [],
+  trackList: [],
   coins: 750,
   missions: [
     { id:1, name:'Open 1 Pack',               reward:50,  prog:0, total:1, done:false },
-    { id:2, name:'Add a card to your Deck',   reward:30,  prog:1, total:1, done:true  },
+    { id:2, name:'Add a card to your track list',   reward:30,  prog:1, total:1, done:true  },
     { id:3, name:'Win 1 Battle',              reward:100, prog:0, total:1, done:false },
     { id:4, name:'View 5 card details',       reward:25,  prog:3, total:5, done:false },
     { id:5, name:'Collect 4 different genres',reward:75,  prog:3, total:4, done:false },
@@ -89,11 +89,11 @@ function reducer(state: GameState, action: Action): GameState {
       const newIds = action.ids.filter(id => !state.collection.includes(id));
       return { ...state, collection: [...state.collection, ...newIds] };
     }
-    case 'ADD_TO_DECK':
-      if (state.deck.includes(action.id) || state.deck.length >= 10) return state;
-      return { ...state, deck: [...state.deck, action.id] };
-    case 'REMOVE_FROM_DECK':
-      return { ...state, deck: state.deck.filter(id => id !== action.id) };
+    case 'ADD_TO_TRACK_LIST':
+      if (state.trackList.includes(action.id) || state.trackList.length >= 10) return state;
+      return { ...state, trackList: [...state.trackList, action.id] };
+    case 'REMOVE_FROM_TRACK_LIST':
+      return { ...state, trackList: state.trackList.filter(id => id !== action.id) };
     case 'EARN_COINS':
       return { ...state, coins: state.coins + action.amount };
     case 'SPEND_COINS':
