@@ -22,6 +22,7 @@ const MAIN_H_PAD = 20;
 const GRID_GAP = 10;
 const CARD_SM_BASE_W = 149;
 const CARD_SM_BASE_H = 220;
+const TILE_ADD_ROW_H = 36;
 
 function chunkRows<T>(items: T[], rowSize: number): T[][] {
   const rows: T[][] = [];
@@ -40,6 +41,8 @@ function TrackListGridTile({
   cardSmH,
   tileScale,
   onOpenCard,
+  onToggleTrackList,
+  listFull,
 }: {
   card: Card;
   onList: boolean;
@@ -49,6 +52,8 @@ function TrackListGridTile({
   cardSmH: number;
   tileScale: number;
   onOpenCard: () => void;
+  onToggleTrackList: () => void;
+  listFull: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const muted = !onList && !hovered;
@@ -60,9 +65,13 @@ function TrackListGridTile({
         }
       : null;
 
+  const canAdd = !listFull || onList;
   return (
     <View
-      style={[styles.gridCell, { width: colW, minHeight: tileH }]}
+      style={[
+        styles.gridCell,
+        { width: colW, minHeight: tileH + TILE_ADD_ROW_H },
+      ]}
       {...(webCellMouse ?? {})}
     >
       <View style={[styles.tileSlot, { height: tileH }]}>
@@ -79,14 +88,29 @@ function TrackListGridTile({
           ]}
         >
           <View style={muted ? styles.cardMuted : undefined}>
-            <CardComponent
-              card={card}
-              wrapClass="csm"
-              onClick={onOpenCard}
-            />
+            <CardComponent card={card} wrapClass="csm" onClick={onOpenCard} />
           </View>
         </View>
       </View>
+      {onList ? (
+        <Pressable
+          onPress={onToggleTrackList}
+          style={[styles.tileAddBtn, styles.tileAddBtnOnList]}
+        >
+          <Text style={styles.tileAddBtnTextOnList}>Remove from list</Text>
+        </Pressable>
+      ) : canAdd ? (
+        <Pressable
+          onPress={onToggleTrackList}
+          style={[styles.tileAddBtn, styles.tileAddBtnPrimary]}
+        >
+          <Text style={styles.tileAddBtnTextPrimary}>+ Add to track list</Text>
+        </Pressable>
+      ) : (
+        <View style={[styles.tileAddBtn, styles.tileAddBtnDisabled]}>
+          <Text style={styles.tileAddBtnTextDisabled}>Track list full</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -95,7 +119,7 @@ export default function TrackListBuilderScreen() {
   const { state, dispatch, showToast, advanceMission } = useGame();
   const { width: winW } = useWindowDimensions();
   const cardM = useCardSizeMultiplier();
-  const { collection, trackList } = state;
+  const { collection, trackList, decks } = state;
   const [filter, setFilter] = useState<string>("All");
 
   const layoutW =
@@ -169,6 +193,20 @@ export default function TrackListBuilderScreen() {
           })}
         </ScrollView>
         <Pressable
+          style={styles.btnAddList}
+          onPress={() => {
+            if (trackList.length === 0) {
+              showToast("Add at least one card to your list first.", "err");
+              return;
+            }
+            const nextN = decks.length + 1;
+            dispatch({ type: "ADD_TRACK_LIST" });
+            showToast(`Track list ${nextN} added to your arena decks ✓`, "ok");
+          }}
+        >
+          <Text style={styles.btnAddListText}>+ Add track list</Text>
+        </Pressable>
+        <Pressable
           style={styles.btnSave}
           onPress={() =>
             showToast(`Track list saved (${trackList.length} cards) ✓`, "ok")
@@ -224,13 +262,18 @@ export default function TrackListBuilderScreen() {
                   onOpenCard={() =>
                     dispatch({ type: "OPEN_MODAL", cardId: card.id })
                   }
+                  onToggleTrackList={() => toggleTrackList(card.id)}
+                  listFull={trackList.length >= 10}
                 />
               ))}
               {row.length < 3
                 ? Array.from({ length: 3 - row.length }).map((_, i) => (
                     <View
                       key={`pad-${rowIdx}-${i}`}
-                      style={{ width: colW, minHeight: tileH }}
+                      style={{
+                        width: colW,
+                        minHeight: tileH + TILE_ADD_ROW_H,
+                      }}
                     />
                   ))
                 : null}
@@ -338,6 +381,20 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontStyle: "italic",
   },
+  btnAddList: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: colors.gold,
+    borderRadius: 3,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  btnAddListText: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(9),
+    letterSpacing: 1.5,
+    color: colors.gold,
+  },
   btnSave: {
     backgroundColor: colors.gold,
     borderRadius: 3,
@@ -411,4 +468,45 @@ const styles = StyleSheet.create({
     top: 0,
   },
   cardMuted: { opacity: 0.5 },
+  tileAddBtn: {
+    marginTop: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 3,
+    alignItems: "center",
+    alignSelf: "center",
+    maxWidth: "100%",
+  },
+  tileAddBtnPrimary: {
+    backgroundColor: colors.gold,
+  },
+  tileAddBtnTextPrimary: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(7),
+    letterSpacing: 1,
+    color: "#0a0600",
+  },
+  tileAddBtnOnList: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: colors.gold,
+  },
+  tileAddBtnTextOnList: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(7),
+    letterSpacing: 1,
+    color: colors.gold,
+  },
+  tileAddBtnDisabled: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: colors.border,
+    opacity: 0.5,
+  },
+  tileAddBtnTextDisabled: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    letterSpacing: 0.5,
+    color: colors.muted,
+  },
 });
