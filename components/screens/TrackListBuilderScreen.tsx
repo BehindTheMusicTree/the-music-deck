@@ -302,9 +302,15 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
                   <Text style={styles.renameIcon}>✎</Text>
                 </Pressable>
               ) : null}
-              <Text style={styles.title} numberOfLines={2}>
-                {displayName}
-              </Text>
+              <Pressable
+                onPress={deck ? startRename : undefined}
+                style={styles.titlePressable}
+                hitSlop={8}
+              >
+                <Text style={styles.title} numberOfLines={2}>
+                  {displayName}
+                </Text>
+              </Pressable>
             </View>
           )}
         </View>
@@ -502,9 +508,11 @@ const styles = StyleSheet.create({
     gap: 10,
     width: "100%",
   },
-  title: {
+  titlePressable: {
     flex: 1,
     minWidth: 120,
+  },
+  title: {
     fontFamily: fonts.cinzelBold,
     fontSize: fs(14),
     letterSpacing: 1.5,
