@@ -28,6 +28,10 @@ interface FightState {
   enemyCard: Card;
   /** Second enemy engagement slot (rival bench). */
   enemyCard2: Card | null;
+  playerHP: number;
+  playerMaxHP: number;
+  enemyHP: number;
+  enemyMaxHP: number;
   /** Shared crowd mood: -100 (you’re losing the room) … +100 (encore). */
   mood: number;
   log: BattleLog[];
@@ -56,6 +60,12 @@ function moodValueColor(mood: number) {
   if (mood <= -40) return "#b04050";
   if (mood >= 40) return colors.gold;
   return colors.muted;
+}
+
+function hpColor(pct: number) {
+  if (pct <= 25) return "#b04050";
+  if (pct <= 55) return "#c89030";
+  return "#50a840";
 }
 
 /** Match `cxs` wrap in `Card.tsx` (battle slots). */
@@ -157,6 +167,7 @@ export default function BattleScreen() {
       playerMaxHP: 100,
       enemyHP: 100,
       enemyMaxHP: 100,
+      mood: 0,
       log: [],
       phase: "fighting",
       specialUsed: false,
