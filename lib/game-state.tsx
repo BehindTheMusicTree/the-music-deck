@@ -94,21 +94,26 @@ const defaultBattle: BattleState = {
   log: [],
 };
 
-const INITIAL_CARD_IDS = [1, 25, 30, 3, 12] as const;
+/** Répété jusqu’à 60 cartes : la collection de démo n’a pas 60 uniques. */
+const COLLECTION_SEED = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 25, 27, 29, 30, 31, 32, 33, 34, 35, 36,
+  37,
+] as const;
+
+const STARTER_DECK_60: number[] = Array.from({ length: 60 }, (_, i) =>
+  COLLECTION_SEED[i % COLLECTION_SEED.length]
+);
 
 const initialDecks: BattleDeck[] = [
   {
     id: "starter",
     name: "Track list 1",
-    cardIds: [...INITIAL_CARD_IDS],
+    cardIds: [...STARTER_DECK_60],
   },
 ];
 
 const initialState: GameState = {
-  collection: [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 25, 27, 29, 30, 31, 32, 33, 34, 35,
-    36, 37,
-  ],
+  collection: [...COLLECTION_SEED],
   decks: initialDecks,
   activeDeckId: "starter",
   coins: 750,
