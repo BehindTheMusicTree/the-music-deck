@@ -66,6 +66,7 @@ type Action =
   | { type: "ADD_DECK" }
   | { type: "REMOVE_DECK"; deckId: string }
   | { type: "SET_ACTIVE_DECK"; deckId: string }
+  | { type: "RENAME_DECK"; deckId: string; name: string }
   | { type: "EARN_COINS"; amount: number }
   | { type: "SPEND_COINS"; amount: number }
   | { type: "ADVANCE_MISSION"; id: number; amount: number }
@@ -201,6 +202,16 @@ function reducer(state: GameState, action: Action): GameState {
     case "SET_ACTIVE_DECK": {
       if (!state.decks.some((d) => d.id === action.deckId)) return state;
       return { ...state, activeDeckId: action.deckId };
+    }
+    case "RENAME_DECK": {
+      const name = action.name.trim().slice(0, 48);
+      if (!name) return state;
+      return {
+        ...state,
+        decks: state.decks.map((d) =>
+          d.id === action.deckId ? { ...d, name } : d,
+        ),
+      };
     }
     case "EARN_COINS":
       return { ...state, coins: state.coins + action.amount };

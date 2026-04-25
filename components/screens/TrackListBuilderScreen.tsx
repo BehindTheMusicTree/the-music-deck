@@ -1,7 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
+  TextInput,
   ScrollView,
   Pressable,
   StyleSheet,
@@ -132,6 +133,14 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
   const deck = decks.find((d) => d.id === deckId);
   const trackList = deck?.cardIds ?? [];
   const [filter, setFilter] = useState<string>("All");
+  const [renaming, setRenaming] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+
+  useEffect(() => {
+    if (!deck) return;
+    setNameDraft(deck.name);
+    setRenaming(false);
+  }, [deckId, deck?.name]);
 
   useFocusEffect(
     useCallback(() => {
@@ -172,6 +181,32 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
   }
 
   const displayName = deck?.name ?? "Track list";
+
+  function startRename() {
+    if (deck) setNameDraft(deck.name);
+    setRenaming(true);
+  }
+
+  function commitRename() {
+    if (!deck) return;
+    const next = nameDraft.trim();
+    if (!next) {
+      showToast("Name cannot be empty", "err");
+      return;
+    }
+    if (next === deck.name) {
+      setRenaming(false);
+      return;
+    }
+    dispatch({ type: "RENAME_DECK", deckId, name: next });
+    showToast("List renamed", "ok");
+    setRenaming(false);
+  }
+
+  function cancelRename() {
+    if (deck) setNameDraft(deck.name);
+    setRenaming(false);
+  }
 
   return (
     <View style={styles.screen}>
@@ -230,9 +265,48 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
           >
             <Text style={styles.backText}>← Back</Text>
           </Pressable>
-          <Text style={styles.title} numberOfLines={1}>
-            {displayName}
-          </Text>
+          {renaming ? (
+            <View style={styles.renameBlock}>
+              <TextInput
+                value={nameDraft}
+                onChangeText={setNameDraft}
+                maxLength={48}
+                placeholder="Track list name"
+                placeholderTextColor={colors.muted}
+                style={styles.nameInput}
+                autoFocus
+                onSubmitEditing={commitRename}
+                returnKeyType="done"
+                selectTextOnFocus
+              />
+              <View style={styles.renameRow}>
+                <Pressable
+                  onPress={commitRename}
+                  style={styles.renameBtnSave}
+                >
+                  <Text style={styles.renameBtnSaveText}>Save</Text>
+                </Pressable>
+                <Pressable onPress={cancelRename} style={styles.renameBtnCancel}>
+                  <Text style={styles.renameBtnCancelText}>Cancel</Text>
+                </Pressable>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.titleRow}>
+              <Text style={styles.title} numberOfLines={2}>
+                {displayName}
+              </Text>
+              {deck ? (
+                <Pressable
+                  onPress={startRename}
+                  style={styles.renameLink}
+                  hitSlop={8}
+                >
+                  <Text style={styles.renameLinkText}>Rename</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          )}
         </View>
         <ScrollView
           horizontal
@@ -422,11 +496,69 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     color: colors.gold,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 12,
+    width: "100%",
+    flexWrap: "wrap",
+  },
   title: {
+    flex: 1,
+    minWidth: 120,
     fontFamily: fonts.cinzelBold,
     fontSize: fs(14),
     letterSpacing: 1.5,
     color: colors.white,
+  },
+  renameLink: { paddingTop: 2 },
+  renameLinkText: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    letterSpacing: 0.5,
+    color: colors.gold,
+    textDecorationLine: "underline",
+  },
+  renameBlock: { width: "100%", gap: 8 },
+  nameInput: {
+    width: "100%",
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(12),
+    letterSpacing: 0.5,
+    color: colors.white,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 3,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+  },
+  renameRow: { flexDirection: "row", gap: 8 },
+  renameBtnSave: {
+    backgroundColor: colors.gold,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 3,
+  },
+  renameBtnSaveText: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(8),
+    letterSpacing: 1,
+    color: "#0a0600",
+  },
+  renameBtnCancel: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 3,
+  },
+  renameBtnCancelText: {
+    fontFamily: fonts.cinzelBold,
+    fontSize: fs(8),
+    letterSpacing: 1,
+    color: colors.muted,
   },
   filters: {
     flexGrow: 0,
