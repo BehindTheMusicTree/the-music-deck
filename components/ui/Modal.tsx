@@ -27,12 +27,12 @@ export default function Modal() {
     if (onTrackList) {
       dispatch({ type: 'REMOVE_FROM_DECK', deckId: deck.id, cardId: card.id });
       showToast('Card removed from your active track list');
-    } else if (listLen < 10) {
+    } else if (listLen < 60) {
       dispatch({ type: 'ADD_TO_DECK', deckId: deck.id, cardId: card.id });
       showToast('Card added to your active track list', 'ok');
       dispatch({ type: 'ADVANCE_MISSION', id: 2, amount: 1 });
     } else {
-      showToast('Track list full! Max 10 cards.', 'err');
+      showToast('Track list full! Max 60 cards.', 'err');
     }
     close();
   }
@@ -91,7 +91,7 @@ export default function Modal() {
                   ? <Pressable style={styles.btnSecondary} onPress={toggleTrackList}>
                       <Text style={styles.btnSecondaryText}>Remove from track list</Text>
                     </Pressable>
-                  : listLen < 10
+                  : listLen < 60
                     ? <Pressable style={styles.btnPrimary} onPress={toggleTrackList}>
                         <Text style={styles.btnPrimaryText}>+ Add to track list</Text>
                       </Pressable>

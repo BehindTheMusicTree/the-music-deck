@@ -171,8 +171,8 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
     if (trackList.includes(cardId)) {
       dispatch({ type: "REMOVE_FROM_DECK", deckId, cardId });
       showToast("Card removed from this list");
-    } else if (trackList.length >= 10) {
-      showToast("List full! Max 10 cards.", "err");
+    } else if (trackList.length >= 60) {
+      showToast("List full! Max 60 cards.", "err");
     } else {
       dispatch({ type: "ADD_TO_DECK", deckId, cardId });
       showToast("Card added to this list", "ok");
@@ -214,11 +214,11 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
         <View style={styles.powerBox}>
           <Text style={styles.powerLbl}>Total Power</Text>
           <Text style={styles.powerNum}>{totalPower}</Text>
-          <Text style={styles.powerSub}>{trackList.length} / 10 cards</Text>
+          <Text style={styles.powerSub}>{trackList.length} / 60 cards</Text>
         </View>
         <Text style={styles.trackListTitle}>This list</Text>
         <ScrollView style={styles.slots}>
-          {Array.from({ length: 10 }, (_, i) => {
+          {Array.from({ length: 60 }, (_, i) => {
             const id = trackList[i];
             const c = id ? CARDS.find((c) => c.id === id) : null;
             return c ? (
@@ -357,7 +357,7 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
                     dispatch({ type: "OPEN_MODAL", cardId: card.id })
                   }
                   onToggleTrackList={() => toggleInList(card.id)}
-                  listFull={trackList.length >= 10}
+                  listFull={trackList.length >= 60}
                 />
               ))}
               {row.length < 3

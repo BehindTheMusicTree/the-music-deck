@@ -35,7 +35,7 @@ export interface BattleState {
   log: { type: string; msg: string }[];
 }
 
-/** Saved lineup for battles and track list builder (max 10 cards). */
+/** Saved lineup for battles and track list builder (max 60 cards). */
 export interface BattleDeck {
   id: string;
   name: string;
@@ -164,7 +164,7 @@ function reducer(state: GameState, action: Action): GameState {
         ...state,
         decks: state.decks.map((d) => {
           if (d.id !== deckId) return d;
-          if (d.cardIds.includes(cardId) || d.cardIds.length >= 10) return d;
+          if (d.cardIds.includes(cardId) || d.cardIds.length >= 60) return d;
           return { ...d, cardIds: [...d.cardIds, cardId] };
         }),
       };

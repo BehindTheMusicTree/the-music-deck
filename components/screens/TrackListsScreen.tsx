@@ -68,7 +68,7 @@ export default function TrackListsScreen() {
                     {d.name}
                   </Text>
                   <Text style={styles.meta}>
-                    {d.cardIds.length} / 10 cards · power {p}
+                    {d.cardIds.length} / 60 cards · power {p}
                   </Text>
                 </View>
                 <Text style={styles.chev}>Open →</Text>

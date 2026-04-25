@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -8,7 +9,7 @@ import {
   Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useGame, type BattleDeck } from "@/lib/game-state";
+import { useGame } from "@/lib/game-state";
 import { CARDS } from "@/lib/data/cards";
 import { useCardSizeMultiplier } from "@/lib/card-layout";
 import CardComponent from "@/components/Card";
@@ -65,11 +66,10 @@ export default function BattleScreen() {
   const router = useRouter();
   const cardM = useCardSizeMultiplier();
   const { state, showToast, advanceMission, earnCoins } = useGame();
-  const { collection, decks } = state;
+  const { collection } = state;
   const [selectedDeckId, setSelectedDeckId] = useState(
     () => state.decks[0]?.id ?? "",
   );
-  const [expandedDeckId, setExpandedDeckId] = useState<string | null>(null);
   const [fight, setFight] = useState<FightState | null>(null);
   const [zoomCard, setZoomCard] = useState<Card | null>(null);
   const [attackPrimed, setAttackPrimed] = useState(false);
@@ -98,6 +98,15 @@ export default function BattleScreen() {
     }
   }, [state.decks, selectedDeckId]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (fight != null) return;
+      if (state.decks.some((d) => d.id === state.activeDeckId)) {
+        setSelectedDeckId(state.activeDeckId);
+      }
+    }, [fight, state.activeDeckId, state.decks]),
+  );
+
   const lineupCards = (
     state.decks.find((d) => d.id === selectedDeckId)?.cardIds ?? []
   )
@@ -107,14 +116,6 @@ export default function BattleScreen() {
     );
   const canStart = lineupCards.length > 0;
   const hasDecks = state.decks.length > 0;
-
-  function resolvedCardsForDeck(deck: BattleDeck) {
-    return deck.cardIds
-      .map((id) => CARDS.find((c) => c.id === id))
-      .filter(
-        (c): c is Card => c != null && collection.includes(c.id),
-      );
-  }
 
   const addLog = useCallback(
     (fs: FightState, type: string, msg: string): FightState => ({
@@ -328,11 +329,12 @@ export default function BattleScreen() {
   }
 
   if (!fight) {
+    const activeDeck = state.decks.find((d) => d.id === selectedDeckId);
     return (
       <View style={styles.screen}>
         <View style={styles.sHdr}>
           <Text style={styles.lbl}>BATTLE ARENA</Text>
-          <Text style={styles.h2}>Track lists</Text>
+          <Text style={styles.h2}>Arène</Text>
         </View>
         {!hasDecks ? (
           <View style={styles.emptyLineup}>
@@ -345,107 +347,70 @@ export default function BattleScreen() {
               style={styles.btnPrimary}
               onPress={() => router.push("/tracklist")}
             >
-              <Text style={styles.btnPrimaryText}>Track lists</Text>
+              <Text style={styles.btnPrimaryText}>Mes track lists</Text>
             </Pressable>
           </View>
         ) : (
           <>
-            <Text style={styles.pickLabel}>
-              Une track list par défaut est déjà là. Touche une ligne pour la
-              déplier et voir les cartes ; dans la zone ouverte, appuie sur
-              « Utiliser pour ce duel » pour l’engager. Slot 1 = combattant.
-            </Text>
-            <View style={styles.tlList}>
-              {decks.map((deck) => {
-                const expanded = expandedDeckId === deck.id;
-                const forDuel = deck.id === selectedDeckId;
-                const resolved = resolvedCardsForDeck(deck);
-                return (
-                  <View key={deck.id} style={styles.tlItem}>
-                    <Pressable
-                      onPress={() =>
-                        setExpandedDeckId((prev) =>
-                          prev === deck.id ? null : deck.id,
-                        )
-                      }
-                      style={[
-                        styles.tlHeader,
-                        forDuel && styles.tlHeaderForDuel,
-                      ]}
-                    >
-                      <Text style={styles.tlChevron}>
-                        {expanded ? "▼" : "▶"}
-                      </Text>
-                      <View style={styles.tlHeaderMain}>
-                        <Text style={styles.tlName}>{deck.name}</Text>
-                        {forDuel ? (
-                          <Text style={styles.tlForDuelLbl}>
-                            Sélectionnée pour ce duel
-                          </Text>
-                        ) : null}
-                      </View>
-                      <Text style={styles.tlCount}>
-                        {deck.cardIds.length}
-                      </Text>
-                    </Pressable>
-                    {expanded ? (
-                      <View style={styles.tlBody}>
-                        {resolved.length > 0 ? (
-                          <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={styles.tlCardsRow}
-                          >
-                            {resolved.map((card, i) => (
-                              <View key={card.id} style={styles.pickCardWrap}>
-                                <Text style={styles.pickSlotNum}>{i + 1}</Text>
-                                <CardComponent card={card} wrapClass="cxs" />
-                              </View>
-                            ))}
-                          </ScrollView>
-                        ) : (
-                          <Text style={styles.tlEmptyResolved}>
-                            Aucune carte de cette liste n’est dans ta collection.
-                          </Text>
-                        )}
-                        <Pressable
-                          style={styles.tlUseBtn}
-                          onPress={() => setSelectedDeckId(deck.id)}
-                        >
-                          <Text style={styles.tlUseBtnText}>
-                            Utiliser pour ce duel
-                          </Text>
-                        </Pressable>
-                      </View>
-                    ) : null}
-                  </View>
-                );
-              })}
+            <View style={styles.battleMenuBlock}>
+              <View style={styles.battlePrimaryRow}>
+                <Pressable
+                  style={[styles.battleModeBtn, styles.battleModeBtnSecondary]}
+                  disabled={!canStart}
+                  onPress={startBattle}
+                >
+                  <Text style={styles.battleModeBtnLabel}>Tremplin</Text>
+                  <Text style={styles.battleModeBtnSub}>Vs IA</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.battleModeBtn, styles.battleModeBtnMain]}
+                  onPress={() =>
+                    showToast("Gig online coming soon.", "err")
+                  }
+                >
+                  <Text style={styles.battleModeBtnLabelMain}>Gig</Text>
+                  <Text style={styles.battleModeBtnSubMain}>
+                    Vs humain en ligne
+                  </Text>
+                </Pressable>
+              </View>
+              <View style={styles.battleSecondaryRow}>
+                <Pressable
+                  style={styles.battleMiniBtn}
+                  onPress={() => router.push("/tracklist")}
+                >
+                  <Text style={styles.battleMiniBtnText}>Track lists</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.battleMiniBtn}
+                  onPress={() => showToast("Didacticiel bientôt disponible.")}
+                >
+                  <Text style={styles.battleMiniBtnText}>Didacticiel</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.battleMiniBtn}
+                  onPress={() => showToast("Guide bientôt disponible.")}
+                >
+                  <Text style={styles.battleMiniBtnText}>Guide</Text>
+                </Pressable>
+              </View>
             </View>
             {canStart ? (
               <Text style={styles.leadHint}>
-                Lineup active : {lineupCards[0]?.title}
+                Lineup : « {activeDeck?.name ?? "—"} » · slot 1 :{" "}
+                {lineupCards[0]?.title}
                 {lineupCards.length > 1
                   ? ` · ${lineupCards.length} cartes`
                   : ""}
               </Text>
             ) : (
               <Text style={styles.warnHint}>
-                Déplie une track list puis choisis « Utiliser pour ce duel »
-                pour une lineup avec au moins une carte dans ta collection.
+                Ouvre « Track lists » pour composer une liste avec au moins une
+                carte de ta collection, puis reviens ici.
               </Text>
             )}
           </>
         )}
-        <View style={styles.startRow}>
-          <Pressable
-            style={[styles.btnAttack, !canStart && styles.btnDisabled]}
-            disabled={!canStart}
-            onPress={startBattle}
-          >
-            <Text style={styles.btnAttackText}>Lancer le combat</Text>
-          </Pressable>
-        </View>
       </View>
     );
   }
@@ -694,99 +659,76 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     color: colors.white,
   },
-  pickLabel: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(8),
-    letterSpacing: 0.4,
-    color: colors.muted,
-    paddingHorizontal: 20,
-    marginBottom: 12,
-    textAlign: "center",
-    lineHeight: fs(16),
-  },
-  tlList: {
+  battleMenuBlock: {
     paddingHorizontal: 16,
     gap: 10,
-    marginBottom: 8,
+    marginBottom: 10,
   },
-  tlItem: {
+  battlePrimaryRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  battleModeBtn: {
     borderRadius: 4,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 3,
+  },
+  battleModeBtnSecondary: {
+    flex: 1,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "rgba(0,0,0,.22)",
-    overflow: "hidden",
+    backgroundColor: "rgba(255,255,255,0.02)",
   },
-  tlHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+  battleModeBtnMain: {
+    flex: 1.4,
+    backgroundColor: colors.gold,
   },
-  tlHeaderForDuel: {
-    borderLeftWidth: 3,
-    borderLeftColor: colors.gold,
-    backgroundColor: "rgba(168,124,40,.08)",
-  },
-  tlChevron: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(10),
-    color: colors.muted,
-    width: 20,
-  },
-  tlHeaderMain: { flex: 1, gap: 2 },
-  tlName: {
+  battleModeBtnLabel: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(12),
-    letterSpacing: 0.8,
+    fontSize: fs(14),
+    letterSpacing: 1.5,
     color: colors.white,
   },
-  tlForDuelLbl: {
+  battleModeBtnSub: {
     fontFamily: fonts.spaceMono,
     fontSize: fs(7),
+    color: colors.muted,
     letterSpacing: 0.6,
-    color: colors.gold,
-    textTransform: "uppercase",
   },
-  tlCount: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(9),
-    color: colors.muted,
-  },
-  tlBody: {
-    paddingHorizontal: 12,
-    paddingBottom: 12,
-    paddingTop: 4,
-    gap: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: "rgba(0,0,0,.18)",
-  },
-  tlCardsRow: {
-    flexDirection: "row",
-    gap: 10,
-    paddingVertical: 8,
-    alignItems: "flex-end",
-  },
-  tlEmptyResolved: {
-    fontFamily: fonts.cormorantItalic,
-    fontSize: fs(13),
-    color: colors.muted,
-    paddingVertical: 8,
-  },
-  tlUseBtn: {
-    alignSelf: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: colors.gold,
-  },
-  tlUseBtnText: {
+  battleModeBtnLabelMain: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(10),
-    letterSpacing: 1,
-    color: colors.gold,
+    fontSize: fs(18),
+    letterSpacing: 2,
+    color: "#0a0600",
+  },
+  battleModeBtnSubMain: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    color: "#221400",
+    letterSpacing: 0.6,
+  },
+  battleSecondaryRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  battleMiniBtn: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 3,
+    paddingVertical: 8,
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.02)",
+  },
+  battleMiniBtnText: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(7),
+    letterSpacing: 0.7,
+    color: colors.muted,
+    textTransform: "uppercase",
   },
   warnHint: {
     fontFamily: fonts.cormorantItalic,
@@ -796,20 +738,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 8,
     lineHeight: fs(20),
-  },
-  pickGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-    padding: 20,
-    justifyContent: "center",
-  },
-  pickCardWrap: { alignItems: "center", gap: 6 },
-  pickSlotNum: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(8),
-    color: colors.muted,
-    letterSpacing: 1,
   },
   leadHint: {
     fontFamily: fonts.cormorantItalic,
@@ -839,7 +767,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: fs(22),
   },
-  startRow: { padding: 20, alignItems: "center" },
   arena: { flex: 1, padding: 12, gap: 12 },
   battleColumn: {
     flexShrink: 0,
