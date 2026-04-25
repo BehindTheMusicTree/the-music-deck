@@ -293,18 +293,18 @@ export default function TrackListBuilderScreen({ deckId }: Props) {
             </View>
           ) : (
             <View style={styles.titleRow}>
-              <Text style={styles.title} numberOfLines={2}>
-                {displayName}
-              </Text>
               {deck ? (
                 <Pressable
                   onPress={startRename}
-                  style={styles.renameLink}
+                  style={styles.renameIconBtn}
                   hitSlop={8}
                 >
-                  <Text style={styles.renameLinkText}>Rename</Text>
+                  <Text style={styles.renameIcon}>✎</Text>
                 </Pressable>
               ) : null}
+              <Text style={styles.title} numberOfLines={2}>
+                {displayName}
+              </Text>
             </View>
           )}
         </View>
@@ -498,11 +498,9 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: 12,
+    alignItems: "center",
+    gap: 10,
     width: "100%",
-    flexWrap: "wrap",
   },
   title: {
     flex: 1,
@@ -512,13 +510,19 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     color: colors.white,
   },
-  renameLink: { paddingTop: 2 },
-  renameLinkText: {
-    fontFamily: fonts.spaceMono,
-    fontSize: fs(7),
-    letterSpacing: 0.5,
+  renameIconBtn: {
+    width: 28,
+    height: 28,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.card,
+  },
+  renameIcon: {
+    fontSize: fs(12),
     color: colors.gold,
-    textDecorationLine: "underline",
   },
   renameBlock: { width: "100%", gap: 8 },
   nameInput: {
