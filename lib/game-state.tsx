@@ -35,7 +35,7 @@ export interface BattleState {
   log: { type: string; msg: string }[];
 }
 
-/** Saved lineup for battles (same shape as a track list, max 10 cards). */
+/** Saved lineup for battles and track list builder (max 10 cards). */
 export interface BattleDeck {
   id: string;
   name: string;
@@ -44,9 +44,10 @@ export interface BattleDeck {
 
 export interface GameState {
   collection: number[];
-  trackList: number[];
-  /** Saved track lists for the arena; at least one starter entry is seeded. */
+  /** All track lists (also battle decks in the arena). */
   decks: BattleDeck[];
+  /** Used when adding from the card modal: targets this list. */
+  activeDeckId: string;
   coins: number;
   missions: Mission[];
   battle: BattleState;
@@ -54,10 +55,17 @@ export interface GameState {
   modalCardId: number | null;
 }
 
+export function getActiveDeck(state: GameState): BattleDeck | undefined {
+  return state.decks.find((d) => d.id === state.activeDeckId) ?? state.decks[0];
+}
+
 type Action =
   | { type: "ADD_TO_COLLECTION"; ids: number[] }
-  | { type: "ADD_TO_TRACK_LIST"; id: number }
-  | { type: "REMOVE_FROM_TRACK_LIST"; id: number }
+  | { type: "ADD_TO_DECK"; deckId: string; cardId: number }
+  | { type: "REMOVE_FROM_DECK"; deckId: string; cardId: number }
+  | { type: "ADD_DECK" }
+  | { type: "REMOVE_DECK"; deckId: string }
+  | { type: "SET_ACTIVE_DECK"; deckId: string }
   | { type: "EARN_COINS"; amount: number }
   | { type: "SPEND_COINS"; amount: number }
   | { type: "ADVANCE_MISSION"; id: number; amount: number }
@@ -67,8 +75,7 @@ type Action =
   | { type: "CLOSE_MODAL" }
   | { type: "BATTLE_SET"; updates: Partial<BattleState> }
   | { type: "BATTLE_LOG"; entry: { type: string; msg: string } }
-  | { type: "BATTLE_RESET" }
-  | { type: "ADD_TRACK_LIST" };
+  | { type: "BATTLE_RESET" };
 
 const defaultBattle: BattleState = {
   phase: "pick",
@@ -86,13 +93,13 @@ const defaultBattle: BattleState = {
   log: [],
 };
 
-const INITIAL_TRACK_LIST = [1, 25, 30, 3, 12] as const;
+const INITIAL_CARD_IDS = [1, 25, 30, 3, 12] as const;
 
 const initialDecks: BattleDeck[] = [
   {
     id: "starter",
-    name: "Track List Starter",
-    cardIds: [...INITIAL_TRACK_LIST],
+    name: "Track list 1",
+    cardIds: [...INITIAL_CARD_IDS],
   },
 ];
 
@@ -101,8 +108,8 @@ const initialState: GameState = {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 25, 27, 29, 30, 31, 32, 33, 34, 35,
     36, 37,
   ],
-  trackList: [...INITIAL_TRACK_LIST],
   decks: initialDecks,
+  activeDeckId: "starter",
   coins: 750,
   missions: [
     { id: 1, name: "Open 1 Pack", reward: 50, prog: 0, total: 1, done: false },
@@ -150,15 +157,51 @@ function reducer(state: GameState, action: Action): GameState {
       const newIds = action.ids.filter((id) => !state.collection.includes(id));
       return { ...state, collection: [...state.collection, ...newIds] };
     }
-    case "ADD_TO_TRACK_LIST":
-      if (state.trackList.includes(action.id) || state.trackList.length >= 10)
-        return state;
-      return { ...state, trackList: [...state.trackList, action.id] };
-    case "REMOVE_FROM_TRACK_LIST":
+    case "ADD_TO_DECK": {
+      const { deckId, cardId } = action;
       return {
         ...state,
-        trackList: state.trackList.filter((id) => id !== action.id),
+        decks: state.decks.map((d) => {
+          if (d.id !== deckId) return d;
+          if (d.cardIds.includes(cardId) || d.cardIds.length >= 10) return d;
+          return { ...d, cardIds: [...d.cardIds, cardId] };
+        }),
       };
+    }
+    case "REMOVE_FROM_DECK": {
+      const { deckId, cardId } = action;
+      return {
+        ...state,
+        decks: state.decks.map((d) => {
+          if (d.id !== deckId) return d;
+          return { ...d, cardIds: d.cardIds.filter((id) => id !== cardId) };
+        }),
+      };
+    }
+    case "ADD_DECK": {
+      const n = state.decks.length + 1;
+      const newDeck: BattleDeck = {
+        id: `deck-${Date.now()}`,
+        name: `Track list ${n}`,
+        cardIds: [],
+      };
+      return { ...state, decks: [...state.decks, newDeck] };
+    }
+    case "REMOVE_DECK": {
+      if (state.decks.length <= 1) return state;
+      const { deckId } = action;
+      const next = state.decks.filter((d) => d.id !== deckId);
+      if (next.length === state.decks.length) return state;
+      let activeDeckId = state.activeDeckId;
+      if (activeDeckId === deckId) {
+        activeDeckId = next[0]!.id;
+      }
+      return { ...state, decks: next, activeDeckId };
+    }
+    case "SET_ACTIVE_DECK": {
+      if (!state.decks.some((d) => d.id === action.deckId)) return state;
+      return { ...state, activeDeckId: action.deckId };
+    }
     case "EARN_COINS":
       return { ...state, coins: state.coins + action.amount };
     case "SPEND_COINS":
@@ -188,15 +231,6 @@ function reducer(state: GameState, action: Action): GameState {
       };
     case "BATTLE_RESET":
       return { ...state, battle: defaultBattle };
-    case "ADD_TRACK_LIST": {
-      const name = `Track list ${state.decks.length + 1}`;
-      const newDeck: BattleDeck = {
-        id: `deck-${Date.now()}`,
-        name,
-        cardIds: [...state.trackList],
-      };
-      return { ...state, decks: [...state.decks, newDeck] };
-    }
     default:
       return state;
   }

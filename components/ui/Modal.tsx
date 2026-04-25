@@ -1,6 +1,6 @@
 import { Modal as RNModal, View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useGame } from '@/lib/game-state';
+import { useGame, getActiveDeck } from '@/lib/game-state';
 import { CARDS } from '@/lib/data/cards';
 import CardComponent from '@/components/Card';
 import { colors, fonts, fs, rarity as rarityTokens } from '@/lib/tokens';
@@ -8,7 +8,8 @@ import { colors, fonts, fs, rarity as rarityTokens } from '@/lib/tokens';
 export default function Modal() {
   const { state, dispatch, showToast } = useGame();
   const router = useRouter();
-  const { modalCardId, collection, trackList } = state;
+  const { modalCardId, collection } = state;
+  const activeDeck = getActiveDeck(state);
 
   if (!modalCardId) return null;
   const card = CARDS.find(c => c.id === modalCardId);
@@ -16,17 +17,19 @@ export default function Modal() {
 
   const rarityColor = rarityTokens[card.rarity as keyof typeof rarityTokens] ?? rarityTokens.Common;
   const owned = collection.includes(card.id);
-  const onTrackList = trackList.includes(card.id);
+  const deck = activeDeck;
+  const onTrackList = deck ? deck.cardIds.includes(card.id) : false;
+  const listLen = deck?.cardIds.length ?? 0;
 
   function close() { dispatch({ type: 'CLOSE_MODAL' }); }
   function toggleTrackList() {
-    if (!card) return;
+    if (!card || !deck) return;
     if (onTrackList) {
-      dispatch({ type: 'REMOVE_FROM_TRACK_LIST', id: card.id });
-      showToast('Card removed from track list');
-    } else if (trackList.length < 10) {
-      dispatch({ type: 'ADD_TO_TRACK_LIST', id: card.id });
-      showToast('Card added to track list', 'ok');
+      dispatch({ type: 'REMOVE_FROM_DECK', deckId: deck.id, cardId: card.id });
+      showToast('Card removed from your active track list');
+    } else if (listLen < 10) {
+      dispatch({ type: 'ADD_TO_DECK', deckId: deck.id, cardId: card.id });
+      showToast('Card added to your active track list', 'ok');
       dispatch({ type: 'ADVANCE_MISSION', id: 2, amount: 1 });
     } else {
       showToast('Track list full! Max 10 cards.', 'err');
@@ -88,7 +91,7 @@ export default function Modal() {
                   ? <Pressable style={styles.btnSecondary} onPress={toggleTrackList}>
                       <Text style={styles.btnSecondaryText}>Remove from track list</Text>
                     </Pressable>
-                  : trackList.length < 10
+                  : listLen < 10
                     ? <Pressable style={styles.btnPrimary} onPress={toggleTrackList}>
                         <Text style={styles.btnPrimaryText}>+ Add to track list</Text>
                       </Pressable>

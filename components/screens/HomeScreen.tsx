@@ -9,7 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useGame } from "@/lib/game-state";
+import { useGame, getActiveDeck } from "@/lib/game-state";
 import { CARDS } from "@/lib/data/cards";
 import CardComponent from "@/components/Card";
 import { colors, fonts, fs } from "@/lib/tokens";
@@ -24,7 +24,8 @@ export default function HomeScreen() {
   const { state, dispatch } = useGame();
   const router = useRouter();
   const { width: winW } = useWindowDimensions();
-  const { collection, trackList } = state;
+  const { collection } = state;
+  const trackListSize = getActiveDeck(state)?.cardIds.length ?? 0;
   const contentW =
     Platform.OS === "web" ? Math.min(winW, WEB_MAX_CONTENT_W) : winW;
   const colW =
@@ -103,7 +104,7 @@ export default function HomeScreen() {
       <View style={styles.stats}>
         {[
           { num: collection.length, unit: "Cards" },
-          { num: trackList.length, unit: "On track list" },
+          { num: trackListSize, unit: "On track list" },
           { num: "S1", unit: "Season" },
         ].map(({ num, unit }) => (
           <View key={unit} style={styles.stat}>

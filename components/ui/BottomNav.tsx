@@ -6,7 +6,7 @@ import { colors, fonts, fs } from '@/lib/tokens';
 const NAV = [
   { screen: '',            label: 'Home',       icon: '🏠' },
   { screen: 'collection',  label: 'Collection',  icon: '🎴' },
-  { screen: 'tracklist', label: 'Track list',   icon: '⚔️' },
+  { screen: 'tracklist', label: 'Track lists',  icon: '⚔️' },
   { screen: 'battle',      label: 'Battle',      icon: '🎯' },
   { screen: 'market',      label: 'Market',      icon: '🛒' },
   { screen: 'digcrate',   label: 'Crate Dig',   icon: '🎲' },
@@ -25,7 +25,8 @@ export default function BottomNav() {
         const active =
           pathname === href
           || (isHome && (pathname === '/index' || pathname === '/pack'))
-          || (screen === 'collection' && pathname.startsWith('/collection'));
+          || (screen === 'collection' && pathname.startsWith('/collection'))
+          || (screen === 'tracklist' && pathname.startsWith('/tracklist'));
         return (
           <Pressable
             key={screen}

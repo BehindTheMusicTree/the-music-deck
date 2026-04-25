@@ -345,7 +345,7 @@ export default function BattleScreen() {
               style={styles.btnPrimary}
               onPress={() => router.push("/tracklist")}
             >
-              <Text style={styles.btnPrimaryText}>Track list</Text>
+              <Text style={styles.btnPrimaryText}>Track lists</Text>
             </Pressable>
           </View>
         ) : (

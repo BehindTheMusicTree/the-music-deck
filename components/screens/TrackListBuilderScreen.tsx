@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Platform,
   useWindowDimensions,
 } from "react-native";
+import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useGame } from "@/lib/game-state";
 import { CARDS, type Card } from "@/lib/data/cards";
 import { GENRES_ALL } from "@/lib/data/genres";
@@ -88,7 +90,11 @@ function TrackListGridTile({
           ]}
         >
           <View style={muted ? styles.cardMuted : undefined}>
-            <CardComponent card={card} wrapClass="csm" onClick={onOpenCard} />
+            <CardComponent
+              card={card}
+              wrapClass="csm"
+              onClick={onOpenCard}
+            />
           </View>
         </View>
       </View>
@@ -104,23 +110,34 @@ function TrackListGridTile({
           onPress={onToggleTrackList}
           style={[styles.tileAddBtn, styles.tileAddBtnPrimary]}
         >
-          <Text style={styles.tileAddBtnTextPrimary}>+ Add to track list</Text>
+          <Text style={styles.tileAddBtnTextPrimary}>+ Add to list</Text>
         </Pressable>
       ) : (
         <View style={[styles.tileAddBtn, styles.tileAddBtnDisabled]}>
-          <Text style={styles.tileAddBtnTextDisabled}>Track list full</Text>
+          <Text style={styles.tileAddBtnTextDisabled}>List full</Text>
         </View>
       )}
     </View>
   );
 }
 
-export default function TrackListBuilderScreen() {
+type Props = { deckId: string };
+
+export default function TrackListBuilderScreen({ deckId }: Props) {
+  const router = useRouter();
   const { state, dispatch, showToast, advanceMission } = useGame();
   const { width: winW } = useWindowDimensions();
   const cardM = useCardSizeMultiplier();
-  const { collection, trackList, decks } = state;
+  const { collection, decks } = state;
+  const deck = decks.find((d) => d.id === deckId);
+  const trackList = deck?.cardIds ?? [];
   const [filter, setFilter] = useState<string>("All");
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch({ type: "SET_ACTIVE_DECK", deckId });
+    }, [dispatch, deckId]),
+  );
 
   const layoutW =
     Platform.OS === "web" ? Math.min(winW, WEB_MAX_CONTENT_W) : winW;
@@ -141,18 +158,20 @@ export default function TrackListBuilderScreen() {
     .filter(Boolean)
     .filter((c) => filter === "All" || c.genre === filter);
 
-  function toggleTrackList(id: number) {
-    if (trackList.includes(id)) {
-      dispatch({ type: "REMOVE_FROM_TRACK_LIST", id });
-      showToast("Card removed from track list");
+  function toggleInList(cardId: number) {
+    if (trackList.includes(cardId)) {
+      dispatch({ type: "REMOVE_FROM_DECK", deckId, cardId });
+      showToast("Card removed from this list");
     } else if (trackList.length >= 10) {
-      showToast("Track list full! Max 10 cards.", "err");
+      showToast("List full! Max 10 cards.", "err");
     } else {
-      dispatch({ type: "ADD_TO_TRACK_LIST", id });
-      showToast("Card added to track list", "ok");
+      dispatch({ type: "ADD_TO_DECK", deckId, cardId });
+      showToast("Card added to this list", "ok");
       advanceMission(2, 1);
     }
   }
+
+  const displayName = deck?.name ?? "Track list";
 
   return (
     <View style={styles.screen}>
@@ -162,23 +181,23 @@ export default function TrackListBuilderScreen() {
           <Text style={styles.powerNum}>{totalPower}</Text>
           <Text style={styles.powerSub}>{trackList.length} / 10 cards</Text>
         </View>
-        <Text style={styles.trackListTitle}>Your track list</Text>
+        <Text style={styles.trackListTitle}>This list</Text>
         <ScrollView style={styles.slots}>
           {Array.from({ length: 10 }, (_, i) => {
             const id = trackList[i];
-            const card = id ? CARDS.find((c) => c.id === id) : null;
-            return card ? (
+            const c = id ? CARDS.find((c) => c.id === id) : null;
+            return c ? (
               <View key={i} style={styles.slotFilled}>
                 <Text style={styles.slotNum}>{i + 1}</Text>
                 <View style={styles.slotInfo}>
                   <Text style={styles.slotName} numberOfLines={1}>
-                    {card.title}
+                    {c.title}
                   </Text>
-                  <Text style={styles.slotGenre}>{card.genre}</Text>
+                  <Text style={styles.slotGenre}>{c.genre}</Text>
                 </View>
-                <Text style={styles.slotPower}>{card.power}</Text>
+                <Text style={styles.slotPower}>{c.power}</Text>
                 <Pressable
-                  onPress={() => toggleTrackList(id)}
+                  onPress={() => toggleInList(id)}
                   style={styles.slotRm}
                 >
                   <Text style={styles.slotRmText}>✕</Text>
@@ -193,32 +212,27 @@ export default function TrackListBuilderScreen() {
           })}
         </ScrollView>
         <Pressable
-          style={styles.btnAddList}
-          onPress={() => {
-            if (trackList.length === 0) {
-              showToast("Add at least one card to your list first.", "err");
-              return;
-            }
-            const nextN = decks.length + 1;
-            dispatch({ type: "ADD_TRACK_LIST" });
-            showToast(`Track list ${nextN} added to your arena decks ✓`, "ok");
-          }}
-        >
-          <Text style={styles.btnAddListText}>+ Add track list</Text>
-        </Pressable>
-        <Pressable
           style={styles.btnSave}
           onPress={() =>
-            showToast(`Track list saved (${trackList.length} cards) ✓`, "ok")
+            showToast(`${displayName} saved (${trackList.length} cards) ✓`, "ok")
           }
         >
-          <Text style={styles.btnSaveText}>Save track list</Text>
+          <Text style={styles.btnSaveText}>Save</Text>
         </Pressable>
       </View>
 
       <View style={styles.main}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Track list</Text>
+        <View style={styles.headerBar}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            hitSlop={12}
+          >
+            <Text style={styles.backText}>← Back</Text>
+          </Pressable>
+          <Text style={styles.title} numberOfLines={1}>
+            {displayName}
+          </Text>
         </View>
         <ScrollView
           horizontal
@@ -262,7 +276,7 @@ export default function TrackListBuilderScreen() {
                   onOpenCard={() =>
                     dispatch({ type: "OPEN_MODAL", cardId: card.id })
                   }
-                  onToggleTrackList={() => toggleTrackList(card.id)}
+                  onToggleTrackList={() => toggleInList(card.id)}
                   listFull={trackList.length >= 10}
                 />
               ))}
@@ -381,20 +395,6 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontStyle: "italic",
   },
-  btnAddList: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: colors.gold,
-    borderRadius: 3,
-    paddingVertical: 10,
-    alignItems: "center",
-  },
-  btnAddListText: {
-    fontFamily: fonts.cinzelBold,
-    fontSize: fs(9),
-    letterSpacing: 1.5,
-    color: colors.gold,
-  },
   btnSave: {
     backgroundColor: colors.gold,
     borderRadius: 3,
@@ -408,16 +408,24 @@ const styles = StyleSheet.create({
     color: "#0a0600",
   },
   main: { flex: 1, minWidth: 0 },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+  headerBar: {
+    paddingHorizontal: 12,
+    paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+    gap: 8,
+  },
+  backBtn: { alignSelf: "flex-start" },
+  backText: {
+    fontFamily: fonts.spaceMono,
+    fontSize: fs(8),
+    letterSpacing: 0.5,
+    color: colors.gold,
   },
   title: {
     fontFamily: fonts.cinzelBold,
-    fontSize: fs(16),
-    letterSpacing: 2,
+    fontSize: fs(14),
+    letterSpacing: 1.5,
     color: colors.white,
   },
   filters: {
