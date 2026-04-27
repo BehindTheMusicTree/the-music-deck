@@ -121,9 +121,7 @@ export default function BattleScreen() {
     state.decks.find((d) => d.id === selectedDeckId)?.cardIds ?? []
   )
     .map((id) => CARDS.find((c) => c.id === id))
-    .filter(
-      (c): c is Card => c != null && collection.includes(c.id),
-    );
+    .filter((c): c is Card => c != null && collection.includes(c.id));
   const canStart = lineupCards.length > 0;
   const hasDecks = state.decks.length > 0;
 
@@ -140,9 +138,7 @@ export default function BattleScreen() {
     if (!deck || deck.cardIds.length === 0) return;
     const resolved = deck.cardIds
       .map((id) => CARDS.find((c) => c.id === id))
-      .filter(
-        (c): c is Card => c != null && collection.includes(c.id),
-      );
+      .filter((c): c is Card => c != null && collection.includes(c.id));
     if (resolved.length === 0) return;
     const playerCard = resolved[0];
     const sid = resolved[1]?.id;
@@ -375,9 +371,7 @@ export default function BattleScreen() {
                 </Pressable>
                 <Pressable
                   style={[styles.battleModeBtn, styles.battleModeBtnMain]}
-                  onPress={() =>
-                    showToast("Gig online coming soon.", "err")
-                  }
+                  onPress={() => showToast("Gig online coming soon.", "err")}
                 >
                   <Text style={styles.battleModeBtnLabelMain}>Gig</Text>
                   <Text style={styles.battleModeBtnSubMain}>

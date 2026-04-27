@@ -1,28 +1,96 @@
-# Music Deck
+# The Music Deck
 
-A collectible music card game inspired by Pokemon-style content packs, booster loops, rarity tiers, and tactical battles.
+A collectible music card game where players build lineups, open boosters, and battle through genre-based strategy.
 
-## Overview
+## Table of Contents
 
-The Music Deck lets players collect songs and special cards, then compete in festival battles using stack-based lineups and genre matchups.
+- [Concept](#concept)
+- [Core Gameplay Snapshot](#core-gameplay-snapshot)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [External Link](#external-link)
 
-## High-Level Product Snapshot
+## Concept
 
-- Card catalog: songs and special cards, with expandable size over time.
-- Release model: one active content pack at a time; boosters draw only from the active pack.
-- Collection size: unlimited.
-- Battle format: 10 active slots with stack rules.
-- Stack rule: only cards from the same subgenre can be stacked; strongest card in stack is base, each supplementary stacked card adds +15%.
-- Progression includes daily enigmas (10/day), missions, and MusicTree completion.
-- Economy uses points from gameplay, boosters, enigmas, and optional freemium purchases.
+The Music Deck combines music discovery with collectible card mechanics:
+
+- Collect song cards and special cards.
+- Open boosters from the currently active content pack.
+- Build battle-ready lineups using stack and genre synergies.
+- Progress through daily enigmas, missions, and MusicTree completion.
+
+## Core Gameplay Snapshot
+
+- **Card catalog**: Song and special cards, designed to expand over time.
+- **Pack model**: Only one pack is active at a time, and boosters draw from that active pack.
+- **Collection size**: Unlimited.
+- **Battle format**: 10 active slots per festival battle.
+- **Stack rule**: Only cards from the same subgenre can stack; the strongest card is the base, and each supplementary stacked card adds `+15%`.
+- **Economy**: Point-driven progression from battles, boosters, enigmas, and optional freemium bundles.
+
+## Tech Stack
+
+- Expo
+- React Native + React Native Web
+- Expo Router
+- TypeScript
+- ESLint
+
+## Prerequisites
+
+- Node.js (current LTS recommended)
+- npm (or another package manager, with npm commands adapted accordingly)
+
+## Getting Started
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the web development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Optional platform targets:
+
+   ```bash
+   npm run ios
+   npm run android
+   ```
+
+## Available Scripts
+
+- `npm run dev`: Start Expo in web mode.
+- `npm run ios`: Start Expo targeting iOS.
+- `npm run android`: Start Expo targeting Android.
+- `npm run build`: Export a web build.
+- `npm run lint`: Run ESLint.
+
+## Project Structure
+
+- `app/`: Route-level screens and Expo Router entry points.
+- `components/`: Reusable UI and gameplay components.
+- `lib/`: Shared data, tokens, and domain constants.
+- `docs/`: Product specs, game rules, and design decisions.
+- `assets/`: Source assets used during content/design workflows.
+- `public/`: Public static assets for web/export usage.
 
 ## Documentation
 
-Use the docs hub for detailed rules:
+Start with:
 
 - [Documentation Index](./docs/INDEX.md)
 
-Detailed specs:
+Detailed specifications:
 
 - [Card System](./docs/card-system.md)
 - [Pack Rotation Rules](./docs/pack-rotation.md)
@@ -30,54 +98,23 @@ Detailed specs:
 - [Economy and Marketplace](./docs/economy-marketplace.md)
 - [Progression and Enigmas](./docs/progression-and-enigmas.md)
 - [MusicTree View](./docs/musictree.md)
+- [Missions and Challenges](./docs/missions-and-challenges.md)
 - [AI Card Generation and Asset Storage](./docs/ai-card-generation.md)
 
-Shared references:
+Reference material:
 
 - [Glossary](./docs/glossary.md)
 - [Decisions](./docs/decisions.md)
 - [Open Questions](./docs/open-questions.md)
+- [Genres](./docs/genres.md)
 
-## Genres de Cartes (Types)
+## Contributing
 
-Chaque carte chanson appartient à un genre (type), qui influence les bonus/malus lors des battles contre d'autres types. Voici les 9 genres principaux et leur couleur associée :
-
-| Genre / Type | Couleur     |
-| ------------ | ----------- |
-| Rock         | Bleu        |
-| Reggae Dub   | Vert        |
-| Vintage      | Jaune pâle  |
-| World        | Rouge       |
-| Classique    | Marron bois |
-| Pop          | Blanc       |
-| Electronic   | Métal       |
-| Country      | Orange      |
-| Disco Funk   | Violet      |
-| Hip-hop      | Or          |
-
-🎵 **TABLEAU DES FORCES / FAIBLESSES — MUSIC DECK**
-
-| Genre / Type            | Fort contre →           | Faible contre ←         |
-| ----------------------- | ----------------------- | ----------------------- |
-| Rock (Bleu)             | Vintage (Jaune pâle)    | Reggae Dub (Vert)       |
-| Reggae Dub (Vert)       | Rock (Bleu)             | Hip-hop (Or)            |
-| Vintage (Jaune pâle)    | World (Rouge)           | Rock (Bleu)             |
-| World (Rouge)           | Classique (Marron bois) | Vintage (Jaune pâle)    |
-| Classique (Marron bois) | Electronic (Métal)      | World (Rouge)           |
-| Pop (Blanc)             | Hip-hop (Or)            | Disco Funk (Violet)     |
-| Electronic (Métal)      | Country (Orange)        | Classique (Marron bois) |
-| Country (Orange)        | Disco Funk (Violet)     | Electronic (Métal)      |
-| Disco Funk (Violet)     | Pop (Blanc)             | Country (Orange)        |
-| Hip-hop (Or)            | Reggae Dub (Vert)       | Pop (Blanc)             |
-
-**Rôle en battle :**
-
-- Le genre d'une carte détermine ses affinités et faiblesses face aux autres genres.
-- Certains genres obtiennent des bonus ou subissent des malus selon le type de l'adversaire (voir la documentation du système de battle pour les détails des interactions).
-- Les stratégies de stack et de lineup tirent parti de ces interactions de types pour maximiser les chances de victoire.
-
-Pour plus de détails sur les effets des genres en combat, consultez la section [Battle System](./docs/battle-system.md).
+- Create a dedicated feature branch.
+- Keep commits focused and concise.
+- Run `npm run lint` before opening a PR.
+- Update docs when changing gameplay rules or data models.
 
 ## External Link
 
-- `https://grow.themusictree.org`
+- [grow.themusictree.org](https://grow.themusictree.org)

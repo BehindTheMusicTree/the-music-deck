@@ -10,6 +10,12 @@ export interface GenreCfg {
   icon: string;
 }
 
+export type ThemeInput = {
+  genre?: Genre | string | null;
+  country?: string | null;
+  region?: string | null;
+};
+
 export const GENRE_CFG: Record<Genre, GenreCfg> = {
   Rock: {
     cls: "g-metal",
@@ -102,6 +108,56 @@ export const GENRE_CFG: Record<Genre, GenreCfg> = {
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,14.5 8,11.5 3.5,14.5 5,9.5 1,6 6,6" fill="currentColor"/></svg>',
   },
 };
+
+const VALID_GENRES = new Set<Genre>([
+  "Rock",
+  "Reggae",
+  "Vintage",
+  "World",
+  "Classic",
+  "Electro",
+  "Country",
+  "Funk",
+  "HipHop",
+  "Pop",
+]);
+
+function norm(v?: string | null) {
+  return (v ?? "").trim().toLowerCase();
+}
+
+function toGenre(v?: string | null): Genre | null {
+  if (!v) return null;
+  return VALID_GENRES.has(v as Genre) ? (v as Genre) : null;
+}
+
+/**
+ * Détermine le thème à partir du trio pays / région / genre.
+ * Fallback: genre fourni, sinon "Pop".
+ */
+export function themeFromCountryRegionGenre(input: ThemeInput): Genre {
+  const genre = toGenre(input.genre) ?? "Pop";
+  const country = norm(input.country);
+  const region = norm(input.region);
+  const key = `${country}|${region}|${genre}`;
+
+  switch (key) {
+    case "usa|nashville|Country":
+    case "united states|nashville|Country":
+      return "Country";
+    case "jamaica|kingston|Reggae":
+      return "Reggae";
+    case "france|paris|Electro":
+      return "Electro";
+    case "uk|london|Rock":
+    case "united kingdom|london|Rock":
+      return "Rock";
+    case "italy|naples|Classic":
+      return "Classic";
+    default:
+      return genre;
+  }
+}
 
 export const GENRES_ALL: (Genre | "All")[] = [
   "All",
