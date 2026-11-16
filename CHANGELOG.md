@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Metal**: Reclassified as Rock subgenre, colour changed to dark red (`#7a0810`)
 - **World**: Defined as a pattern genre — dotted white overlay on host genre colour, no fixed colour of its own
 
+### Fixed
+
+- Keep agent plans and scratch data out of Git while tracking the directory ignore rules.
+
 ### Documentation
 
 - **docs/charte-graphique.md**: Full visual charter added covering palette, genre colour system, subgenre blending rules, typography, and rarities
